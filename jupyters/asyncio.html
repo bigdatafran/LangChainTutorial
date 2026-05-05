@@ -1,0 +1,991 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>11. Programación asíncrona con asyncio en Python: una guía práctica &#8212; LangChain &amp; LangGraph</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'jupyters/asyncio';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="12. Introducción a Ollama" href="ollama.html" />
+    <link rel="prev" title="10. Introducción" href="base_datos.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../introduccion.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">LangChain & LangGraph</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Langchain.</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="modelosLangChain.html">1. Modelos de IA con LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="runnables.html">2. Los runnables de LangChain</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="prompts.html">3. Prompts template en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="salidas_estructuradas.html">4. Salidas estructuradas en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="messages.html">5. Messages en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="agentes.html">6. Agentes en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">7. Tools (herramientas) en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="langchain_async_concurrencia.html">8. Ejecución asíncrona en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="init_langGraph.html">9. Primer acercamiento a LangGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="base_datos.html">10. Base de datos con LangGraph</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Apendices.</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">11. Asincronia con asyncio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ollama.html">12. Ollama</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sitiosweb.html">13. Sitios web</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Índice de términos</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">Índice de términos</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Programación asíncrona con asyncio en Python: una guía práctica</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#por-que-importa-la-asincronia">11.1. ¿Por qué importa la asincronía?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#corrutinas-la-base-de-todo">11.2. Corrutinas: la base de todo</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gestores-de-contexto-e-iteradores-asincronos">11.3. Gestores de contexto e iteradores asíncronos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tareas-y-ejecucion-concurrente">11.4. Tareas y ejecución concurrente.</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#medir-el-tiempo-de-ejecucion-con-decoradores">11.5. Medir el tiempo de ejecución con decoradores</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#manejo-de-errores-en-corrutinas-concurrentes">11.6. Manejo de errores en corrutinas concurrentes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#el-bucle-de-eventos">11.7. El bucle de eventos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modo-debug-detecta-problemas-antes-de-que-lleguen-a-produccion">11.8. Modo debug: detecta problemas antes de que lleguen a producción</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">11.9. Conclusión</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="programacion-asincrona-con-asyncio-en-python-una-guia-practica">
+<span id="referencia1"></span><h1><span class="section-number">11. </span>Programación asíncrona con asyncio en Python: una guía práctica<a class="headerlink" href="#programacion-asincrona-con-asyncio-en-python-una-guia-practica" title="Link to this heading">#</a></h1>
+<section id="por-que-importa-la-asincronia">
+<h2><span class="section-number">11.1. </span>¿Por qué importa la asincronía?<a class="headerlink" href="#por-que-importa-la-asincronia" title="Link to this heading">#</a></h2>
+<p>Python ha madurado enormemente en los últimos años, y una de las áreas donde más ha crecido es la programación asíncrona. La biblioteca asyncio hace posible ejecutar múltiples tareas de forma concurrente dentro de un programa que, en esencia, corre en un solo hilo.</p>
+<p>Cuando construyes aplicaciones que dependen de operaciones lentas —consultar una API externa, leer de una base de datos, procesar archivos grandes— el tiempo de espera se convierte en tu enemigo. asyncio te permite aprovechar ese tiempo de espera para seguir haciendo trabajo útil en lugar de quedarte bloqueado.</p>
+<p>Este artículo te llevará por los pilares fundamentales de asyncio: corrutinas, gestores de contexto asíncronos, tareas concurrentes, medición de rendimiento, manejo de errores y el bucle de eventos. Cada sección incluye ejemplos listos para ejecutar.</p>
+</section>
+<section id="corrutinas-la-base-de-todo">
+<h2><span class="section-number">11.2. </span>Corrutinas: la base de todo<a class="headerlink" href="#corrutinas-la-base-de-todo" title="Link to this heading">#</a></h2>
+<p>Una corrutina es una función especial que puede suspender su ejecución en un punto determinado y ceder el control a otra tarea, para luego retomar desde donde se quedó. Esto es exactamente lo que necesitas cuando tienes operaciones que implican esperas.</p>
+<p>En Python, una corrutina se declara con <code class="docutils literal notranslate"><span class="pre">async</span> <span class="pre">def</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">saludar</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hola desde una corrutina&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Para ejecutarla, necesitas la palabra clave <code class="docutils literal notranslate"><span class="pre">await</span></code>, ya que no puedes invocarla como una función ordinaria. El punto de entrada de todo programa asyncio es <code class="docutils literal notranslate"><span class="pre">asyncio.run()</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">saludar</span><span class="p">():</span>
+    <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># simula una operación de 2 segundos</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Operación completada&quot;</span><span class="p">)</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="k">await</span> <span class="n">saludar</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">RuntimeError</span><span class="g g-Whitespace">                              </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">line</span> <span class="mi">11</span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+<span class="g g-Whitespace">      </span><span class="mi">8</span>     <span class="k">await</span> <span class="n">saludar</span><span class="p">()</span>
+<span class="g g-Whitespace">      </span><span class="mi">9</span> 
+<span class="g g-Whitespace">     </span><span class="mi">10</span> <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="ne">---&gt; </span><span class="mi">11</span>     <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+
+<span class="nn">File ~\AppData\Roaming\uv\python\cpython-3.13-windows-x86_64-none\Lib\asyncio\runners.py:191,</span> in <span class="ni">run</span><span class="nt">(main, debug, loop_factory)</span>
+<span class="g g-Whitespace">    </span><span class="mi">161</span><span class="w"> </span><span class="sd">&quot;&quot;&quot;Execute the coroutine and return the result.</span>
+<span class="g g-Whitespace">    </span><span class="mi">162</span><span class="sd"> </span>
+<span class="g g-Whitespace">    </span><span class="mi">163</span><span class="sd"> This function runs the passed coroutine, taking care of</span>
+<span class="sd">   (...)    187     asyncio.run(main())</span>
+<span class="g g-Whitespace">    </span><span class="mi">188</span><span class="sd"> &quot;&quot;&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">189</span> <span class="k">if</span> <span class="n">events</span><span class="o">.</span><span class="n">_get_running_loop</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">190</span>     <span class="c1"># fail fast with short traceback</span>
+<span class="ne">--&gt; </span><span class="mi">191</span>     <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">192</span>         <span class="s2">&quot;asyncio.run() cannot be called from a running event loop&quot;</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">194</span> <span class="k">with</span> <span class="n">Runner</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">,</span> <span class="n">loop_factory</span><span class="o">=</span><span class="n">loop_factory</span><span class="p">)</span> <span class="k">as</span> <span class="n">runner</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">195</span>     <span class="k">return</span> <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">)</span>
+
+<span class="ne">RuntimeError</span>: asyncio.run() cannot be called from a running event loop
+</pre></div>
+</div>
+</div>
+</div>
+<p>NOTA: El código anterior nos genera un error porque se jecuta en jupyter notebook. El error ocurre porque <code class="docutils literal notranslate"><span class="pre">asyncio.run()</span></code> no se puede llamar cuando ya hay un event loop en ejecución, como en Jupyter, VS Code o entornos interactivos.</p>
+<p>Se debe usar  <code class="docutils literal notranslate"><span class="pre">nest_asyncio</span></code> para permitir event loops anidados, ideal para un flujo de trabajo con notebooks. El código anterior corregido para poder ser ejecutado de manera adecuada con jupyter notebook, sería el siguiente:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">nest_asyncio</span>
+<span class="n">nest_asyncio</span><span class="o">.</span><span class="n">apply</span><span class="p">()</span>  <span class="c1"># Aplícalo una vez por sesión</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">saludar</span><span class="p">():</span>
+    <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Operación completada&quot;</span><span class="p">)</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="k">await</span> <span class="n">saludar</span><span class="p">()</span>
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Operación completada
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="gestores-de-contexto-e-iteradores-asincronos">
+<h2><span class="section-number">11.3. </span>Gestores de contexto e iteradores asíncronos<a class="headerlink" href="#gestores-de-contexto-e-iteradores-asincronos" title="Link to this heading">#</a></h2>
+<p>En aplicaciones reales, necesitas abrir conexiones, leer archivos o interactuar con servicios externos. asyncio ofrece soporte nativo para hacer todo esto de forma no bloqueante.</p>
+<p><code class="docutils literal notranslate"><span class="pre">async</span> <span class="pre">with</span></code></p>
+<p>El bloque async with gestiona recursos asíncronos de forma segura, garantizando que se abran y cierren correctamente aunque ocurra un error:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">aiofiles</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">procesar_log</span><span class="p">():</span>
+    <span class="k">async</span> <span class="k">with</span> <span class="n">aiofiles</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;registro_eventos.txt&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">archivo</span><span class="p">:</span>
+        <span class="n">contenido_binario</span> <span class="o">=</span> <span class="k">await</span> <span class="n">archivo</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+    <span class="n">texto</span> <span class="o">=</span> <span class="n">contenido_binario</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">texto</span><span class="p">[:</span><span class="mi">500</span><span class="p">])</span>  <span class="c1"># muestra los primeros 500 caracteres</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="k">await</span> <span class="n">procesar_log</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>El registro de eventos es un sistema esencial para documentar incidencias en software de facturación. Captura automáticamente interacciones críticas con el SIF (Sistema Informático de Facturación), como cambios de configuración, fallos técnicos o accesos no autorizados, garantizando trazabilidad e integridad. Cada evento se firma electrónicamente y se almacena con timestamp preciso, permitiendo auditorías por la AEAT. Incluye resúmenes periódicos cada 6 horas y exportación de datos. Esta normati
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>d:\MisTrabajos\IA_generativa\Langchain\libro\.venv\Lib\site-packages\aiofiles\tempfile\__init__.py:11: RuntimeWarning: coroutine &#39;main&#39; was never awaited
+  from ..base import AiofilesContextManager
+RuntimeWarning: Enable tracemalloc to get the object allocation traceback
+</pre></div>
+</div>
+</div>
+</div>
+<p>Otro caso muy común es hacer peticiones HTTP sin bloquear el hilo principal:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Patrón habitual con aiohttp</span>
+<span class="k">async</span> <span class="k">with</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientSession</span><span class="p">()</span> <span class="k">as</span> <span class="n">sesion</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">with</span> <span class="n">sesion</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;https://api.misitio.com/usuarios&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">respuesta</span><span class="p">:</span>
+        <span class="n">datos</span> <span class="o">=</span> <span class="k">await</span> <span class="n">respuesta</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="n">line</span> <span class="mi">2</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="c1"># Patrón habitual con aiohttp</span>
+<span class="ne">----&gt; </span><span class="mi">2</span> <span class="k">async</span> <span class="k">with</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientSession</span><span class="p">()</span> <span class="k">as</span> <span class="n">sesion</span><span class="p">:</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span>     <span class="k">async</span> <span class="k">with</span> <span class="n">sesion</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;https://api.misitio.com/usuarios&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">respuesta</span><span class="p">:</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span>         <span class="n">datos</span> <span class="o">=</span> <span class="k">await</span> <span class="n">respuesta</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+<span class="ne">NameError</span>: name &#39;aiohttp&#39; is not defined
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Buena práctica</strong>: usa siempre async with para gestionar recursos que requieran inicialización y limpieza.</p>
+<p><code class="docutils literal notranslate"><span class="pre">async</span> <span class="pre">for</span></code></p>
+<p>Cuando necesitas recorrer datos que se generan de forma asíncrona, usas async for junto con un generador asíncrono:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">generar_reportes</span><span class="p">():</span>
+    <span class="n">secciones</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;resumen&quot;</span><span class="p">,</span> <span class="s2">&quot;detalle&quot;</span><span class="p">,</span> <span class="s2">&quot;gráficas&quot;</span><span class="p">,</span> <span class="s2">&quot;conclusiones&quot;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">seccion</span> <span class="ow">in</span> <span class="n">secciones</span><span class="p">:</span>
+        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># simula tiempo de generación</span>
+        <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;Sección generada: </span><span class="si">{</span><span class="n">seccion</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">exportar_documento</span><span class="p">():</span>
+    <span class="k">async</span> <span class="k">for</span> <span class="n">bloque</span> <span class="ow">in</span> <span class="n">generar_reportes</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Procesando → </span><span class="si">{</span><span class="n">bloque</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">exportar_documento</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Procesando → Sección generada: resumen
+Procesando → Sección generada: detalle
+Procesando → Sección generada: gráficas
+Procesando → Sección generada: conclusiones
+</pre></div>
+</div>
+</div>
+</div>
+<p>La diferencia entre for y async for es clara: el primero recorre iterables síncronos (listas, tuplas, generadores normales), mientras que el segundo está diseñado para iterables asíncronos. Intentar mezclarlos incorrectamente provoca un TypeError en tiempo de ejecución.</p>
+</section>
+<section id="tareas-y-ejecucion-concurrente">
+<h2><span class="section-number">11.4. </span>Tareas y ejecución concurrente.<a class="headerlink" href="#tareas-y-ejecucion-concurrente" title="Link to this heading">#</a></h2>
+<p>Cuando envuelves una corrutina en una <code class="docutils literal notranslate"><span class="pre">Task</span></code> usando <code class="docutils literal notranslate"><span class="pre">asyncio.create_task()</span></code>, la estás registrando para que el bucle de eventos la ejecute tan pronto como pueda, sin esperar a que la corrutina anterior termine:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">descargar_imagen</span><span class="p">(</span><span class="n">nombre</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Iniciando descarga: </span><span class="si">{</span><span class="n">nombre</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Descarga completada: </span><span class="si">{</span><span class="n">nombre</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">tarea</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">descargar_imagen</span><span class="p">(</span><span class="s2">&quot;foto_perfil.jpg&quot;</span><span class="p">))</span>
+    <span class="k">await</span> <span class="n">tarea</span>
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Iniciando descarga: foto_perfil.jpg
+Descarga completada: foto_perfil.jpg
+</pre></div>
+</div>
+</div>
+</div>
+<p>Si intentas crear una tarea fuera de un contexto asíncrono activo, Python lanzará:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="ne">RuntimeError</span><span class="p">:</span> <span class="n">no</span> <span class="n">running</span> <span class="n">event</span> <span class="n">loop</span>
+</pre></div>
+</div>
+<p>Esto sucede porque <code class="docutils literal notranslate"><span class="pre">asyncio.create_task()</span></code> necesita un bucle de eventos en marcha. La solución es siempre colocar este tipo de código dentro de una función <code class="docutils literal notranslate"><span class="pre">async</span></code> y arrancarla con <code class="docutils literal notranslate"><span class="pre">asyncio.run()</span></code>.</p>
+<p>Las tareas también se pueden cancelar o limitar en tiempo de ejecución:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">proceso_largo</span><span class="p">():</span>
+    <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Proceso terminado&quot;</span><span class="p">)</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">tarea</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">proceso_largo</span><span class="p">())</span>
+    <span class="n">tarea</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>  <span class="c1"># cancelamos la tarea antes de que acabe</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">wait_for</span><span class="p">(</span><span class="n">proceso_largo</span><span class="p">(),</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">3.0</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">TimeoutError</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;El proceso superó el tiempo máximo permitido&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>El proceso superó el tiempo máximo permitido
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="medir-el-tiempo-de-ejecucion-con-decoradores">
+<h2><span class="section-number">11.5. </span>Medir el tiempo de ejecución con decoradores<a class="headerlink" href="#medir-el-tiempo-de-ejecucion-con-decoradores" title="Link to this heading">#</a></h2>
+<p>Un decorador asíncrono te permite instrumentar tus corrutinas sin modificar su lógica interna. Es útil para detectar cuellos de botella:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">cronometrar</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">envolver</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">inicio</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">resultado</span> <span class="o">=</span> <span class="k">await</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">fin</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39; tardó </span><span class="si">{</span><span class="n">fin</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">inicio</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> segundos&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">resultado</span>
+    <span class="k">return</span> <span class="n">envolver</span>
+
+<span class="nd">@cronometrar</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">consultar_base_datos</span><span class="p">():</span>
+    <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">1.5</span><span class="p">)</span>  <span class="c1"># simula una consulta lenta</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Datos recuperados&quot;</span><span class="p">)</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="k">await</span> <span class="n">consultar_base_datos</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Datos recuperados
+&#39;consultar_base_datos&#39; tardó 1.502 segundos
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>¿Para qué sirve medir el tiempo en tareas asíncronas?</strong></p>
+<p>Monitorizar el tiempo de ejecución tiene varias ventajas concretas:</p>
+<p>Detectar cuellos de botella: una corrutina que tarda demasiado puede estar haciendo más trabajo del necesario o esperando recursos innecesariamente.</p>
+<p>Planificar recursos: saber cuánto tarda cada tarea ayuda a decidir si conviene paralelizarla, delegarla a un worker externo o simplemente optimizarla.</p>
+<p>Depurar comportamientos anómalos: si una tarea nunca termina o tarda mucho más de lo esperado, el tiempo de ejecución es la primera pista.</p>
+<p>Mejorar la experiencia de usuario: en aplicaciones con interfaz, una tarea que bloquea por más de un par de segundos debería ir acompañada de algún indicador visual.</p>
+<p>Validar la escalabilidad: antes de aumentar la carga de tu sistema, necesitas saber cómo se comportan tus corrutinas con los datos actuales.</p>
+</section>
+<section id="manejo-de-errores-en-corrutinas-concurrentes">
+<h2><span class="section-number">11.6. </span>Manejo de errores en corrutinas concurrentes<a class="headerlink" href="#manejo-de-errores-en-corrutinas-concurrentes" title="Link to this heading">#</a></h2>
+<p>Las corrutinas son “perezosas”: no ejecutan su cuerpo hasta que alguien las espera con await. Esto significa que los errores también se posponen, lo que puede dificultar el diagnóstico si no estás preparado.</p>
+<p>Cuando ejecutas múltiples corrutinas en paralelo, <code class="docutils literal notranslate"><span class="pre">asyncio.gather</span></code> con <code class="docutils literal notranslate"><span class="pre">return_exceptions=True</span></code> te permite recoger todos los errores sin que uno solo interrumpa el resto:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">obtener_temperatura</span><span class="p">(</span><span class="n">ciudad</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">ciudad</span> <span class="o">==</span> <span class="s2">&quot;Ciudad Desconocida&quot;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No existe datos para: </span><span class="si">{</span><span class="n">ciudad</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Temperatura en </span><span class="si">{</span><span class="n">ciudad</span><span class="si">}</span><span class="s2">: 22°C&quot;</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">obtener_cambio_divisa</span><span class="p">(</span><span class="n">par</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">par</span> <span class="o">==</span> <span class="s2">&quot;ZZZ/XXX&quot;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Par de divisas no válido: </span><span class="si">{</span><span class="n">par</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Cambio </span><span class="si">{</span><span class="n">par</span><span class="si">}</span><span class="s2">: 1.08&quot;</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">resultados</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
+        <span class="n">obtener_temperatura</span><span class="p">(</span><span class="s2">&quot;Madrid&quot;</span><span class="p">),</span>
+        <span class="n">obtener_temperatura</span><span class="p">(</span><span class="s2">&quot;Ciudad Desconocida&quot;</span><span class="p">),</span>
+        <span class="n">obtener_cambio_divisa</span><span class="p">(</span><span class="s2">&quot;EUR/USD&quot;</span><span class="p">),</span>
+        <span class="n">obtener_cambio_divisa</span><span class="p">(</span><span class="s2">&quot;ZZZ/XXX&quot;</span><span class="p">),</span>
+        <span class="n">return_exceptions</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resultados</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="ne">Exception</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error capturado: </span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Temperatura en Madrid: 22°C
+Error capturado: No existe datos para: Ciudad Desconocida
+Cambio EUR/USD: 1.08
+Error capturado: &#39;Par de divisas no válido: ZZZ/XXX&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="el-bucle-de-eventos">
+<h2><span class="section-number">11.7. </span>El bucle de eventos<a class="headerlink" href="#el-bucle-de-eventos" title="Link to this heading">#</a></h2>
+<p>El bucle de eventos es el motor que orquesta la ejecución de todas las corrutinas. Normalmente no necesitas interactuar con él directamente —asyncio.run() lo gestiona— pero en algunos casos avanzados puedes controlarlo manualmente:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">procesar_pedido</span><span class="p">(</span><span class="n">pedido_id</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pedido #</span><span class="si">{</span><span class="n">pedido_id</span><span class="si">}</span><span class="s2">: iniciando procesamiento&quot;</span><span class="p">)</span>
+    <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">pedido_id</span><span class="p">)</span>  <span class="c1"># simula tiempo variable por pedido</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pedido #</span><span class="si">{</span><span class="n">pedido_id</span><span class="si">}</span><span class="s2">: listo&quot;</span><span class="p">)</span>
+
+<span class="n">bucle</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+
+<span class="n">tareas</span> <span class="o">=</span> <span class="p">[</span><span class="n">bucle</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">procesar_pedido</span><span class="p">(</span><span class="n">pid</span><span class="p">))</span> <span class="k">for</span> <span class="n">pid</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)]</span>
+
+<span class="n">bucle</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="n">tareas</span><span class="p">))</span>
+
+<span class="n">bucle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Pedido #1: iniciando procesamiento
+Pedido #2: iniciando procesamiento
+Pedido #3: iniciando procesamiento
+Pedido #1: listo
+Pedido #2: listo
+Pedido #3: listo
+</pre></div>
+</div>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">RuntimeError</span><span class="g g-Whitespace">                              </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">12</span><span class="p">],</span> <span class="n">line</span> <span class="mi">14</span>
+<span class="g g-Whitespace">     </span><span class="mi">10</span> <span class="n">tareas</span> <span class="o">=</span> <span class="p">[</span><span class="n">bucle</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">procesar_pedido</span><span class="p">(</span><span class="n">pid</span><span class="p">))</span> <span class="k">for</span> <span class="n">pid</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)]</span>
+<span class="g g-Whitespace">     </span><span class="mi">11</span> 
+<span class="g g-Whitespace">     </span><span class="mi">12</span> <span class="n">bucle</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="n">tareas</span><span class="p">))</span>
+<span class="g g-Whitespace">     </span><span class="mi">13</span> 
+<span class="ne">---&gt; </span><span class="mi">14</span> <span class="n">bucle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="nn">File ~\AppData\Roaming\uv\python\cpython-3.13-windows-x86_64-none\Lib\asyncio\selector_events.py:101,</span> in <span class="ni">BaseSelectorEventLoop.close</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">     </span><span class="mi">99</span> <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="g g-Whitespace">    </span><span class="mi">100</span>     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_running</span><span class="p">():</span>
+<span class="ne">--&gt; </span><span class="mi">101</span>         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Cannot close a running event loop&quot;</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">102</span>     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_closed</span><span class="p">():</span>
+<span class="g g-Whitespace">    </span><span class="mi">103</span>         <span class="k">return</span>
+
+<span class="ne">RuntimeError</span>: Cannot close a running event loop
+</pre></div>
+</div>
+</div>
+</div>
+<p>El problema anterior, es que en Jupyter Notebook ya hay un bucle de eventos corriendo, por lo que no puedes crear uno nuevo ni cerrarlo manualmente. La solución es usar directamente await con asyncio.gather():</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">procesar_pedido</span><span class="p">(</span><span class="n">pedido_id</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pedido #</span><span class="si">{</span><span class="n">pedido_id</span><span class="si">}</span><span class="s2">: iniciando procesamiento&quot;</span><span class="p">)</span>
+    <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">pedido_id</span><span class="p">)</span>  <span class="c1"># simula tiempo variable por pedido</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pedido #</span><span class="si">{</span><span class="n">pedido_id</span><span class="si">}</span><span class="s2">: listo&quot;</span><span class="p">)</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">tareas</span> <span class="o">=</span> <span class="p">[</span><span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">procesar_pedido</span><span class="p">(</span><span class="n">pid</span><span class="p">))</span> <span class="k">for</span> <span class="n">pid</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)]</span>
+    <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="n">tareas</span><span class="p">)</span>
+
+<span class="k">await</span> <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Pedido #1: iniciando procesamiento
+Pedido #2: iniciando procesamiento
+Pedido #3: iniciando procesamiento
+Pedido #1: listo
+Pedido #2: listo
+Pedido #3: listo
+</pre></div>
+</div>
+</div>
+</div>
+<p>Aquí lanzamos tres pedidos concurrentes con tiempos de procesamiento distintos (1, 2 y 3 segundos), y el bucle de eventos los coordina sin bloquear ninguno.</p>
+<p>Recuerda: asyncio está pensado para tareas limitadas por entrada/salida (I/O-bound). Si tus operaciones consumen CPU intensivamente (cálculos matemáticos, procesamiento de imágenes), el paralelismo real requiere <code class="docutils literal notranslate"><span class="pre">multiprocessing</span></code>, no corrutinas.</p>
+</section>
+<section id="modo-debug-detecta-problemas-antes-de-que-lleguen-a-produccion">
+<h2><span class="section-number">11.8. </span>Modo debug: detecta problemas antes de que lleguen a producción<a class="headerlink" href="#modo-debug-detecta-problemas-antes-de-que-lleguen-a-produccion" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">asyncio</span></code> incluye un modo de depuración que emite advertencias cuando detecta patrones problemáticos, como llamadas bloqueantes dentro del bucle de eventos:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;PYTHONASYNCIODEBUG&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;1&#39;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>La variable de entorno debe configurarse antes de importar asyncio. Una vez habilitado, el modo debug te avisará de problemas como este:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;PYTHONASYNCIODEBUG&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;1&#39;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">enviar_notificacion</span><span class="p">(</span><span class="n">usuario_id</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Enviando notificación a usuario </span><span class="si">{</span><span class="n">usuario_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Notificación enviada a usuario </span><span class="si">{</span><span class="n">usuario_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">exportar_csv</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Exportando datos a CSV...&quot;</span><span class="p">)</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>  <span class="c1"># ⚠️ llamada bloqueante: no usar en código asíncrono</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;CSV exportado&quot;</span><span class="p">)</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">tareas</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">enviar_notificacion</span><span class="p">(</span><span class="mi">101</span><span class="p">)),</span>
+        <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">enviar_notificacion</span><span class="p">(</span><span class="mi">202</span><span class="p">)),</span>
+        <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">exportar_csv</span><span class="p">())</span>
+    <span class="p">]</span>
+    <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="n">tareas</span><span class="p">)</span>
+
+<span class="n">bucle</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+<span class="n">bucle</span><span class="o">.</span><span class="n">set_debug</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">bucle</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+<span class="k">finally</span><span class="p">:</span>
+    <span class="n">bucle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Enviando notificación a usuario 101
+Enviando notificación a usuario 202
+Exportando datos a CSV...
+CSV exportado
+Notificación enviada a usuario 101
+Notificación enviada a usuario 202
+</pre></div>
+</div>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">RuntimeError</span><span class="g g-Whitespace">                              </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">15</span><span class="p">],</span> <span class="n">line</span> <span class="mi">30</span>
+<span class="g g-Whitespace">     </span><span class="mi">26</span> 
+<span class="g g-Whitespace">     </span><span class="mi">27</span> <span class="k">try</span><span class="p">:</span>
+<span class="g g-Whitespace">     </span><span class="mi">28</span>     <span class="n">bucle</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+<span class="g g-Whitespace">     </span><span class="mi">29</span> <span class="k">finally</span><span class="p">:</span>
+<span class="ne">---&gt; </span><span class="mi">30</span>     <span class="n">bucle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="nn">File ~\AppData\Roaming\uv\python\cpython-3.13-windows-x86_64-none\Lib\asyncio\selector_events.py:101,</span> in <span class="ni">BaseSelectorEventLoop.close</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">     </span><span class="mi">99</span> <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="g g-Whitespace">    </span><span class="mi">100</span>     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_running</span><span class="p">():</span>
+<span class="ne">--&gt; </span><span class="mi">101</span>         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Cannot close a running event loop&quot;</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">102</span>     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_closed</span><span class="p">():</span>
+<span class="g g-Whitespace">    </span><span class="mi">103</span>         <span class="k">return</span>
+
+<span class="ne">RuntimeError</span>: Cannot close a running event loop
+</pre></div>
+</div>
+</div>
+</div>
+<p>Mismo problema que antes, la solución es la siguiente si se está trabajando con jupyter notebook</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;PYTHONASYNCIODEBUG&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;1&#39;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">enviar_notificacion</span><span class="p">(</span><span class="n">usuario_id</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Enviando notificación a usuario </span><span class="si">{</span><span class="n">usuario_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Notificación enviada a usuario </span><span class="si">{</span><span class="n">usuario_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">exportar_csv</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Exportando datos a CSV...&quot;</span><span class="p">)</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>  <span class="c1"># ⚠️ llamada bloqueante — asyncio lo detectará en modo debug</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;CSV exportado&quot;</span><span class="p">)</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="c1"># Activar debug desde dentro del bucle ya activo</span>
+    <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">set_debug</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    
+    <span class="n">tareas</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">enviar_notificacion</span><span class="p">(</span><span class="mi">101</span><span class="p">)),</span>
+        <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">enviar_notificacion</span><span class="p">(</span><span class="mi">202</span><span class="p">)),</span>
+        <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">exportar_csv</span><span class="p">())</span>
+    <span class="p">]</span>
+    <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="n">tareas</span><span class="p">)</span>
+
+<span class="k">await</span> <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Enviando notificación a usuario 101
+Enviando notificación a usuario 202
+Exportando datos a CSV...
+CSV exportado
+Notificación enviada a usuario 101
+Notificación enviada a usuario 202
+</pre></div>
+</div>
+</div>
+</div>
+<p>En este ejemplo, <code class="docutils literal notranslate"><span class="pre">time.sleep(3)</span></code> dentro de <code class="docutils literal notranslate"><span class="pre">exportar_csv</span></code> bloquea el bucle de eventos durante 3 segundos, impidiendo que las otras tareas avancen. El modo debug detecta esta situación y la reporta con un mensaje de advertencia. En producción, la solución es reemplazar <code class="docutils literal notranslate"><span class="pre">time.sleep</span></code> por <code class="docutils literal notranslate"><span class="pre">await</span> <span class="pre">asyncio.sleep</span></code> o, si la operación es realmente síncrona, ejecutarla en un executor separado.</p>
+</section>
+<section id="conclusion">
+<h2><span class="section-number">11.9. </span>Conclusión<a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h2>
+<p>Con este material se tiene una base sólida para trabajar con <code class="docutils literal notranslate"><span class="pre">asyncio</span></code>: sabes cómo definir y ejecutar corrutinas, cómo gestionar recursos de forma asíncrona con <code class="docutils literal notranslate"><span class="pre">async</span> <span class="pre">with</span></code> y <code class="docutils literal notranslate"><span class="pre">async</span> <span class="pre">for</span></code>, cómo crear tareas concurrentes, medir su rendimiento y capturar errores de forma robusta.</p>
+<p>El verdadero potencial de <code class="docutils literal notranslate"><span class="pre">asyncio</span></code> aparece cuando las aplicaciones crecen y necesitas coordinar docenas o cientos de tareas simultáneas: semáforos para limitar concurrencia, colas para comunicación entre tareas, o transportes y protocolos para comunicación de red de bajo nivel.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./jupyters"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="base_datos.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">10. </span>Introducción</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="ollama.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">12. </span>Introducción a Ollama</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#por-que-importa-la-asincronia">11.1. ¿Por qué importa la asincronía?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#corrutinas-la-base-de-todo">11.2. Corrutinas: la base de todo</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gestores-de-contexto-e-iteradores-asincronos">11.3. Gestores de contexto e iteradores asíncronos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tareas-y-ejecucion-concurrente">11.4. Tareas y ejecución concurrente.</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#medir-el-tiempo-de-ejecucion-con-decoradores">11.5. Medir el tiempo de ejecución con decoradores</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#manejo-de-errores-en-corrutinas-concurrentes">11.6. Manejo de errores en corrutinas concurrentes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#el-bucle-de-eventos">11.7. El bucle de eventos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modo-debug-detecta-problemas-antes-de-que-lleguen-a-produccion">11.8. Modo debug: detecta problemas antes de que lleguen a producción</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">11.9. Conclusión</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Francisco Rodríguez
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

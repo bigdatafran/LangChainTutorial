@@ -1,0 +1,1429 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>7. Introducción a las Tools. &#8212; LangChain &amp; LangGraph</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'jupyters/tools';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="8. LangChain en producción: concurrencia y operaciones asíncronas" href="langchain_async_concurrencia.html" />
+    <link rel="prev" title="6. Introdución a los Agentes en LangChain" href="agentes.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../introduccion.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">LangChain & LangGraph</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Langchain.</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="modelosLangChain.html">1. Modelos de IA con LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="runnables.html">2. Los runnables de LangChain</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="prompts.html">3. Prompts template en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="salidas_estructuradas.html">4. Salidas estructuradas en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="messages.html">5. Messages en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="agentes.html">6. Agentes en LangChain</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">7. Tools (herramientas) en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="langchain_async_concurrencia.html">8. Ejecución asíncrona en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="init_langGraph.html">9. Primer acercamiento a LangGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="base_datos.html">10. Base de datos con LangGraph</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Apendices.</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="asyncio.html">11. Asincronia con asyncio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ollama.html">12. Ollama</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sitiosweb.html">13. Sitios web</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Índice de términos</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">Índice de términos</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Introducción a las Tools.</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#crear-tools">7.1. Crear Tools</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#definicion-basica-con-tool">7.1.1. Definición básica con <code class="docutils literal notranslate"><span class="pre">@tool</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#personalizar-el-nombre-de-la-tool">7.1.2. Personalizar el nombre de la Tool</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#personalizar-la-descripcion">7.1.3. Personalizar la descripción</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#esquema-avanzado-con-pydantic">7.1.4. Esquema avanzado con Pydantic</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#acceso-al-contexto-en-tiempo-de-ejecucion-toolruntime">7.2. Acceso al Contexto en Tiempo de Ejecución: <code class="docutils literal notranslate"><span class="pre">ToolRuntime</span></code></a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#acceder-al-state-memoria-a-corto-plazo">7.2.1. 2.1 Acceder al State (memoria a corto plazo)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#actualizar-el-state-con-command">7.2.2. Actualizar el State con <code class="docutils literal notranslate"><span class="pre">Command</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#context-configuracion-inmutable">7.2.3. Context (configuración inmutable)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#long-term-memory-con-store">7.2.4. Long-term Memory con Store</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stream-writer-actualizaciones-en-tiempo-real">7.2.5. Stream Writer (actualizaciones en tiempo real)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#toolnode-ejecucion-de-tools-en-grafos">7.3. ToolNode: Ejecución de Tools en Grafos</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#uso-basico">7.3.1. Uso básico</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tipos-de-valores-de-retorno">7.3.2. Tipos de valores de retorno</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#retornar-string-texto-plano">7.3.2.1. ✅ Retornar string (texto plano)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#retornar-un-objeto-datos-estructurados">7.3.2.2. ✅ Retornar un objeto (datos estructurados)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#retornar-command-actualizar-estado">7.3.2.3. ✅ Retornar <code class="docutils literal notranslate"><span class="pre">Command</span></code> (actualizar estado)</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manejo-de-errores-en-toolnode">7.3.3. Manejo de errores en ToolNode</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#enrutamiento-condicional-con-tools-condition">7.3.4. Enrutamiento condicional con <code class="docutils literal notranslate"><span class="pre">tools_condition</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tools-precompiladas-de-langchain">7.4. Tools Precompiladas de LangChain</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resumen-arquitectura-de-una-tool">7.5. Resumen: Arquitectura de una Tool</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#toolruntime-en-langgraph-guia-detallada">7.6. <code class="docutils literal notranslate"><span class="pre">ToolRuntime</span></code> en LangGraph — Guía Detallada</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#que-es-toolruntime">7.6.1. ¿Qué es <code class="docutils literal notranslate"><span class="pre">ToolRuntime</span></code>?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jerarquia-de-clases">7.6.2. Jerarquía de clases</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#atributos-completos-de-toolruntime">7.6.3. Atributos completos de <code class="docutils literal notranslate"><span class="pre">ToolRuntime</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-correcto">7.7. Import correcto</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-1-acceso-al-estado-del-grafo">7.7.1. Ejemplo 1 — Acceso al estado del grafo</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-2-usar-tool-call-id-para-crear-toolmessage-manual">7.7.2. Ejemplo 2 — Usar <code class="docutils literal notranslate"><span class="pre">tool_call_id</span></code> para crear <code class="docutils literal notranslate"><span class="pre">ToolMessage</span></code> manual</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-3-acceso-al-contexto-con-contextt">7.7.3. Ejemplo 3 — Acceso al contexto con <code class="docutils literal notranslate"><span class="pre">ContextT</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-4-memoria-persistente-con-runtime-store">7.7.4. Ejemplo 4 — Memoria persistente con <code class="docutils literal notranslate"><span class="pre">runtime.store</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-5-streaming-con-runtime-stream-writer">7.7.5. Ejemplo 5 — Streaming con <code class="docutils literal notranslate"><span class="pre">runtime.stream_writer</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-6-server-info-solo-langgraph-server">7.7.6. Ejemplo 6 — <code class="docutils literal notranslate"><span class="pre">server_info</span></code> (solo LangGraph Server)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tipo-generico-toolruntime-contextt-statet">7.7.7. Tipo genérico: <code class="docutils literal notranslate"><span class="pre">ToolRuntime[ContextT,</span> <span class="pre">StateT]</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#resumen-visual-del-flujo">7.7.8. Resumen visual del flujo</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diferencias-clave-runtime-vs-toolruntime">7.7.9. Diferencias clave: <code class="docutils literal notranslate"><span class="pre">Runtime</span></code> vs <code class="docutils literal notranslate"><span class="pre">ToolRuntime</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#referencias">7.8. Referencias</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="introduccion-a-las-tools">
+<h1><span class="section-number">7. </span>Introducción a las Tools.<a class="headerlink" href="#introduccion-a-las-tools" title="Link to this heading">#</a></h1>
+<p id="index-0">Las <strong>Tools</strong> (herramientas) extienden las capacidades de los <strong>agentes</strong> de LangChain, permitiéndoles:</p>
+<ul class="simple">
+<li><p>Obtener datos en tiempo real</p></li>
+<li><p>Ejecutar código</p></li>
+<li><p>Consultar bases de datos externas</p></li>
+<li><p>Tomar acciones en el mundo real</p></li>
+</ul>
+<p>Internamente, las tools son <strong>funciones invocables con entradas y salidas bien definidas</strong> que se pasan a un modelo de lenguaje (LLM). El modelo decide <strong>cuándo invocar</strong> una tool y <strong>qué argumentos</strong> proporcionarle, basándose en el contexto de la conversación.</p>
+<p><img alt="" src="../_images/tools.png" /></p>
+<section id="crear-tools">
+<h2><span class="section-number">7.1. </span>Crear Tools<a class="headerlink" href="#crear-tools" title="Link to this heading">#</a></h2>
+<section id="definicion-basica-con-tool">
+<h3><span class="section-number">7.1.1. </span>Definición básica con <code class="docutils literal notranslate"><span class="pre">&#64;tool</span></code><a class="headerlink" href="#definicion-basica-con-tool" title="Link to this heading">#</a></h3>
+<p id="index-1">La forma más sencilla de crear una tool es usando el decorador <code class="docutils literal notranslate"><span class="pre">&#64;tool</span></code>. Por defecto, el <strong>docstring de la función</strong> se convierte en la descripción de la tool.</p>
+<blockquote>
+<div><p>⚠️ Los <strong>type hints son obligatorios</strong>: definen el esquema de entrada de la tool.</p>
+</div></blockquote>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">search_database</span><span class="p">(</span><span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Busca registros en la base de datos de clientes que coincidan con la consulta.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        query: Términos de búsqueda</span>
+<span class="sd">        limit: Número máximo de resultados a devolver</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Se encontraron </span><span class="si">{</span><span class="n">limit</span><span class="si">}</span><span class="s2"> resultados para &#39;</span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+
+<span class="c1"># Probamos la tool directamente</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">search_database</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="s2">&quot;clientes premium&quot;</span><span class="p">,</span> <span class="s2">&quot;limit&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">}))</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="personalizar-el-nombre-de-la-tool">
+<h3><span class="section-number">7.1.2. </span>Personalizar el nombre de la Tool<a class="headerlink" href="#personalizar-el-nombre-de-la-tool" title="Link to this heading">#</a></h3>
+<p>Por defecto, el nombre de la tool se toma del nombre de la función. Puedes sobreescribirlo:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+
+<span class="nd">@tool</span><span class="p">(</span><span class="s2">&quot;web_search&quot;</span><span class="p">)</span>  <span class="c1"># Nombre personalizado</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">search</span><span class="p">(</span><span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Busca información en la web.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Resultados para: </span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">search</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>  <span class="c1"># → web_search</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">search</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="personalizar-la-descripcion">
+<h3><span class="section-number">7.1.3. </span>Personalizar la descripción<a class="headerlink" href="#personalizar-la-descripcion" title="Link to this heading">#</a></h3>
+<p>Puedes proporcionar una descripción explícita en lugar de usar el docstring:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+
+<span class="nd">@tool</span><span class="p">(</span>
+    <span class="s2">&quot;calculator&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Realiza cálculos aritméticos. Úsala para cualquier problema matemático.&quot;</span>
+<span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">calc</span><span class="p">(</span><span class="n">expression</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Evalúa expresiones matemáticas.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">expression</span><span class="p">))</span>
+
+<span class="c1"># El modelo verá la description personalizada, no el docstring</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">calc</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;expression&quot;</span><span class="p">:</span> <span class="s2">&quot;3 * (4 + 2)&quot;</span><span class="p">}))</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="esquema-avanzado-con-pydantic">
+<h3><span class="section-number">7.1.4. </span>Esquema avanzado con Pydantic<a class="headerlink" href="#esquema-avanzado-con-pydantic" title="Link to this heading">#</a></h3>
+<p id="index-2">Para inputs complejos, usa modelos Pydantic para definir el esquema con mayor detalle y validación:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">WeatherInput</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Input para consultas del tiempo.&quot;&quot;&quot;</span>
+    <span class="n">location</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Nombre de la ciudad o coordenadas&quot;</span><span class="p">)</span>
+    <span class="n">units</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;celsius&quot;</span><span class="p">,</span> <span class="s2">&quot;fahrenheit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;celsius&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Unidad de temperatura preferida&quot;</span>
+    <span class="p">)</span>
+    <span class="n">include_forecast</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Incluir previsión de 5 días&quot;</span>
+    <span class="p">)</span>
+
+<span class="nd">@tool</span><span class="p">(</span><span class="n">args_schema</span><span class="o">=</span><span class="n">WeatherInput</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_weather</span><span class="p">(</span><span class="n">location</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">units</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;celsius&quot;</span><span class="p">,</span> <span class="n">include_forecast</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Obtiene el tiempo actual y, opcionalmente, la previsión.&quot;&quot;&quot;</span>
+    <span class="n">temp</span> <span class="o">=</span> <span class="mi">22</span> <span class="k">if</span> <span class="n">units</span> <span class="o">==</span> <span class="s2">&quot;celsius&quot;</span> <span class="k">else</span> <span class="mi">72</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Tiempo en </span><span class="si">{</span><span class="n">location</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">temp</span><span class="si">}</span><span class="s2">°</span><span class="si">{</span><span class="n">units</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">if</span> <span class="n">include_forecast</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Próximos 5 días: Soleado&quot;</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="c1"># Llamada con validación Pydantic</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">get_weather</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span>
+    <span class="s2">&quot;location&quot;</span><span class="p">:</span> <span class="s2">&quot;Madrid&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;units&quot;</span><span class="p">:</span> <span class="s2">&quot;celsius&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;include_forecast&quot;</span><span class="p">:</span> <span class="kc">True</span>
+<span class="p">}))</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="acceso-al-contexto-en-tiempo-de-ejecucion-toolruntime">
+<h2><span class="section-number">7.2. </span>Acceso al Contexto en Tiempo de Ejecución: <code class="docutils literal notranslate"><span class="pre">ToolRuntime</span></code><a class="headerlink" href="#acceso-al-contexto-en-tiempo-de-ejecucion-toolruntime" title="Link to this heading">#</a></h2>
+<p id="index-3">Las tools pueden acceder a información de ejecución mediante el parámetro especial <code class="docutils literal notranslate"><span class="pre">ToolRuntime</span></code>. Este parámetro es <strong>invisible para el LLM</strong> (no aparece en el esquema de la tool).</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Componente</p></th>
+<th class="head"><p>Descripción</p></th>
+<th class="head"><p>Caso de uso</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">runtime.state</span></code></p></td>
+<td><p>Memoria a corto plazo (conversación actual)</p></td>
+<td><p>Historial de mensajes, contadores</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">runtime.context</span></code></p></td>
+<td><p>Configuración inmutable en tiempo de invocación</p></td>
+<td><p>User ID, sesión</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">runtime.store</span></code></p></td>
+<td><p>Memoria a largo plazo (persiste entre sesiones)</p></td>
+<td><p>Preferencias de usuario</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">runtime.stream_writer</span></code></p></td>
+<td><p>Emitir actualizaciones en tiempo real</p></td>
+<td><p>Feedback de operaciones largas</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">runtime.execution_info</span></code></p></td>
+<td><p>Info del hilo y ejecución actual</p></td>
+<td><p>Thread ID, Run ID, reintentos</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">runtime.tool_call_id</span></code></p></td>
+<td><p>ID único de la invocación actual</p></td>
+<td><p>Correlación de logs</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr class="docutils" />
+<section id="acceder-al-state-memoria-a-corto-plazo">
+<h3><span class="section-number">7.2.1. </span>2.1 Acceder al State (memoria a corto plazo)<a class="headerlink" href="#acceder-al-state-memoria-a-corto-plazo" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span><span class="p">,</span> <span class="n">ToolRuntime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_last_user_message</span><span class="p">(</span><span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Obtiene el mensaje más reciente del usuario en la conversación.&quot;&quot;&quot;</span>
+    <span class="n">messages</span> <span class="o">=</span> <span class="n">runtime</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">messages</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">HumanMessage</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">message</span><span class="o">.</span><span class="n">content</span>
+
+    <span class="k">return</span> <span class="s2">&quot;No se encontraron mensajes del usuario&quot;</span>
+
+<span class="c1"># Acceder a campos personalizados del estado</span>
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_user_preference</span><span class="p">(</span><span class="n">pref_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Obtiene el valor de una preferencia de usuario.&quot;&quot;&quot;</span>
+    <span class="n">preferences</span> <span class="o">=</span> <span class="n">runtime</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user_preferences&quot;</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="k">return</span> <span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pref_name</span><span class="p">,</span> <span class="s2">&quot;No establecido&quot;</span><span class="p">)</span>
+
+<span class="c1"># Nota: &#39;runtime&#39; está oculto al modelo → el LLM solo ve &#39;pref_name&#39;</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="actualizar-el-state-con-command">
+<h3><span class="section-number">7.2.2. </span>Actualizar el State con <code class="docutils literal notranslate"><span class="pre">Command</span></code><a class="headerlink" href="#actualizar-el-state-con-command" title="Link to this heading">#</a></h3>
+<p id="index-4">Usa <code class="docutils literal notranslate"><span class="pre">Command</span></code> para que una tool actualice el estado del agente:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">Command</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">set_user_name</span><span class="p">(</span><span class="n">new_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Command</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Establece el nombre del usuario en el estado de la conversación.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Command</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;user_name&quot;</span><span class="p">:</span> <span class="n">new_name</span><span class="p">})</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="context-configuracion-inmutable">
+<h3><span class="section-number">7.2.3. </span>Context (configuración inmutable)<a class="headerlink" href="#context-configuracion-inmutable" title="Link to this heading">#</a></h3>
+<p>El <code class="docutils literal notranslate"><span class="pre">context</span></code> proporciona datos de configuración pasados en tiempo de invocación. Ideal para User IDs, sesiones, etc.:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span><span class="p">,</span> <span class="n">ToolRuntime</span>
+
+<span class="n">USER_DATABASE</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;user123&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Ana García&quot;</span><span class="p">,</span> <span class="s2">&quot;account_type&quot;</span><span class="p">:</span> <span class="s2">&quot;Premium&quot;</span><span class="p">,</span> <span class="s2">&quot;balance&quot;</span><span class="p">:</span> <span class="mi">5000</span><span class="p">},</span>
+    <span class="s2">&quot;user456&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Luis Martínez&quot;</span><span class="p">,</span> <span class="s2">&quot;account_type&quot;</span><span class="p">:</span> <span class="s2">&quot;Estándar&quot;</span><span class="p">,</span> <span class="s2">&quot;balance&quot;</span><span class="p">:</span> <span class="mi">1200</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">UserContext</span><span class="p">:</span>
+    <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_account_info</span><span class="p">(</span><span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Obtiene la información de cuenta del usuario actual.&quot;&quot;&quot;</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="n">runtime</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">user_id</span>  <span class="c1"># Inyectado automáticamente</span>
+
+    <span class="k">if</span> <span class="n">user_id</span> <span class="ow">in</span> <span class="n">USER_DATABASE</span><span class="p">:</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">USER_DATABASE</span><span class="p">[</span><span class="n">user_id</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Titular: </span><span class="si">{</span><span class="n">user</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Tipo: </span><span class="si">{</span><span class="n">user</span><span class="p">[</span><span class="s1">&#39;account_type&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Saldo: €</span><span class="si">{</span><span class="n">user</span><span class="p">[</span><span class="s1">&#39;balance&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="s2">&quot;Usuario no encontrado&quot;</span>
+
+<span class="c1"># Al invocar el agente, se pasa el contexto:</span>
+<span class="c1"># agent.invoke({&quot;messages&quot;: [...]}, context=UserContext(user_id=&quot;user123&quot;))</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="long-term-memory-con-store">
+<h3><span class="section-number">7.2.4. </span>Long-term Memory con Store<a class="headerlink" href="#long-term-memory-con-store" title="Link to this heading">#</a></h3>
+<p>El <code class="docutils literal notranslate"><span class="pre">Store</span></code> proporciona almacenamiento <strong>persistente entre sesiones</strong>. Usa un patrón <code class="docutils literal notranslate"><span class="pre">namespace/key</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.store.memory</span><span class="w"> </span><span class="kn">import</span> <span class="n">InMemoryStore</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span><span class="p">,</span> <span class="n">ToolRuntime</span>
+
+<span class="c1"># Tool para leer de la memoria</span>
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_user_info</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Busca información de un usuario en la memoria persistente.&quot;&quot;&quot;</span>
+    <span class="n">store</span> <span class="o">=</span> <span class="n">runtime</span><span class="o">.</span><span class="n">store</span>
+    <span class="n">user_info</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="s2">&quot;users&quot;</span><span class="p">,),</span> <span class="n">user_id</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">user_info</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="k">if</span> <span class="n">user_info</span> <span class="k">else</span> <span class="s2">&quot;Usuario desconocido&quot;</span>
+
+<span class="c1"># Tool para escribir en la memoria</span>
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">save_user_info</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">user_info</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Guarda información de un usuario en la memoria persistente.&quot;&quot;&quot;</span>
+    <span class="n">store</span> <span class="o">=</span> <span class="n">runtime</span><span class="o">.</span><span class="n">store</span>
+    <span class="n">store</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="s2">&quot;users&quot;</span><span class="p">,),</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">user_info</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s2">&quot;Información guardada correctamente.&quot;</span>
+
+<span class="c1"># El store persiste entre invocaciones del agente:</span>
+<span class="n">store</span> <span class="o">=</span> <span class="n">InMemoryStore</span><span class="p">()</span>  <span class="c1"># En producción: PostgresStore</span>
+<span class="c1"># agent = create_agent(model, tools=[get_user_info, save_user_info], store=store)</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="stream-writer-actualizaciones-en-tiempo-real">
+<h3><span class="section-number">7.2.5. </span>Stream Writer (actualizaciones en tiempo real)<a class="headerlink" href="#stream-writer-actualizaciones-en-tiempo-real" title="Link to this heading">#</a></h3>
+<p>Emite actualizaciones progresivas durante la ejecución de una tool larga:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span><span class="p">,</span> <span class="n">ToolRuntime</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">analyze_document</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Analiza un documento extenso.&quot;&quot;&quot;</span>
+    <span class="n">writer</span> <span class="o">=</span> <span class="n">runtime</span><span class="o">.</span><span class="n">stream_writer</span>
+
+    <span class="n">writer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;📄 Cargando documento: </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="c1"># ... procesamiento ...</span>
+    <span class="n">writer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🔍 Analizando contenido...&quot;</span><span class="p">)</span>
+    <span class="c1"># ... más procesamiento ...</span>
+    <span class="n">writer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Análisis completado&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Análisis de &#39;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&#39; finalizado.&quot;</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p>⚠️ <code class="docutils literal notranslate"><span class="pre">runtime.stream_writer</span></code> solo funciona dentro de un contexto de ejecución LangGraph.</p>
+</div></blockquote>
+</section>
+</section>
+<hr class="docutils" />
+<section id="toolnode-ejecucion-de-tools-en-grafos">
+<h2><span class="section-number">7.3. </span>ToolNode: Ejecución de Tools en Grafos<a class="headerlink" href="#toolnode-ejecucion-de-tools-en-grafos" title="Link to this heading">#</a></h2>
+<p id="index-5"><code class="docutils literal notranslate"><span class="pre">ToolNode</span></code> es un nodo precompilado de LangGraph que gestiona automáticamente la <strong>ejecución paralela</strong>, el <strong>manejo de errores</strong> y la <strong>inyección de estado</strong>.</p>
+<section id="uso-basico">
+<h3><span class="section-number">7.3.1. </span>Uso básico<a class="headerlink" href="#uso-basico" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.prebuilt</span><span class="w"> </span><span class="kn">import</span> <span class="n">ToolNode</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">StateGraph</span><span class="p">,</span> <span class="n">MessagesState</span><span class="p">,</span> <span class="n">START</span><span class="p">,</span> <span class="n">END</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">search</span><span class="p">(</span><span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Busca información.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Resultados para: </span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">calculator</span><span class="p">(</span><span class="n">expression</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Evalúa una expresión matemática.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">expression</span><span class="p">))</span>
+
+<span class="c1"># Crear el ToolNode con las tools</span>
+<span class="n">tool_node</span> <span class="o">=</span> <span class="n">ToolNode</span><span class="p">([</span><span class="n">search</span><span class="p">,</span> <span class="n">calculator</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Tools disponibles:&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">[</span><span class="n">search</span><span class="p">,</span> <span class="n">calculator</span><span class="p">]])</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="tipos-de-valores-de-retorno">
+<h3><span class="section-number">7.3.2. </span>Tipos de valores de retorno<a class="headerlink" href="#tipos-de-valores-de-retorno" title="Link to this heading">#</a></h3>
+<section id="retornar-string-texto-plano">
+<h4><span class="section-number">7.3.2.1. </span>✅ Retornar string (texto plano)<a class="headerlink" href="#retornar-string-texto-plano" title="Link to this heading">#</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_weather</span><span class="p">(</span><span class="n">city</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Obtiene el tiempo para una ciudad.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Actualmente está soleado en </span><span class="si">{</span><span class="n">city</span><span class="si">}</span><span class="s2">.&quot;</span>
+
+<span class="c1"># El resultado se convierte en un ToolMessage que el modelo puede leer</span>
+</pre></div>
+</div>
+</section>
+<section id="retornar-un-objeto-datos-estructurados">
+<h4><span class="section-number">7.3.2.2. </span>✅ Retornar un objeto (datos estructurados)<a class="headerlink" href="#retornar-un-objeto-datos-estructurados" title="Link to this heading">#</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_weather_data</span><span class="p">(</span><span class="n">city</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Obtiene datos del tiempo estructurados para una ciudad.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;city&quot;</span><span class="p">:</span> <span class="n">city</span><span class="p">,</span>
+        <span class="s2">&quot;temperature_c&quot;</span><span class="p">:</span> <span class="mi">22</span><span class="p">,</span>
+        <span class="s2">&quot;conditions&quot;</span><span class="p">:</span> <span class="s2">&quot;soleado&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+<span class="c1"># El modelo puede razonar sobre campos específicos del dict</span>
+</pre></div>
+</div>
+</section>
+<section id="retornar-command-actualizar-estado">
+<h4><span class="section-number">7.3.2.3. </span>✅ Retornar <code class="docutils literal notranslate"><span class="pre">Command</span></code> (actualizar estado)<a class="headerlink" href="#retornar-command-actualizar-estado" title="Link to this heading">#</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">ToolMessage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">ToolRuntime</span><span class="p">,</span> <span class="n">tool</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">Command</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">set_language</span><span class="p">(</span><span class="n">language</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Command</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Establece el idioma preferido de respuesta.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Command</span><span class="p">(</span>
+        <span class="n">update</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;preferred_language&quot;</span><span class="p">:</span> <span class="n">language</span><span class="p">,</span>
+            <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="n">ToolMessage</span><span class="p">(</span>
+                    <span class="n">content</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Idioma establecido a: </span><span class="si">{</span><span class="n">language</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">,</span>
+                    <span class="n">tool_call_id</span><span class="o">=</span><span class="n">runtime</span><span class="o">.</span><span class="n">tool_call_id</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">],</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="manejo-de-errores-en-toolnode">
+<h3><span class="section-number">7.3.3. </span>Manejo de errores en ToolNode<a class="headerlink" href="#manejo-de-errores-en-toolnode" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.prebuilt</span><span class="w"> </span><span class="kn">import</span> <span class="n">ToolNode</span>
+
+<span class="n">tools</span> <span class="o">=</span> <span class="p">[</span><span class="n">search</span><span class="p">,</span> <span class="n">calculator</span><span class="p">]</span>
+
+<span class="c1"># Comportamiento por defecto: captura errores de invocación</span>
+<span class="n">tool_node_default</span> <span class="o">=</span> <span class="n">ToolNode</span><span class="p">(</span><span class="n">tools</span><span class="p">)</span>
+
+<span class="c1"># Captura todos los errores y envía mensaje al LLM</span>
+<span class="n">tool_node_catch_all</span> <span class="o">=</span> <span class="n">ToolNode</span><span class="p">(</span><span class="n">tools</span><span class="p">,</span> <span class="n">handle_tool_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Mensaje de error personalizado</span>
+<span class="n">tool_node_custom_msg</span> <span class="o">=</span> <span class="n">ToolNode</span><span class="p">(</span>
+    <span class="n">tools</span><span class="p">,</span>
+    <span class="n">handle_tool_errors</span><span class="o">=</span><span class="s2">&quot;Algo salió mal, por favor inténtalo de nuevo.&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># Handler de error personalizado</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">handle_error</span><span class="p">(</span><span class="n">e</span><span class="p">:</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Input inválido: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="n">tool_node_custom_handler</span> <span class="o">=</span> <span class="n">ToolNode</span><span class="p">(</span><span class="n">tools</span><span class="p">,</span> <span class="n">handle_tool_errors</span><span class="o">=</span><span class="n">handle_error</span><span class="p">)</span>
+
+<span class="c1"># Solo captura tipos de excepción específicos</span>
+<span class="n">tool_node_specific</span> <span class="o">=</span> <span class="n">ToolNode</span><span class="p">(</span><span class="n">tools</span><span class="p">,</span> <span class="n">handle_tool_errors</span><span class="o">=</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="enrutamiento-condicional-con-tools-condition">
+<h3><span class="section-number">7.3.4. </span>Enrutamiento condicional con <code class="docutils literal notranslate"><span class="pre">tools_condition</span></code><a class="headerlink" href="#enrutamiento-condicional-con-tools-condition" title="Link to this heading">#</a></h3>
+<p id="index-6"><code class="docutils literal notranslate"><span class="pre">tools_condition</span></code> dirige el flujo del grafo: si el LLM hizo tool calls → va al nodo “tools”; si no → termina.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.prebuilt</span><span class="w"> </span><span class="kn">import</span> <span class="n">ToolNode</span><span class="p">,</span> <span class="n">tools_condition</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">StateGraph</span><span class="p">,</span> <span class="n">MessagesState</span><span class="p">,</span> <span class="n">START</span><span class="p">,</span> <span class="n">END</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">)</span>
+<span class="n">tools</span> <span class="o">=</span> <span class="p">[</span><span class="n">search</span><span class="p">,</span> <span class="n">calculator</span><span class="p">]</span>
+<span class="n">model_with_tools</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">bind_tools</span><span class="p">(</span><span class="n">tools</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">call_llm</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">MessagesState</span><span class="p">):</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">model_with_tools</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">response</span><span class="p">]}</span>
+
+<span class="c1"># Construcción del grafo</span>
+<span class="n">builder</span> <span class="o">=</span> <span class="n">StateGraph</span><span class="p">(</span><span class="n">MessagesState</span><span class="p">)</span>
+<span class="n">builder</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;llm&quot;</span><span class="p">,</span> <span class="n">call_llm</span><span class="p">)</span>
+<span class="n">builder</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;tools&quot;</span><span class="p">,</span> <span class="n">ToolNode</span><span class="p">(</span><span class="n">tools</span><span class="p">))</span>
+
+<span class="n">builder</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">START</span><span class="p">,</span> <span class="s2">&quot;llm&quot;</span><span class="p">)</span>
+<span class="n">builder</span><span class="o">.</span><span class="n">add_conditional_edges</span><span class="p">(</span><span class="s2">&quot;llm&quot;</span><span class="p">,</span> <span class="n">tools_condition</span><span class="p">)</span>  <span class="c1"># → &quot;tools&quot; o END</span>
+<span class="n">builder</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s2">&quot;tools&quot;</span><span class="p">,</span> <span class="s2">&quot;llm&quot;</span><span class="p">)</span>
+
+<span class="n">graph</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+
+<span class="c1"># Ejemplo de ejecución</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;¿Cuánto es 15 * 8?&quot;</span><span class="p">}]})</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="tools-precompiladas-de-langchain">
+<h2><span class="section-number">7.4. </span>Tools Precompiladas de LangChain<a class="headerlink" href="#tools-precompiladas-de-langchain" title="Link to this heading">#</a></h2>
+<p>LangChain incluye una amplia colección de tools listas para usar. Ejemplos:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Instalación (ejecutar en terminal):</span>
+<span class="c1"># pip install langchain-community</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_community.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">DuckDuckGoSearchRun</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_community.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">WikipediaQueryRun</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_community.utilities</span><span class="w"> </span><span class="kn">import</span> <span class="n">WikipediaAPIWrapper</span>
+
+<span class="c1"># Tool de búsqueda web</span>
+<span class="n">search_tool</span> <span class="o">=</span> <span class="n">DuckDuckGoSearchRun</span><span class="p">()</span>
+
+<span class="c1"># Tool de Wikipedia</span>
+<span class="n">wiki_tool</span> <span class="o">=</span> <span class="n">WikipediaQueryRun</span><span class="p">(</span><span class="n">api_wrapper</span><span class="o">=</span><span class="n">WikipediaAPIWrapper</span><span class="p">())</span>
+
+<span class="c1"># Ver descripción que el LLM recibirá</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Search Tool:&quot;</span><span class="p">,</span> <span class="n">search_tool</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wikipedia Tool:&quot;</span><span class="p">,</span> <span class="n">wiki_tool</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+<span class="c1"># Úsalas directamente con un agente:</span>
+<span class="c1"># agent = create_agent(model, tools=[search_tool, wiki_tool])</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="resumen-arquitectura-de-una-tool">
+<h2><span class="section-number">7.5. </span>Resumen: Arquitectura de una Tool<a class="headerlink" href="#resumen-arquitectura-de-una-tool" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">HTML</span>
+
+<span class="n">diagrama</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">&lt;pre style=&quot;font-family: monospace; font-size: 13px; line-height: 1.5; background: #1e1e1e; color: #d4d4d4; padding: 20px; border-radius: 8px;&quot;&gt;</span>
+<span class="s2">┌─────────────────────────────────────────────────────┐</span>
+<span class="s2">│                   AGENTE (LLM)                      │</span>
+<span class="s2">│                                                     │</span>
+<span class="s2">│  1. Recibe la consulta del usuario                  │</span>
+<span class="s2">│  2. Decide qué tool invocar (y con qué args)        │</span>
+<span class="s2">│  3. Recibe el resultado de la tool                  │</span>
+<span class="s2">│  4. Genera la respuesta final                       │</span>
+<span class="s2">└────────────────────┬────────────────────────────────┘</span>
+<span class="s2">                     │ invoca</span>
+<span class="s2">                     ▼</span>
+<span class="s2">┌─────────────────────────────────────────────────────┐</span>
+<span class="s2">│                  TOOL (@tool)                       │</span>
+<span class="s2">│                                                     │</span>
+<span class="s2">│  - Nombre (tool name)                               │</span>
+<span class="s2">│  - Descripción (para el LLM)                        │</span>
+<span class="s2">│  - Esquema de inputs (type hints / Pydantic)        │</span>
+<span class="s2">│  - Lógica de ejecución (función Python)             │</span>
+<span class="s2">│  - Acceso opcional a ToolRuntime                    │</span>
+<span class="s2">│    ├── state (memoria conversación)                 │</span>
+<span class="s2">│    ├── context (config inmutable)                   │</span>
+<span class="s2">│    ├── store (memoria persistente)                  │</span>
+<span class="s2">│    └── stream_writer (actualizaciones)              │</span>
+<span class="s2">└─────────────────────────────────────────────────────┘</span>
+<span class="s2">&lt;/pre&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">HTML</span><span class="p">(</span><span class="n">diagrama</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="toolruntime-en-langgraph-guia-detallada">
+<h2><span class="section-number">7.6. </span><code class="docutils literal notranslate"><span class="pre">ToolRuntime</span></code> en LangGraph — Guía Detallada<a class="headerlink" href="#toolruntime-en-langgraph-guia-detallada" title="Link to this heading">#</a></h2>
+<blockquote id="index-7">
+<div><p><strong>Fuente oficial:</strong> <a class="reference external" href="https://reference.langchain.com/javascript/langchain/index/ToolRuntime">LangChain Reference – ToolRuntime (JS)</a> | <a class="reference external" href="https://reference.langchain.com/python/langgraph/runtime/Runtime">LangChain Reference – Runtime (Python)</a> | <a class="reference external" href="https://reference.langchain.com/python/langgraph.prebuilt/tool_node">LangGraph Prebuilt – tool_node</a></p>
+</div></blockquote>
+<hr class="docutils" />
+<section id="que-es-toolruntime">
+<h3><span class="section-number">7.6.1. </span>¿Qué es <code class="docutils literal notranslate"><span class="pre">ToolRuntime</span></code>?<a class="headerlink" href="#que-es-toolruntime" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">ToolRuntime</span></code> es una clase de LangGraph (en <code class="docutils literal notranslate"><span class="pre">langgraph.prebuilt</span></code>) que agrupa información de ejecución y se <strong>inyecta automáticamente</strong> en las herramientas (tools) cuando estas se ejecutan dentro de un grafo.</p>
+<p>Es una <strong>subclase de <code class="docutils literal notranslate"><span class="pre">Runtime</span></code></strong> (de <code class="docutils literal notranslate"><span class="pre">langgraph.runtime</span></code>), pero diseñada específicamente para tools. Comparte los atributos generales del runtime (<code class="docutils literal notranslate"><span class="pre">context</span></code>, <code class="docutils literal notranslate"><span class="pre">store</span></code>, <code class="docutils literal notranslate"><span class="pre">stream_writer</span></code>) y añade atributos propios de la ejecución de herramientas: <code class="docutils literal notranslate"><span class="pre">config</span></code>, <code class="docutils literal notranslate"><span class="pre">state</span></code> y <code class="docutils literal notranslate"><span class="pre">tool_call_id</span></code>.</p>
+<p>El LLM <strong>nunca ve</strong> el parámetro <code class="docutils literal notranslate"><span class="pre">runtime</span></code> — está completamente oculto del esquema de la herramienta.</p>
+</section>
+<hr class="docutils" />
+<section id="jerarquia-de-clases">
+<h3><span class="section-number">7.6.2. </span>Jerarquía de clases<a class="headerlink" href="#jerarquia-de-clases" title="Link to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Runtime (langgraph.runtime)
+│   ├── context
+│   ├── store
+│   ├── stream_writer
+│   └── previous
+│
+└── ToolRuntime (langgraph.prebuilt)   ← subclase
+        ├── Todo lo de Runtime, más:
+        ├── state          ← estado actual del grafo
+        ├── config         ← RunnableConfig de la ejecución
+        ├── tool_call_id   ← ID único de la llamada
+        └── server_info    ← metadatos del servidor (LangGraph Server)
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="atributos-completos-de-toolruntime">
+<h3><span class="section-number">7.6.3. </span>Atributos completos de <code class="docutils literal notranslate"><span class="pre">ToolRuntime</span></code><a class="headerlink" href="#atributos-completos-de-toolruntime" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Atributo</p></th>
+<th class="head"><p>Tipo</p></th>
+<th class="head"><p>Descripción</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">runtime.state</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">dict</span></code> / <code class="docutils literal notranslate"><span class="pre">TypedDict</span></code></p></td>
+<td><p>Estado actual del grafo en el momento de la ejecución</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">runtime.context</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ContextT</span></code> (dataclass)</p></td>
+<td><p>Datos estáticos pasados al invocar el agente (user_id, config, etc.)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">runtime.config</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">RunnableConfig</span></code></p></td>
+<td><p>Configuración de ejecución de LangChain</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">runtime.store</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">BaseStore</span> <span class="pre">|</span> <span class="pre">None</span></code></p></td>
+<td><p>Acceso a memoria persistente entre sesiones</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">runtime.stream_writer</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">StreamWriter</span></code></p></td>
+<td><p>Función para emitir actualizaciones por streaming custom</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">runtime.tool_call_id</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p>ID único de esta llamada a la herramienta</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">runtime.server_info</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ServerInfo</span> <span class="pre">|</span> <span class="pre">None</span></code></p></td>
+<td><p>Metadatos del servidor (assistant_id, graph_id, user). Solo disponible en LangGraph Server</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="import-correcto">
+<h2><span class="section-number">7.7. </span>Import correcto<a class="headerlink" href="#import-correcto" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Python — desde langgraph.prebuilt (recomendado)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.prebuilt</span><span class="w"> </span><span class="kn">import</span> <span class="n">ToolRuntime</span>
+
+<span class="c1"># También disponible via langchain.tools (alto nivel)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">ToolRuntime</span><span class="p">,</span> <span class="n">tool</span>
+</pre></div>
+</div>
+<div class="highlight-typescript notranslate"><div class="highlight"><pre><span></span><span class="c1">// JavaScript/TypeScript</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">tool</span><span class="p">,</span><span class="w"> </span><span class="kr">type</span><span class="w"> </span><span class="nx">ToolRuntime</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@langchain/core/tools&quot;</span><span class="p">;</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+<section id="ejemplo-1-acceso-al-estado-del-grafo">
+<h3><span class="section-number">7.7.1. </span>Ejemplo 1 — Acceso al estado del grafo<a class="headerlink" href="#ejemplo-1-acceso-al-estado-del-grafo" title="Link to this heading">#</a></h3>
+<p>El caso de uso más importante: leer el estado del grafo desde dentro de una tool.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypedDict</span><span class="p">,</span> <span class="n">Annotated</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">AIMessage</span><span class="p">,</span> <span class="n">ToolMessage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.prebuilt</span><span class="w"> </span><span class="kn">import</span> <span class="n">ToolRuntime</span><span class="p">,</span> <span class="n">ToolNode</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">StateGraph</span><span class="p">,</span> <span class="n">MessagesState</span><span class="p">,</span> <span class="n">END</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">operator</span><span class="w"> </span><span class="kn">import</span> <span class="n">add</span>
+
+<span class="c1"># Estado del grafo con campo custom</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomState</span><span class="p">(</span><span class="n">MessagesState</span><span class="p">):</span>
+    <span class="n">user_name</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_user_name</span><span class="p">(</span><span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">CustomState</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Obtiene el nombre del usuario desde el estado del grafo.&quot;&quot;&quot;</span>
+    <span class="c1"># runtime.state es el estado actual del grafo</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">runtime</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user_name&quot;</span><span class="p">,</span> <span class="s2">&quot;desconocido&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;El nombre en el estado es: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="c1"># Construir grafo</span>
+<span class="n">tool_node</span> <span class="o">=</span> <span class="n">ToolNode</span><span class="p">([</span><span class="n">get_user_name</span><span class="p">])</span>
+
+<span class="n">builder</span> <span class="o">=</span> <span class="n">StateGraph</span><span class="p">(</span><span class="n">CustomState</span><span class="p">)</span>
+<span class="n">builder</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;tools&quot;</span><span class="p">,</span> <span class="n">tool_node</span><span class="p">)</span>
+<span class="n">builder</span><span class="o">.</span><span class="n">set_entry_point</span><span class="p">(</span><span class="s2">&quot;tools&quot;</span><span class="p">)</span>
+<span class="n">builder</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s2">&quot;tools&quot;</span><span class="p">,</span> <span class="n">END</span><span class="p">)</span>
+
+<span class="n">graph</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+
+<span class="c1"># Invocar con un AIMessage que llame a la tool</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span>
+    <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="n">AIMessage</span><span class="p">(</span>
+            <span class="n">content</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="n">tool_calls</span><span class="o">=</span><span class="p">[{</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;get_user_name&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="p">{},</span>
+                <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;call_001&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;tool_call&quot;</span>
+            <span class="p">}]</span>
+        <span class="p">)</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;user_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Carlos&quot;</span>
+<span class="p">})</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+<span class="c1"># → El nombre en el estado es: Carlos</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="ejemplo-2-usar-tool-call-id-para-crear-toolmessage-manual">
+<h3><span class="section-number">7.7.2. </span>Ejemplo 2 — Usar <code class="docutils literal notranslate"><span class="pre">tool_call_id</span></code> para crear <code class="docutils literal notranslate"><span class="pre">ToolMessage</span></code> manual<a class="headerlink" href="#ejemplo-2-usar-tool-call-id-para-crear-toolmessage-manual" title="Link to this heading">#</a></h3>
+<p>Cuando una tool devuelve un <code class="docutils literal notranslate"><span class="pre">Command</span></code> para actualizar el estado, necesitas <code class="docutils literal notranslate"><span class="pre">tool_call_id</span></code> para construir el <code class="docutils literal notranslate"><span class="pre">ToolMessage</span></code> de respuesta.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypedDict</span><span class="p">,</span> <span class="n">Annotated</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">ToolMessage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.prebuilt</span><span class="w"> </span><span class="kn">import</span> <span class="n">ToolRuntime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">MessagesState</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">Command</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomState</span><span class="p">(</span><span class="n">MessagesState</span><span class="p">):</span>
+    <span class="n">user_name</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">set_user_name</span><span class="p">(</span><span class="n">new_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">CustomState</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Command</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Actualiza el nombre del usuario en el estado del grafo.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Command</span><span class="p">(</span>
+        <span class="n">update</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;user_name&quot;</span><span class="p">:</span> <span class="n">new_name</span><span class="p">,</span>
+            <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="n">ToolMessage</span><span class="p">(</span>
+                    <span class="n">content</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Nombre actualizado a: </span><span class="si">{</span><span class="n">new_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">tool_call_id</span><span class="o">=</span><span class="n">runtime</span><span class="o">.</span><span class="n">tool_call_id</span><span class="p">,</span>  <span class="c1"># ← Imprescindible</span>
+                <span class="p">)</span>
+            <span class="p">],</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="ejemplo-3-acceso-al-contexto-con-contextt">
+<h3><span class="section-number">7.7.3. </span>Ejemplo 3 — Acceso al contexto con <code class="docutils literal notranslate"><span class="pre">ContextT</span></code><a class="headerlink" href="#ejemplo-3-acceso-al-contexto-con-contextt" title="Link to this heading">#</a></h3>
+<p>El contexto es información estática pasada en el momento de invocar el agente (ideal para <code class="docutils literal notranslate"><span class="pre">user_id</span></code>, configuraciones, conexiones a BD, etc.).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.prebuilt</span><span class="w"> </span><span class="kn">import</span> <span class="n">ToolRuntime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_agent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+
+<span class="c1"># Definir el esquema de contexto</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Context</span><span class="p">:</span>
+    <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">tenant</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">fetch_user_preferences</span><span class="p">(</span><span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">[</span><span class="n">Context</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Obtiene las preferencias del usuario usando el contexto de ejecución.&quot;&quot;&quot;</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="n">runtime</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">user_id</span>      <span class="c1"># ← Del contexto inyectado</span>
+    <span class="n">tenant</span> <span class="o">=</span> <span class="n">runtime</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">tenant</span>
+
+    <span class="c1"># El LLM nunca ve &#39;runtime&#39; — está completamente oculto</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Preferencias para user=</span><span class="si">{</span><span class="n">user_id</span><span class="si">}</span><span class="s2"> en tenant=</span><span class="si">{</span><span class="n">tenant</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">)</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">fetch_user_preferences</span><span class="p">],</span>
+    <span class="n">context_schema</span><span class="o">=</span><span class="n">Context</span>      <span class="c1"># ← Se registra el esquema</span>
+<span class="p">)</span>
+
+<span class="c1"># Al invocar, se pasa el contexto</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
+    <span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Dame mis preferencias&quot;</span><span class="p">}]},</span>
+    <span class="n">context</span><span class="o">=</span><span class="n">Context</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="s2">&quot;u-42&quot;</span><span class="p">,</span> <span class="n">tenant</span><span class="o">=</span><span class="s2">&quot;empresa-abc&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="ejemplo-4-memoria-persistente-con-runtime-store">
+<h3><span class="section-number">7.7.4. </span>Ejemplo 4 — Memoria persistente con <code class="docutils literal notranslate"><span class="pre">runtime.store</span></code><a class="headerlink" href="#ejemplo-4-memoria-persistente-con-runtime-store" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">runtime.store</span></code> proporciona acceso a un <code class="docutils literal notranslate"><span class="pre">BaseStore</span></code> para guardar y leer datos entre sesiones.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.prebuilt</span><span class="w"> </span><span class="kn">import</span> <span class="n">ToolRuntime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.store.memory</span><span class="w"> </span><span class="kn">import</span> <span class="n">InMemoryStore</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_agent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">save_user_info</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">user_info</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Guarda información del usuario en la memoria persistente.&quot;&quot;&quot;</span>
+    <span class="n">runtime</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="s2">&quot;users&quot;</span><span class="p">,),</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">user_info</span><span class="p">)</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Información de </span><span class="si">{</span><span class="n">user_id</span><span class="si">}</span><span class="s2"> guardada correctamente.&quot;</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_user_info</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Recupera información del usuario desde la memoria persistente.&quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">runtime</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="s2">&quot;users&quot;</span><span class="p">,),</span> <span class="n">user_id</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s2">&quot;Usuario no encontrado.&quot;</span>
+
+<span class="n">store</span> <span class="o">=</span> <span class="n">InMemoryStore</span><span class="p">()</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">)</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">save_user_info</span><span class="p">,</span> <span class="n">get_user_info</span><span class="p">],</span>
+    <span class="n">store</span><span class="o">=</span><span class="n">store</span>     <span class="c1"># ← El store se pasa al agente</span>
+<span class="p">)</span>
+
+<span class="c1"># Primera sesión: guardar</span>
+<span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span>
+    <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Guarda: user_id=abc123, nombre=Ana, edad=30&quot;</span><span class="p">}]</span>
+<span class="p">})</span>
+
+<span class="c1"># Segunda sesión: recuperar</span>
+<span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span>
+    <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;¿Qué información hay de abc123?&quot;</span><span class="p">}]</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="ejemplo-5-streaming-con-runtime-stream-writer">
+<h3><span class="section-number">7.7.5. </span>Ejemplo 5 — Streaming con <code class="docutils literal notranslate"><span class="pre">runtime.stream_writer</span></code><a class="headerlink" href="#ejemplo-5-streaming-con-runtime-stream-writer" title="Link to this heading">#</a></h3>
+<p>Útil para enviar actualizaciones parciales mientras la tool trabaja.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.prebuilt</span><span class="w"> </span><span class="kn">import</span> <span class="n">ToolRuntime</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">long_analysis</span><span class="p">(</span><span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Realiza un análisis largo emitiendo progreso en tiempo real.&quot;&quot;&quot;</span>
+    <span class="n">writer</span> <span class="o">=</span> <span class="n">runtime</span><span class="o">.</span><span class="n">stream_writer</span>
+
+    <span class="n">writer</span><span class="p">({</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;Iniciando análisis...&quot;</span><span class="p">,</span> <span class="s2">&quot;progress&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">writer</span><span class="p">({</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;Procesando datos...&quot;</span><span class="p">,</span> <span class="s2">&quot;progress&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">})</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">writer</span><span class="p">({</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;Finalizando...&quot;</span><span class="p">,</span> <span class="s2">&quot;progress&quot;</span><span class="p">:</span> <span class="mi">90</span><span class="p">})</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Análisis completado para: </span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+<p>Para capturar los eventos custom al invocar:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">agent</span><span class="o">.</span><span class="n">stream</span><span class="p">(</span>
+    <span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Analiza las ventas&quot;</span><span class="p">}]},</span>
+    <span class="n">stream_mode</span><span class="o">=</span><span class="s2">&quot;custom&quot;</span>
+<span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+<span class="c1"># → {&quot;status&quot;: &quot;Iniciando análisis...&quot;, &quot;progress&quot;: 0}</span>
+<span class="c1"># → {&quot;status&quot;: &quot;Procesando datos...&quot;, &quot;progress&quot;: 50}</span>
+<span class="c1"># → {&quot;status&quot;: &quot;Finalizando...&quot;, &quot;progress&quot;: 90}</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="ejemplo-6-server-info-solo-langgraph-server">
+<h3><span class="section-number">7.7.6. </span>Ejemplo 6 — <code class="docutils literal notranslate"><span class="pre">server_info</span></code> (solo LangGraph Server)<a class="headerlink" href="#ejemplo-6-server-info-solo-langgraph-server" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.prebuilt</span><span class="w"> </span><span class="kn">import</span> <span class="n">ToolRuntime</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_server_context</span><span class="p">(</span><span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Accede a metadatos del servidor cuando se ejecuta en LangGraph Server.&quot;&quot;&quot;</span>
+    <span class="n">server</span> <span class="o">=</span> <span class="n">runtime</span><span class="o">.</span><span class="n">server_info</span>
+
+    <span class="k">if</span> <span class="n">server</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;Ejecutando en modo local (sin LangGraph Server).&quot;</span>
+
+    <span class="n">info</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Assistant ID: </span><span class="si">{</span><span class="n">server</span><span class="o">.</span><span class="n">assistant_id</span><span class="si">}</span><span class="s2">, Graph ID: </span><span class="si">{</span><span class="n">server</span><span class="o">.</span><span class="n">graph_id</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="k">if</span> <span class="n">server</span><span class="o">.</span><span class="n">user</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">info</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;, Usuario autenticado: </span><span class="si">{</span><span class="n">server</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">identity</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="k">return</span> <span class="n">info</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p>⚠️ <code class="docutils literal notranslate"><span class="pre">runtime.server_info</span></code> es <code class="docutils literal notranslate"><span class="pre">None</span></code> en desarrollo local. Solo está disponible cuando el grafo corre en LangGraph Server (requiere <code class="docutils literal notranslate"><span class="pre">langgraph</span> <span class="pre">&gt;=</span> <span class="pre">1.1.5</span></code>).</p>
+</div></blockquote>
+</section>
+<hr class="docutils" />
+<section id="tipo-generico-toolruntime-contextt-statet">
+<h3><span class="section-number">7.7.7. </span>Tipo genérico: <code class="docutils literal notranslate"><span class="pre">ToolRuntime[ContextT,</span> <span class="pre">StateT]</span></code><a class="headerlink" href="#tipo-generico-toolruntime-contextt-statet" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">ToolRuntime</span></code> acepta dos parámetros de tipo genérico opcionales para obtener tipado estático completo:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Sin tipado (funciona igualmente)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">my_tool</span><span class="p">(</span><span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="c1"># Con contexto tipado</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">my_tool</span><span class="p">(</span><span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">[</span><span class="n">MyContext</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="c1"># Con contexto Y estado tipados</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">my_tool</span><span class="p">(</span><span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">[</span><span class="n">MyContext</span><span class="p">,</span> <span class="n">MyState</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="c1"># Solo estado (sin contexto)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">my_tool</span><span class="p">(</span><span class="n">runtime</span><span class="p">:</span> <span class="n">ToolRuntime</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">MyState</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span> <span class="o">...</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="resumen-visual-del-flujo">
+<h3><span class="section-number">7.7.8. </span>Resumen visual del flujo<a class="headerlink" href="#resumen-visual-del-flujo" title="Link to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>agent.invoke({&quot;messages&quot;: [...]}, context=Context(...))
+        │
+        ▼
+   LangGraph Runtime arranca el grafo
+        │
+        ▼
+   El LLM decide llamar a una tool
+        │
+        ▼
+   ToolNode detecta el parámetro `runtime: ToolRuntime`
+        │
+        ▼
+   Inyecta automáticamente ToolRuntime con:
+   ┌─────────────────────────────────────────┐
+   │  state        → estado actual del grafo │
+   │  context      → datos del invocador     │
+   │  config       → RunnableConfig          │
+   │  store        → memoria persistente     │
+   │  stream_writer→ streaming custom        │
+   │  tool_call_id → ID único de la llamada  │
+   └─────────────────────────────────────────┘
+        │
+        ▼
+   Tu función recibe `runtime` listo para usar
+   (el LLM nunca ve este parámetro)
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="diferencias-clave-runtime-vs-toolruntime">
+<h3><span class="section-number">7.7.9. </span>Diferencias clave: <code class="docutils literal notranslate"><span class="pre">Runtime</span></code> vs <code class="docutils literal notranslate"><span class="pre">ToolRuntime</span></code><a class="headerlink" href="#diferencias-clave-runtime-vs-toolruntime" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Característica</p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">Runtime</span></code> (nodos/middleware)</p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">ToolRuntime</span></code> (tools)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Import</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">langgraph.runtime</span> <span class="pre">import</span> <span class="pre">Runtime</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">langgraph.prebuilt</span> <span class="pre">import</span> <span class="pre">ToolRuntime</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Uso</p></td>
+<td><p>Nodos del grafo y middleware</p></td>
+<td><p>Solo tools (<code class="docutils literal notranslate"><span class="pre">&#64;tool</span></code>)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">state</span></code></p></td>
+<td><p>❌ No disponible</p></td>
+<td><p>✅ Disponible</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">config</span></code></p></td>
+<td><p>❌ (usar <code class="docutils literal notranslate"><span class="pre">config:</span> <span class="pre">RunnableConfig</span></code>)</p></td>
+<td><p>✅ Disponible</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tool_call_id</span></code></p></td>
+<td><p>❌ No disponible</p></td>
+<td><p>✅ Disponible</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">context</span></code></p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">store</span></code></p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">stream_writer</span></code></p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="referencias">
+<h2><span class="section-number">7.8. </span>Referencias<a class="headerlink" href="#referencias" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.langchain.com/oss/python/langchain/tools">Documentación oficial – Tools</a></p></li>
+<li><p><a class="reference external" href="https://docs.langchain.com/oss/python/langchain/agents">Documentación oficial – Agents</a></p></li>
+<li><p><a class="reference external" href="https://docs.langchain.com/oss/python/integrations/tools">Catálogo de Tools precompiladas</a></p></li>
+<li><p><a class="reference external" href="https://reference.langchain.com/python/langgraph/agents/#langgraph.prebuilt.tool_node.ToolNode">LangGraph ToolNode API</a></p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./jupyters"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="agentes.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">6. </span>Introdución a los Agentes en LangChain</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="langchain_async_concurrencia.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">8. </span>LangChain en producción: concurrencia y operaciones asíncronas</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#crear-tools">7.1. Crear Tools</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#definicion-basica-con-tool">7.1.1. Definición básica con <code class="docutils literal notranslate"><span class="pre">@tool</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#personalizar-el-nombre-de-la-tool">7.1.2. Personalizar el nombre de la Tool</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#personalizar-la-descripcion">7.1.3. Personalizar la descripción</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#esquema-avanzado-con-pydantic">7.1.4. Esquema avanzado con Pydantic</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#acceso-al-contexto-en-tiempo-de-ejecucion-toolruntime">7.2. Acceso al Contexto en Tiempo de Ejecución: <code class="docutils literal notranslate"><span class="pre">ToolRuntime</span></code></a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#acceder-al-state-memoria-a-corto-plazo">7.2.1. 2.1 Acceder al State (memoria a corto plazo)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#actualizar-el-state-con-command">7.2.2. Actualizar el State con <code class="docutils literal notranslate"><span class="pre">Command</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#context-configuracion-inmutable">7.2.3. Context (configuración inmutable)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#long-term-memory-con-store">7.2.4. Long-term Memory con Store</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stream-writer-actualizaciones-en-tiempo-real">7.2.5. Stream Writer (actualizaciones en tiempo real)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#toolnode-ejecucion-de-tools-en-grafos">7.3. ToolNode: Ejecución de Tools en Grafos</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#uso-basico">7.3.1. Uso básico</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tipos-de-valores-de-retorno">7.3.2. Tipos de valores de retorno</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#retornar-string-texto-plano">7.3.2.1. ✅ Retornar string (texto plano)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#retornar-un-objeto-datos-estructurados">7.3.2.2. ✅ Retornar un objeto (datos estructurados)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#retornar-command-actualizar-estado">7.3.2.3. ✅ Retornar <code class="docutils literal notranslate"><span class="pre">Command</span></code> (actualizar estado)</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manejo-de-errores-en-toolnode">7.3.3. Manejo de errores en ToolNode</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#enrutamiento-condicional-con-tools-condition">7.3.4. Enrutamiento condicional con <code class="docutils literal notranslate"><span class="pre">tools_condition</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tools-precompiladas-de-langchain">7.4. Tools Precompiladas de LangChain</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resumen-arquitectura-de-una-tool">7.5. Resumen: Arquitectura de una Tool</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#toolruntime-en-langgraph-guia-detallada">7.6. <code class="docutils literal notranslate"><span class="pre">ToolRuntime</span></code> en LangGraph — Guía Detallada</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#que-es-toolruntime">7.6.1. ¿Qué es <code class="docutils literal notranslate"><span class="pre">ToolRuntime</span></code>?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jerarquia-de-clases">7.6.2. Jerarquía de clases</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#atributos-completos-de-toolruntime">7.6.3. Atributos completos de <code class="docutils literal notranslate"><span class="pre">ToolRuntime</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-correcto">7.7. Import correcto</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-1-acceso-al-estado-del-grafo">7.7.1. Ejemplo 1 — Acceso al estado del grafo</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-2-usar-tool-call-id-para-crear-toolmessage-manual">7.7.2. Ejemplo 2 — Usar <code class="docutils literal notranslate"><span class="pre">tool_call_id</span></code> para crear <code class="docutils literal notranslate"><span class="pre">ToolMessage</span></code> manual</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-3-acceso-al-contexto-con-contextt">7.7.3. Ejemplo 3 — Acceso al contexto con <code class="docutils literal notranslate"><span class="pre">ContextT</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-4-memoria-persistente-con-runtime-store">7.7.4. Ejemplo 4 — Memoria persistente con <code class="docutils literal notranslate"><span class="pre">runtime.store</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-5-streaming-con-runtime-stream-writer">7.7.5. Ejemplo 5 — Streaming con <code class="docutils literal notranslate"><span class="pre">runtime.stream_writer</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-6-server-info-solo-langgraph-server">7.7.6. Ejemplo 6 — <code class="docutils literal notranslate"><span class="pre">server_info</span></code> (solo LangGraph Server)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tipo-generico-toolruntime-contextt-statet">7.7.7. Tipo genérico: <code class="docutils literal notranslate"><span class="pre">ToolRuntime[ContextT,</span> <span class="pre">StateT]</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#resumen-visual-del-flujo">7.7.8. Resumen visual del flujo</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diferencias-clave-runtime-vs-toolruntime">7.7.9. Diferencias clave: <code class="docutils literal notranslate"><span class="pre">Runtime</span></code> vs <code class="docutils literal notranslate"><span class="pre">ToolRuntime</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#referencias">7.8. Referencias</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Francisco Rodríguez
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

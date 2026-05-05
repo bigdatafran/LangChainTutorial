@@ -1,0 +1,759 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>12. Introducción a Ollama &#8212; LangChain &amp; LangGraph</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'jupyters/ollama';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="13. Sitios web" href="sitiosweb.html" />
+    <link rel="prev" title="11. Programación asíncrona con asyncio en Python: una guía práctica" href="asyncio.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../introduccion.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">LangChain & LangGraph</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Langchain.</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="modelosLangChain.html">1. Modelos de IA con LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="runnables.html">2. Los runnables de LangChain</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="prompts.html">3. Prompts template en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="salidas_estructuradas.html">4. Salidas estructuradas en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="messages.html">5. Messages en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="agentes.html">6. Agentes en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">7. Tools (herramientas) en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="langchain_async_concurrencia.html">8. Ejecución asíncrona en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="init_langGraph.html">9. Primer acercamiento a LangGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="base_datos.html">10. Base de datos con LangGraph</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Apendices.</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="asyncio.html">11. Asincronia con asyncio</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">12. Ollama</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sitiosweb.html">13. Sitios web</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Índice de términos</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">Índice de términos</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Introducción a Ollama</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#por-que-ejecutar-llms-locales-en-windows">12.1. ¿Por qué ejecutar LLMs locales en Windows?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requisitos-del-sistema-e-instalacion-en-windows">12.2. Requisitos del Sistema e Instalación en Windows</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#requisitos-minimos-y-recomendados">12.2.1. Requisitos mínimos y recomendados</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proceso-de-instalacion">12.2.2. Proceso de Instalación</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gestion-y-operacion-de-modelos-con-ollama">12.3. Gestión y Operación de Modelos con Ollama</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comandos-esenciales">12.3.1. Comandos Esenciales</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#el-archivo-de-configuracion-modelfile">12.3.2. El Archivo de Configuración (Modelfile)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#integracion-de-ollama-con-langchain">12.4. Integración de Ollama con LangChain</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#configuracion-del-entorno-de-python">12.4.1. Configuración del Entorno de Python</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-1-inferencia-basica-con-chatollama">12.4.2. Ejemplo 1: Inferencia Básica con <code class="docutils literal notranslate"><span class="pre">ChatOllama</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-2-creacion-de-cadenas-chains-con-prompts-estructurados">12.4.3. Ejemplo 2: Creación de Cadenas (Chains) con Prompts Estructurados</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-3-respuestas-en-streaming">12.4.4. Ejemplo 3: Respuestas en Streaming</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#arquitectura-avanzada-implementacion-de-rag-local-con-ollama-y-langchain">12.5. Arquitectura Avanzada: Implementación de RAG local con Ollama y LangChain</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-completo-de-rag-local">12.5.1. Ejemplo completo de RAG Local</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#solucion-de-problemas-y-buenas-practicas-en-windows">12.6. Solución de Problemas y Buenas Prácticas en Windows</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problemas-comunes-y-soluciones">12.6.1. Problemas comunes y soluciones</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#buenas-practicas">12.6.2. Buenas Prácticas</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="introduccion-a-ollama">
+<span id="ollama2"></span><h1><span class="section-number">12. </span>Introducción a Ollama<a class="headerlink" href="#introduccion-a-ollama" title="Link to this heading">#</a></h1>
+<p id="index-0">Ollama es una herramienta revolucionaria diseñada para simplificar la descarga, instalación y ejecución de grandes modelos de lenguaje (LLMs) de forma local. Tradicionalmente, trabajar con modelos como Llama 3, Mistral o Gemma requería configurar entornos complejos de Python, manejar dependencias de GPU (como CUDA) y descargar manualmente gigabytes de pesos de modelos. Ollama abstrae toda esta complejidad y la empaqueta en una solución ligera y eficiente.</p>
+<section id="por-que-ejecutar-llms-locales-en-windows">
+<h2><span class="section-number">12.1. </span>¿Por qué ejecutar LLMs locales en Windows?<a class="headerlink" href="#por-que-ejecutar-llms-locales-en-windows" title="Link to this heading">#</a></h2>
+<p>El uso de LLMs de forma local en entornos Windows ofrece ventajas estratégicas cruciales:</p>
+<ul class="simple">
+<li><p><strong>Privacidad y Seguridad de Datos</strong>: La información procesada nunca sale de tu máquina local. Esto es vital para entornos corporativos o proyectos con datos confidenciales.</p></li>
+<li><p><strong>Sin Costes por Token</strong>: A diferencia de las APIs de OpenAI o Anthropic, el uso de Ollama es completamente gratuito una vez descargado el modelo, limitado únicamente por los recursos de hardware de tu sistema.</p></li>
+<li><p><strong>Baja Latencia</strong>: Al eliminar la necesidad de comunicación por red con servidores externos, las respuestas pueden generarse con latencias mínimas, siempre que el hardware local sea el adecuado.</p></li>
+<li><p><strong>Desarrollo sin Conexión</strong>: Puedes seguir programando y experimentando con IA incluso sin acceso a internet.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="requisitos-del-sistema-e-instalacion-en-windows">
+<h2><span class="section-number">12.2. </span>Requisitos del Sistema e Instalación en Windows<a class="headerlink" href="#requisitos-del-sistema-e-instalacion-en-windows" title="Link to this heading">#</a></h2>
+<p>Ollama cuenta con soporte nativo para Windows, lo que significa que no necesitas configurar el Subsistema de Windows para Linux (WSL2) de manera obligatoria, aunque sigue siendo compatible.</p>
+<section id="requisitos-minimos-y-recomendados">
+<h3><span class="section-number">12.2.1. </span>Requisitos mínimos y recomendados<a class="headerlink" href="#requisitos-minimos-y-recomendados" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Sistema Operativo</strong>: Windows 10 (versión 19041 o superior) o Windows 11.</p></li>
+<li><p><strong>Memoria RAM</strong>:</p>
+<ul>
+<li><p>Para modelos de 7B-8B parámetros (ej. Llama 3): Mínimo 8 GB, recomendado 16 GB.</p></li>
+<li><p>Para modelos de 13B-14B parámetros (ej. Mistral Small): Mínimo 16 GB, recomendado 32 GB.</p></li>
+</ul>
+</li>
+<li><p><strong>GPU (Opcional pero altamente recomendado)</strong>: Tarjeta gráfica NVIDIA (GeForce RTX o superior) o AMD con soporte para aceleración por hardware. Ollama detectará automáticamente tu GPU para acelerar la inferencia. Si no dispones de una, se utilizará la CPU, lo que resultará en velocidades de respuesta notablemente más lentas.</p></li>
+</ul>
+</section>
+<section id="proceso-de-instalacion">
+<h3><span class="section-number">12.2.2. </span>Proceso de Instalación<a class="headerlink" href="#proceso-de-instalacion" title="Link to this heading">#</a></h3>
+<ol class="arabic">
+<li><p><strong>Descargar el Instalador</strong>: Dirígete al sitio web oficial de Ollama y descarga el ejecutable para Windows (<code class="docutils literal notranslate"><span class="pre">OllamaSetup.exe</span></code>).</p></li>
+<li><p><strong>Ejecutar el Instalador</strong>: Abre el archivo descargado y sigue los pasos del asistente. El proceso instalará Ollama en tu sistema y lo configurará como un servicio en segundo plano.</p></li>
+<li><p><strong>Verificación</strong>: Una vez instalado, verás el icono de la llama en la bandeja del sistema (system tray). Abre la consola de comandos de Windows (CMD o PowerShell) y ejecuta el siguiente comando para verificar que está correctamente instalado:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ollama<span class="w"> </span>--version
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="gestion-y-operacion-de-modelos-con-ollama">
+<h2><span class="section-number">12.3. </span>Gestión y Operación de Modelos con Ollama<a class="headerlink" href="#gestion-y-operacion-de-modelos-con-ollama" title="Link to this heading">#</a></h2>
+<p>Ollama funciona mediante una interfaz de línea de comandos (CLI) intuitiva. El servicio por defecto escucha en <code class="docutils literal notranslate"><span class="pre">http://localhost:11434</span></code>.</p>
+<section id="comandos-esenciales">
+<h3><span class="section-number">12.3.1. </span>Comandos Esenciales<a class="headerlink" href="#comandos-esenciales" title="Link to this heading">#</a></h3>
+<ul>
+<li><p><strong>Descargar y ejecutar un modelo</strong>: El comando <code class="docutils literal notranslate"><span class="pre">run</span></code> descarga el modelo (si no está ya en el sistema) y arranca una sesión de chat interactiva.</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">ollama</span> <span class="n">run</span> <span class="n">llama3</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Listar modelos instalados</strong>: Muestra los modelos que tienes disponibles localmente.</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">ollama</span> <span class="n">list</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Descargar un modelo sin ejecutarlo</strong>: Ideal para preparar el entorno con antelación.</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">ollama</span> <span class="n">pull</span> <span class="n">mistral</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Eliminar un modelo</strong>: Libera espacio en disco borrando el modelo especificado.</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">ollama</span> <span class="nb">rm </span><span class="n">gemma</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="el-archivo-de-configuracion-modelfile">
+<h3><span class="section-number">12.3.2. </span>El Archivo de Configuración (Modelfile)<a class="headerlink" href="#el-archivo-de-configuracion-modelfile" title="Link to this heading">#</a></h3>
+<p>Ollama permite personalizar el comportamiento de los modelos mediante un archivo llamado <code class="docutils literal notranslate"><span class="pre">Modelfile</span></code>. Puedes definir el sistema de prompts (instrucciones base), la temperatura y otros hiperparámetros.</p>
+<p>Ejemplo de un archivo <code class="docutils literal notranslate"><span class="pre">Modelfile</span></code> para crear un asistente experto en Python:</p>
+<div class="highlight-dockerfile notranslate"><div class="highlight"><pre><span></span><span class="k">FROM</span><span class="w"> </span><span class="s">llama3</span>
+
+<span class="c"># Establecemos la temperatura (más baja para mayor precisión)</span>
+PARAMETER<span class="w"> </span>temperature<span class="w"> </span><span class="m">0</span>.2
+
+<span class="c"># Definimos el prompt del sistema</span>
+SYSTEM<span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+Eres<span class="w"> </span>un<span class="w"> </span>ingeniero<span class="w"> </span>de<span class="w"> </span>software<span class="w"> </span>senior<span class="w"> </span>experto<span class="w"> </span>en<span class="w"> </span>Python.<span class="w"> </span>Responde<span class="w"> </span>de<span class="w"> </span>forma<span class="w"> </span>concisa,<span class="w"> </span>
+utilizando<span class="w"> </span>siempre<span class="w"> </span>tipado<span class="w"> </span>estático<span class="w"> </span>y<span class="w"> </span>buenas<span class="w"> </span>prácticas<span class="w"> </span>de<span class="w"> </span>desarrollo.
+<span class="s2">&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<p>Para crear este modelo personalizado, guarda el contenido en un archivo sin extensión llamado <code class="docutils literal notranslate"><span class="pre">Modelfile</span></code> y ejecuta en PowerShell:</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">ollama</span> <span class="n">create</span> <span class="n">python-expert</span> <span class="o">-f</span> <span class="p">./</span><span class="n">Modelfile</span>
+</pre></div>
+</div>
+<p>Posteriormente, podrás usar tu modelo como cualquier otro:</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">ollama</span> <span class="n">run</span> <span class="n">python-expert</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="integracion-de-ollama-con-langchain">
+<h2><span class="section-number">12.4. </span>Integración de Ollama con LangChain<a class="headerlink" href="#integracion-de-ollama-con-langchain" title="Link to this heading">#</a></h2>
+<p>LangChain es el framework líder para el desarrollo de aplicaciones basadas en Modelos de Lenguaje. Permite encadenar llamadas a LLMs, gestionar la memoria, conectar datos externos (RAG) y construir agentes complejos.</p>
+<section id="configuracion-del-entorno-de-python">
+<h3><span class="section-number">12.4.1. </span>Configuración del Entorno de Python<a class="headerlink" href="#configuracion-del-entorno-de-python" title="Link to this heading">#</a></h3>
+<p>Para conectar Ollama con LangChain en Windows, primero necesitas crear un entorno virtual de Python e instalar las librerías necesarias. Abre PowerShell y ejecuta:</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="c"># Crear y activar un entorno virtual</span>
+<span class="n">python</span> <span class="n">-m</span> <span class="n">venv</span> <span class="p">.</span><span class="n">venv</span>
+<span class="p">.\.</span><span class="n">venv</span><span class="p">\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Activate</span><span class="p">.</span><span class="n">ps1</span>
+
+<span class="c"># Instalar langchain y el paquete específico para Ollama</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="n">langchain</span> <span class="n">langchain-community</span> <span class="n">langchain-core</span>
+</pre></div>
+</div>
+</section>
+<section id="ejemplo-1-inferencia-basica-con-chatollama">
+<h3><span class="section-number">12.4.2. </span>Ejemplo 1: Inferencia Básica con <code class="docutils literal notranslate"><span class="pre">ChatOllama</span></code><a class="headerlink" href="#ejemplo-1-inferencia-basica-con-chatollama" title="Link to this heading">#</a></h3>
+<p>En LangChain, la clase <code class="docutils literal notranslate"><span class="pre">ChatOllama</span></code> se utiliza para interactuar con modelos de chat locales servidos por Ollama.</p>
+<p>Crea un archivo llamado <code class="docutils literal notranslate"><span class="pre">basico.py</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_community.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOllama</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+
+<span class="c1"># Inicializar el modelo</span>
+<span class="c1"># Asegúrate de haber ejecutado previamente &#39;ollama pull llama3&#39;</span>
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatOllama</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;llama3&quot;</span><span class="p">,</span>
+    <span class="n">temperature</span><span class="o">=</span><span class="mf">0.7</span>
+<span class="p">)</span>
+
+<span class="c1"># Definir la consulta</span>
+<span class="n">mensaje</span> <span class="o">=</span> <span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;¿Cuáles son las 3 principales ventajas de usar Python para la IA?&quot;</span><span class="p">)</span>
+
+<span class="c1"># Obtener respuesta</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Enviando consulta a Ollama local...&quot;</span><span class="p">)</span>
+<span class="n">respuesta</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">mensaje</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Respuesta del modelo:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">respuesta</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="ejemplo-2-creacion-de-cadenas-chains-con-prompts-estructurados">
+<h3><span class="section-number">12.4.3. </span>Ejemplo 2: Creación de Cadenas (Chains) con Prompts Estructurados<a class="headerlink" href="#ejemplo-2-creacion-de-cadenas-chains-con-prompts-estructurados" title="Link to this heading">#</a></h3>
+<p>La verdadera potencia de LangChain surge al estructurar los prompts y procesar las respuestas mediante el Lenguaje de Expresión de LangChain (LCEL).</p>
+<p>Crea un archivo llamado <code class="docutils literal notranslate"><span class="pre">cadena_traduccion.py</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_community.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOllama</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">StrOutputParser</span>
+
+<span class="c1"># 1. Definir la plantilla del prompt</span>
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">([</span>
+    <span class="p">(</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;Eres un traductor experto. Traduce el siguiente texto al </span><span class="si">{idioma_destino}</span><span class="s2">.&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{texto}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="p">])</span>
+
+<span class="c1"># 2. Inicializar el modelo de Ollama</span>
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatOllama</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;llama3&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="c1"># 3. Construir la cadena utilizando LCEL</span>
+<span class="n">cadena</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">llm</span> <span class="o">|</span> <span class="n">StrOutputParser</span><span class="p">()</span>
+
+<span class="c1"># 4. Ejecutar la cadena</span>
+<span class="n">idioma</span> <span class="o">=</span> <span class="s2">&quot;alemán&quot;</span>
+<span class="n">texto_a_traducir</span> <span class="o">=</span> <span class="s2">&quot;Hola, estoy aprendiendo a usar modelos locales de inteligencia artificial en mi ordenador.&quot;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Traduciendo a </span><span class="si">{</span><span class="n">idioma</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+<span class="n">resultado</span> <span class="o">=</span> <span class="n">cadena</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span>
+    <span class="s2">&quot;idioma_destino&quot;</span><span class="p">:</span> <span class="n">idioma</span><span class="p">,</span>
+    <span class="s2">&quot;texto&quot;</span><span class="p">:</span> <span class="n">texto_a_traducir</span>
+<span class="p">})</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Traducción:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resultado</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="ejemplo-3-respuestas-en-streaming">
+<h3><span class="section-number">12.4.4. </span>Ejemplo 3: Respuestas en Streaming<a class="headerlink" href="#ejemplo-3-respuestas-en-streaming" title="Link to this heading">#</a></h3>
+<p>Para mejorar la experiencia de usuario, puedes configurar LangChain para que imprima la respuesta del modelo en tiempo real a medida que se genera.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_community.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOllama</span>
+
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatOllama</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;llama3&quot;</span><span class="p">)</span>
+
+<span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;¿Me puedes explicar brevemente qué es la computación cuántica?&quot;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Respuesta en tiempo real:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">llm</span><span class="o">.</span><span class="n">stream</span><span class="p">(</span><span class="n">query</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="arquitectura-avanzada-implementacion-de-rag-local-con-ollama-y-langchain">
+<h2><span class="section-number">12.5. </span>Arquitectura Avanzada: Implementación de RAG local con Ollama y LangChain<a class="headerlink" href="#arquitectura-avanzada-implementacion-de-rag-local-con-ollama-y-langchain" title="Link to this heading">#</a></h2>
+<p>El patrón <strong>RAG (Generación Aumentada por Recuperación)</strong> permite al modelo local responder preguntas basándose en documentos privados (PDFs, TXT, bases de datos) que no estaban en su entrenamiento original.</p>
+<p>Para implementar un RAG completamente local en Windows necesitas instalar paquetes adicionales para procesar texto y crear una base de datos vectorial local (ChromaDB):</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">chromadb</span> <span class="n">langchain-text-splitters</span>
+</pre></div>
+</div>
+<section id="ejemplo-completo-de-rag-local">
+<h3><span class="section-number">12.5.1. </span>Ejemplo completo de RAG Local<a class="headerlink" href="#ejemplo-completo-de-rag-local" title="Link to this heading">#</a></h3>
+<p>A continuación se muestra un script que simula la ingesta de documentos, su almacenamiento en una base de datos vectorial en memoria y la posterior consulta utilizando Ollama para generar la respuesta final.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_community.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOllama</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_community.embeddings</span><span class="w"> </span><span class="kn">import</span> <span class="n">OllamaEmbeddings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_text_splitters</span><span class="w"> </span><span class="kn">import</span> <span class="n">RecursiveCharacterTextSplitter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_community.vectorstores</span><span class="w"> </span><span class="kn">import</span> <span class="n">Chroma</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.runnables</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunnablePassthrough</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">StrOutputParser</span>
+
+<span class="c1"># 1. Documentos de prueba (pueden ser cargados desde archivos locales)</span>
+<span class="n">documentos</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;El proyecto secreto &#39;X-Apollo&#39; es una iniciativa para migrar todos los servidores a energía solar antes de 2028.&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;El presupuesto asignado para el proyecto &#39;X-Apollo&#39; es de 15 millones de euros y está liderado por la ingeniera Elena Torres.&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;La empresa cerrará sus oficinas físicas en diciembre de 2026 para pasar a un modelo de trabajo 100</span><span class="si">% r</span><span class="s2">emoto.&quot;</span>
+<span class="p">]</span>
+
+<span class="c1"># 2. Dividir el texto en fragmentos (chunks)</span>
+<span class="n">text_splitter</span> <span class="o">=</span> <span class="n">RecursiveCharacterTextSplitter</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">chunk_overlap</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">fragmentos</span> <span class="o">=</span> <span class="n">text_splitter</span><span class="o">.</span><span class="n">create_documents</span><span class="p">(</span><span class="n">documentos</span><span class="p">)</span>
+
+<span class="c1"># 3. Crear Embeddings con Ollama</span>
+<span class="c1"># Asegúrate de haber ejecutado &#39;ollama pull nomic-embed-text&#39; antes</span>
+<span class="n">embeddings</span> <span class="o">=</span> <span class="n">OllamaEmbeddings</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;nomic-embed-text&quot;</span><span class="p">)</span>
+
+<span class="c1"># 4. Crear Base de Datos Vectorial (ChromaDB en memoria)</span>
+<span class="n">vectorstore</span> <span class="o">=</span> <span class="n">Chroma</span><span class="o">.</span><span class="n">from_documents</span><span class="p">(</span><span class="n">documents</span><span class="o">=</span><span class="n">fragmentos</span><span class="p">,</span> <span class="n">embedding</span><span class="o">=</span><span class="n">embeddings</span><span class="p">)</span>
+<span class="n">retriever</span> <span class="o">=</span> <span class="n">vectorstore</span><span class="o">.</span><span class="n">as_retriever</span><span class="p">(</span><span class="n">search_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;k&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
+
+<span class="c1"># 5. Definir el prompt para RAG</span>
+<span class="n">template</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Responde a la pregunta basándote únicamente en el siguiente contexto:</span>
+<span class="si">{contexto}</span>
+
+<span class="s2">Pregunta: </span><span class="si">{pregunta}</span>
+<span class="s2">Respuesta:&quot;&quot;&quot;</span>
+
+<span class="n">prompt_rag</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_template</span><span class="p">(</span><span class="n">template</span><span class="p">)</span>
+
+<span class="c1"># 6. Inicializar el LLM</span>
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatOllama</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;llama3&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># 7. Construir la cadena RAG</span>
+<span class="n">cadena_rag</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="p">{</span><span class="s2">&quot;contexto&quot;</span><span class="p">:</span> <span class="n">retriever</span> <span class="o">|</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">docs</span><span class="p">:</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">d</span><span class="o">.</span><span class="n">page_content</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">docs</span><span class="p">])),</span> <span class="s2">&quot;pregunta&quot;</span><span class="p">:</span> <span class="n">RunnablePassthrough</span><span class="p">()}</span>
+    <span class="o">|</span> <span class="n">prompt_rag</span>
+    <span class="o">|</span> <span class="n">llm</span>
+    <span class="o">|</span> <span class="n">StrOutputParser</span><span class="p">()</span>
+<span class="p">)</span>
+
+<span class="c1"># 8. Realizar una consulta</span>
+<span class="n">pregunta</span> <span class="o">=</span> <span class="s2">&quot;¿Quién lidera el proyecto X-Apollo y cuál es su presupuesto?&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pregunta: </span><span class="si">{</span><span class="n">pregunta</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">respuesta</span> <span class="o">=</span> <span class="n">cadena_rag</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">pregunta</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Respuesta generada:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">respuesta</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="solucion-de-problemas-y-buenas-practicas-en-windows">
+<h2><span class="section-number">12.6. </span>Solución de Problemas y Buenas Prácticas en Windows<a class="headerlink" href="#solucion-de-problemas-y-buenas-practicas-en-windows" title="Link to this heading">#</a></h2>
+<section id="problemas-comunes-y-soluciones">
+<h3><span class="section-number">12.6.1. </span>Problemas comunes y soluciones<a class="headerlink" href="#problemas-comunes-y-soluciones" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Ollama no detecta la GPU NVIDIA</strong>:
+Asegúrate de tener instalados los drivers de NVIDIA más recientes. Puedes comprobar si Windows reconoce correctamente tu tarjeta gráfica ejecutando <code class="docutils literal notranslate"><span class="pre">nvidia-smi</span></code> en la terminal. Si ves información sobre tu GPU y la versión de CUDA instalada, Ollama debería reconocerla automáticamente al iniciarse.</p></li>
+<li><p><strong>Error: <code class="docutils literal notranslate"><span class="pre">connection</span> <span class="pre">refused</span></code> en LangChain</strong>:
+Este error ocurre si el servicio de Ollama no se está ejecutando en segundo plano. Comprueba que el icono de Ollama esté en la barra de tareas de Windows. Puedes iniciarlo manualmente buscando “Ollama” en el menú inicio.</p></li>
+<li><p><strong>Rendimiento excesivamente lento</strong>:</p>
+<ul>
+<li><p>Asegúrate de no estar ejecutando otros procesos pesados en segundo plano que saturen la memoria RAM o la VRAM.</p></li>
+<li><p>Elige modelos más pequeños. Si el modelo <code class="docutils literal notranslate"><span class="pre">llama3</span></code> (8B) es demasiado pesado para tu sistema, prueba con modelos optimizados como <code class="docutils literal notranslate"><span class="pre">phi3</span></code> de Microsoft o <code class="docutils literal notranslate"><span class="pre">qwen2</span></code> (0.5B o 1.5B), que requieren muchos menos recursos y ofrecen un rendimiento excelente para tareas generales.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="buenas-practicas">
+<h3><span class="section-number">12.6.2. </span>Buenas Prácticas<a class="headerlink" href="#buenas-practicas" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Fijar variables de entorno</strong>: Puedes configurar variables de entorno en Windows para modificar el comportamiento de Ollama. Por ejemplo, <code class="docutils literal notranslate"><span class="pre">OLLAMA_NUM_PARALLEL=4</span></code> permite atender múltiples peticiones en paralelo.</p></li>
+<li><p><strong>Limpieza de caché</strong>: De vez en cuando, revisa el espacio que ocupan los modelos. En Windows, por defecto, los modelos se guardan en <code class="docutils literal notranslate"><span class="pre">C:\Users\&lt;TuUsuario&gt;\.ollama\models</span></code>. Si cambias de disco y quieres ahorrar espacio en el disco del sistema (<code class="docutils literal notranslate"><span class="pre">C:</span></code>), puedes establecer la variable de entorno de sistema <code class="docutils literal notranslate"><span class="pre">OLLAMA_MODELS</span></code> apuntando a otra unidad de almacenamiento.</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./jupyters"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="asyncio.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">11. </span>Programación asíncrona con asyncio en Python: una guía práctica</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="sitiosweb.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">13. </span>Sitios web</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#por-que-ejecutar-llms-locales-en-windows">12.1. ¿Por qué ejecutar LLMs locales en Windows?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requisitos-del-sistema-e-instalacion-en-windows">12.2. Requisitos del Sistema e Instalación en Windows</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#requisitos-minimos-y-recomendados">12.2.1. Requisitos mínimos y recomendados</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proceso-de-instalacion">12.2.2. Proceso de Instalación</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gestion-y-operacion-de-modelos-con-ollama">12.3. Gestión y Operación de Modelos con Ollama</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comandos-esenciales">12.3.1. Comandos Esenciales</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#el-archivo-de-configuracion-modelfile">12.3.2. El Archivo de Configuración (Modelfile)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#integracion-de-ollama-con-langchain">12.4. Integración de Ollama con LangChain</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#configuracion-del-entorno-de-python">12.4.1. Configuración del Entorno de Python</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-1-inferencia-basica-con-chatollama">12.4.2. Ejemplo 1: Inferencia Básica con <code class="docutils literal notranslate"><span class="pre">ChatOllama</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-2-creacion-de-cadenas-chains-con-prompts-estructurados">12.4.3. Ejemplo 2: Creación de Cadenas (Chains) con Prompts Estructurados</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-3-respuestas-en-streaming">12.4.4. Ejemplo 3: Respuestas en Streaming</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#arquitectura-avanzada-implementacion-de-rag-local-con-ollama-y-langchain">12.5. Arquitectura Avanzada: Implementación de RAG local con Ollama y LangChain</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-completo-de-rag-local">12.5.1. Ejemplo completo de RAG Local</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#solucion-de-problemas-y-buenas-practicas-en-windows">12.6. Solución de Problemas y Buenas Prácticas en Windows</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problemas-comunes-y-soluciones">12.6.1. Problemas comunes y soluciones</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#buenas-practicas">12.6.2. Buenas Prácticas</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Francisco Rodríguez
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

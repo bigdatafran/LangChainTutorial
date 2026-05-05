@@ -1,0 +1,539 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>5. Introducción: De “Prompts” a la Orquestación de Mensajes Orientada a Objetos &#8212; LangChain &amp; LangGraph</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'jupyters/messages';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="6. Introdución a los Agentes en LangChain" href="agentes.html" />
+    <link rel="prev" title="4. Salidas Estructuradas en LangChain" href="salidas_estructuradas.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../introduccion.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">LangChain & LangGraph</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Langchain.</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="modelosLangChain.html">1. Modelos de IA con LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="runnables.html">2. Los runnables de LangChain</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="prompts.html">3. Prompts template en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="salidas_estructuradas.html">4. Salidas estructuradas en LangChain</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">5. Messages en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="agentes.html">6. Agentes en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">7. Tools (herramientas) en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="langchain_async_concurrencia.html">8. Ejecución asíncrona en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="init_langGraph.html">9. Primer acercamiento a LangGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="base_datos.html">10. Base de datos con LangGraph</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Apendices.</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="asyncio.html">11. Asincronia con asyncio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ollama.html">12. Ollama</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sitiosweb.html">13. Sitios web</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Índice de términos</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">Índice de términos</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Introducción: De “Prompts” a la Orquestación de Mensajes Orientada a Objetos</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#anatomia-de-un-mensaje-estructura-y-atributos-criticos">5.1. Anatomía de un Mensaje: Estructura y Atributos Críticos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#el-ecosistema-de-tipos-de-mensajes-actores-en-el-grafo-de-ia">5.2. El Ecosistema de Tipos de Mensajes: Actores en el Grafo de IA</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estrategias-de-implementacion-prompts-vs-mensajes">5.3. Estrategias de Implementación: Prompts vs. Mensajes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#capacidades-avanzadas-bloques-de-contenido-y-razonamiento">5.4. Capacidades Avanzadas: Bloques de Contenido y Razonamiento</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion-y-guia-de-uso-recomendado">5.5. Conclusión y Guía de Uso Recomendado</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#referencias">5.6. Referencias</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="introduccion-de-prompts-a-la-orquestacion-de-mensajes-orientada-a-objetos">
+<span id="messages"></span><h1><span class="section-number">5. </span>Introducción: De “Prompts” a la Orquestación de Mensajes Orientada a Objetos<a class="headerlink" href="#introduccion-de-prompts-a-la-orquestacion-de-mensajes-orientada-a-objetos" title="Link to this heading">#</a></h1>
+<p id="index-0">En la vanguardia del desarrollo de IA generativa, estamos presenciando un cambio de paradigma: la transición del “String-based Prompting” (basado en cadenas) a la Orquestación de Mensajes Orientada a Objetos. En LangChain, los mensajes no son meros contenedores de texto; son la unidad fundamental de contexto y el tejido conectivo que mantiene el estado en arquitecturas complejas, desde flujos lineales hasta grafos de agentes sofisticados mediante LangGraph.</p>
+<p>Para un Arquitecto de Soluciones, dominar la clase Messages es un imperativo estratégico. Esta abstracción permite que nuestras aplicaciones operen bajo el Model Context Protocol (MCP), asegurando que la lógica de negocio permanezca desacoplada del proveedor del modelo (OpenAI, Anthropic, Bedrock). Un mensaje se define por tres componentes críticos:</p>
+<ul class="simple">
+<li><p>Rol: La identidad del emisor (system, user, assistant, tool).</p></li>
+<li><p>Contenido: Una carga útil versátil (texto, imágenes, audio o bloques estructurados).</p></li>
+<li><p>Metadatos: Información de respuesta, IDs y métricas de consumo.</p></li>
+</ul>
+<p>Perspectiva Arquitectónica: La estandarización de mensajes en LangChain no es solo una conveniencia técnica; es una salvaguarda para la interoperabilidad. Al adoptar este esquema, garantizamos que nuestro sistema pueda escalar y pivotar entre modelos sin reescribir la gestión de la memoria, permitiendo una evolución tecnológica sin fricciones.</p>
+<p><img alt="" src="../_images/messages.png" /></p>
+<section id="anatomia-de-un-mensaje-estructura-y-atributos-criticos">
+<h2><span class="section-number">5.1. </span>Anatomía de un Mensaje: Estructura y Atributos Críticos<a class="headerlink" href="#anatomia-de-un-mensaje-estructura-y-atributos-criticos" title="Link to this heading">#</a></h2>
+<p>Desde una visión de ingeniería, el contenido de un mensaje es solo la “punta del iceberg”. Para que un sistema sea resiliente en producción, debemos gestionar atributos que permitan la observabilidad y el control granular.</p>
+<p>Los atributos esenciales de un mensaje incluyen:</p>
+<ul class="simple">
+<li><p>Role: Define la jerarquía y el propósito del emisor en la conversación.</p></li>
+<li><p>Content: Soporta tanto string como una lista de diccionarios (dict[]). El uso de listas de bloques proporciona una interfaz con seguridad de tipos para entradas complejas.</p></li>
+<li><p>Usage_metadata: Contiene el recuento de tokens (input, output, total). Vital para el control de costes y dashboards de consumo.</p></li>
+<li><p>Response_metadata: Atributo fundamental para arquitectos, ya que almacena datos específicos del proveedor que no entran en el estándar (como logprobs, finish_reason o flags de seguridad).</p></li>
+</ul>
+<p>Inicialización con Bloques de Contenido (Type-Safe)</p>
+<p>from langchain_core.messages import AIMessage</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mensaje_ai</span> <span class="o">=</span> <span class="n">AIMessage</span><span class="p">(</span>
+    <span class="n">content</span><span class="o">=</span><span class="p">[</span>
+        <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;El análisis predictivo indica una tendencia alcista.&quot;</span><span class="p">}</span>
+    <span class="p">],</span>
+    <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;arch_msg_99&quot;</span><span class="p">,</span>
+    <span class="n">response_metadata</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;finish_reason&quot;</span><span class="p">:</span> <span class="s2">&quot;stop&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;gpt-4o&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;system_fingerprint&quot;</span><span class="p">:</span> <span class="s2">&quot;fp_447af96&quot;</span>
+    <span class="p">},</span>
+    <span class="n">usage_metadata</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;input_tokens&quot;</span><span class="p">:</span> <span class="mi">45</span><span class="p">,</span>
+        <span class="s2">&quot;output_tokens&quot;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
+        <span class="s2">&quot;total_tokens&quot;</span><span class="p">:</span> <span class="mi">60</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Perspectiva Arquitectónica: El uso de response_metadata es crítico para la depuración y auditoría. Conocer el finish_reason nos permite implementar lógicas de reintento o escalado si un modelo corta una respuesta por límites de contexto antes de completar la tarea.</p>
+</section>
+<section id="el-ecosistema-de-tipos-de-mensajes-actores-en-el-grafo-de-ia">
+<h2><span class="section-number">5.2. </span>El Ecosistema de Tipos de Mensajes: Actores en el Grafo de IA<a class="headerlink" href="#el-ecosistema-de-tipos-de-mensajes-actores-en-el-grafo-de-ia" title="Link to this heading">#</a></h2>
+<p id="index-1">En LangChain, los mensajes actúan como actores en un guion. Cada tipo influye en la probabilidad de los tokens siguientes de manera única.</p>
+<ol class="arabic simple">
+<li><p>SystemMessage: Establece el “primado” o la constitución del modelo. Define la persona, las restricciones de seguridad y el tono. Un SystemMessage de alta fidelidad es la diferencia entre un chatbot genérico y un agente especializado.</p></li>
+<li><p>HumanMessage: Representa la entrada del usuario. Soporta multimodalidad nativa (imágenes, archivos).</p></li>
+<li><p>AIMessage: La salida del modelo. Puede contener texto, razonamiento interno y, crucialmente, tool_calls (llamadas a herramientas).</p></li>
+<li><p>ToolMessage: Comunica el resultado de una ejecución externa. Para evitar errores de ejecución, los siguientes campos son obligatorios:</p></li>
+</ol>
+<ul class="simple">
+<li><p>content: El resultado serializado de la herramienta.</p></li>
+<li><p>tool_call_id: Debe coincidir exactamente con el ID del AIMessage que invocó la herramienta.</p></li>
+<li><p>name: El nombre de la función ejecutada.</p></li>
+</ul>
+<p>Ejemplo de Orquestación con Herramientas</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span><span class="p">,</span> <span class="n">AIMessage</span><span class="p">,</span> <span class="n">ToolMessage</span>
+
+<span class="n">flujo</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;¿Cuál es la carga del servidor alfa?&quot;</span><span class="p">),</span>
+    <span class="n">AIMessage</span><span class="p">(</span>
+        <span class="n">content</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">tool_calls</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;get_server_load&quot;</span><span class="p">,</span> <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;alfa&quot;</span><span class="p">},</span> <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;call_001&quot;</span><span class="p">}]</span>
+    <span class="p">),</span>
+    <span class="n">ToolMessage</span><span class="p">(</span>
+        <span class="n">content</span><span class="o">=</span><span class="s2">&quot;85%&quot;</span><span class="p">,</span> 
+        <span class="n">tool_call_id</span><span class="o">=</span><span class="s2">&quot;call_001&quot;</span><span class="p">,</span> <span class="c1"># Requerido: Vinculación estricta</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;get_server_load&quot;</span>    <span class="c1"># Requerido: Identificación</span>
+    <span class="p">)</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="estrategias-de-implementacion-prompts-vs-mensajes">
+<h2><span class="section-number">5.3. </span>Estrategias de Implementación: Prompts vs. Mensajes<a class="headerlink" href="#estrategias-de-implementacion-prompts-vs-mensajes" title="Link to this heading">#</a></h2>
+<p>La elección del formato de entrada impacta directamente en la capacidad de memoria y razonamiento del sistema.</p>
+<p>Característica	Text Prompts (Strings)	Message Prompts (Lists)
+Casos de Uso	Tareas Zero-shot, clasificación simple.	Agentes, RAG, Chatbots con memoria.
+Complejidad	Baja, ideal para prototipado rápido.	Estructural, necesaria para producción.
+Gestión de Estado	Manual y propensa a errores.	Nativa mediante historial de objetos.
+Multimodalidad	No soportada.	Soportada mediante bloques (dict[]).</p>
+<p>Decisión Arquitectónica: Es imperativo migrar a listas de mensajes cuando el sistema requiere inyección dinámica de instrucciones de sistema o cuando se implementan flujos de Human-in-the-loop, donde el estado debe ser serializado y restaurado con precisión.</p>
+</section>
+<section id="capacidades-avanzadas-bloques-de-contenido-y-razonamiento">
+<h2><span class="section-number">5.4. </span>Capacidades Avanzadas: Bloques de Contenido y Razonamiento<a class="headerlink" href="#capacidades-avanzadas-bloques-de-contenido-y-razonamiento" title="Link to this heading">#</a></h2>
+<p>LangChain facilita la interoperabilidad mediante la estandarización de bloques de contenido. Esto es especialmente potente para modelos que exponen su razonamiento.</p>
+<ul class="simple">
+<li><p>ReasoningContentBlock (Lazy Parsing): Esta es una funcionalidad clave. LangChain puede parsear “perezosamente” (lazy parsing) bloques específicos de proveedores (como el thinking de Anthropic o el reasoning de OpenAI) en un formato estándar. Esto permite que un mismo código procese el razonamiento de múltiples modelos sin lógica personalizada.</p></li>
+<li><p>Multimodalidad: Permite construir mensajes con ImageContentBlock, AudioContentBlock o FileContentBlock.</p></li>
+<li><p>El Campo artifact en ToolMessage: A diferencia del content (que se envía al modelo), el artifact almacena datos que el modelo no necesita ver pero la aplicación sí.</p></li>
+</ul>
+<p>Perspectiva Arquitectónica (Patrón RAG): Al implementar Retrieval Augmented Generation, el content del ToolMessage debe contener el fragmento de texto para que el modelo responda, pero el artifact debe almacenar los IDs de los documentos o metadatos de la fuente. Esto permite renderizar citas en la UI sin “ensuciar” la ventana de contexto del modelo con metadatos técnicos irrelevantes para la generación.</p>
+</section>
+<section id="conclusion-y-guia-de-uso-recomendado">
+<h2><span class="section-number">5.5. </span>Conclusión y Guía de Uso Recomendado<a class="headerlink" href="#conclusion-y-guia-de-uso-recomendado" title="Link to this heading">#</a></h2>
+<p>La arquitectura de mensajes es la base sobre la que se asienta la IA confiable. Para asegurar la excelencia técnica, siga estas Reglas de Oro:</p>
+<ol class="arabic simple">
+<li><p>Agregue Fragmentos en Streaming: Utilice AIMessageChunk para flujos en tiempo real. Recuerde que usage_metadata suele estar disponible únicamente en el chunk final de la secuencia.</p></li>
+<li><p>Estandarice con v1: Para asegurar que los bloques de contenido sean consistentes, establezca la variable de entorno LC_OUTPUT_VERSION=v1 o inicialice sus modelos con output_version=”v1”.</p></li>
+<li><p>Vincule IDs de Herramientas Exitosamente: La consistencia entre tool_call_id y el ID del AIMessage es innegociable para evitar excepciones de estado en el grafo.</p></li>
+<li><p>Optimice el Contexto vía Artifacts: Mantenga el contexto del modelo limpio delegando metadatos de depuración o recuperación al campo artifact.</p></li>
+</ol>
+<p>Una estructura de mensajes limpia no solo facilita el mantenimiento hoy, sino que es el requisito previo para escalar hacia arquitecturas multi-agente robustas. Le invito a implementar estos patrones y observar cómo la estabilidad de sus soluciones de IA se incrementa exponencialmente.</p>
+</section>
+<section id="referencias">
+<h2><span class="section-number">5.6. </span>Referencias<a class="headerlink" href="#referencias" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><a href="https://docs.langchain.com/oss/python/langchain/messages" target="_blank">Referencia oficial </a></p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./jupyters"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="salidas_estructuradas.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">4. </span>Salidas Estructuradas en LangChain</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="agentes.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">6. </span>Introdución a los Agentes en LangChain</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#anatomia-de-un-mensaje-estructura-y-atributos-criticos">5.1. Anatomía de un Mensaje: Estructura y Atributos Críticos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#el-ecosistema-de-tipos-de-mensajes-actores-en-el-grafo-de-ia">5.2. El Ecosistema de Tipos de Mensajes: Actores en el Grafo de IA</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estrategias-de-implementacion-prompts-vs-mensajes">5.3. Estrategias de Implementación: Prompts vs. Mensajes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#capacidades-avanzadas-bloques-de-contenido-y-razonamiento">5.4. Capacidades Avanzadas: Bloques de Contenido y Razonamiento</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion-y-guia-de-uso-recomendado">5.5. Conclusión y Guía de Uso Recomendado</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#referencias">5.6. Referencias</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Francisco Rodríguez
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

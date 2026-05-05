@@ -1,0 +1,870 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>8. LangChain en producción: concurrencia y operaciones asíncronas &#8212; LangChain &amp; LangGraph</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'jupyters/langchain_async_concurrencia';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="9. Introducción" href="init_langGraph.html" />
+    <link rel="prev" title="7. Introducción a las Tools." href="tools.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../introduccion.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">LangChain & LangGraph</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Langchain.</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="modelosLangChain.html">1. Modelos de IA con LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="runnables.html">2. Los runnables de LangChain</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="prompts.html">3. Prompts template en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="salidas_estructuradas.html">4. Salidas estructuradas en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="messages.html">5. Messages en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="agentes.html">6. Agentes en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">7. Tools (herramientas) en LangChain</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">8. Ejecución asíncrona en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="init_langGraph.html">9. Primer acercamiento a LangGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="base_datos.html">10. Base de datos con LangGraph</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Apendices.</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="asyncio.html">11. Asincronia con asyncio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ollama.html">12. Ollama</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sitiosweb.html">13. Sitios web</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Índice de términos</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">Índice de términos</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>LangChain en producción: concurrencia y operaciones asíncronas</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#soporte-asincrono-nativo-en-langchain">8.1. 1. Soporte asíncrono nativo en LangChain</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conceptos-esenciales-de-asyncio">8.2. 2. Conceptos esenciales de <code class="docutils literal notranslate"><span class="pre">asyncio</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#de-sincrono-a-asincrono-usando-ainvoke">8.3. 3. De síncrono a asíncrono: usando <code class="docutils literal notranslate"><span class="pre">ainvoke</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ejecucion-concurrente-con-asyncio-gather">8.4. 4. Ejecución concurrente con <code class="docutils literal notranslate"><span class="pre">asyncio.gather</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streaming-asincrono-con-astream">8.5. 5. Streaming asíncrono con <code class="docutils literal notranslate"><span class="pre">astream</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#procesamiento-por-lotes-con-abatch">8.6. 6. Procesamiento por lotes con <code class="docutils literal notranslate"><span class="pre">abatch</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#consideraciones-para-produccion">8.7. 7. Consideraciones para producción</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manejo-de-errores-en-asyncio-gather">8.7.1. 7.1 Manejo de errores en <code class="docutils literal notranslate"><span class="pre">asyncio.gather</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#limitar-la-concurrencia-con-asyncio-semaphore">8.7.2. 7.2 Limitar la concurrencia con <code class="docutils literal notranslate"><span class="pre">asyncio.Semaphore</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integrar-codigo-sincrono-bloqueante-con-run-in-executor">8.7.3. 7.3 Integrar código síncrono bloqueante con <code class="docutils literal notranslate"><span class="pre">run_in_executor</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resumen">8.8. Resumen</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="langchain-en-produccion-concurrencia-y-operaciones-asincronas">
+<h1><span class="section-number">8. </span>LangChain en producción: concurrencia y operaciones asíncronas<a class="headerlink" href="#langchain-en-produccion-concurrencia-y-operaciones-asincronas" title="Link to this heading">#</a></h1>
+<p><strong>NOTA</strong>: Se recomienda al lector leer la sección del anexo titulado <a class="reference internal" href="asyncio.html#referencia1"><span class="std std-ref">Programación asíncrona con asyncio en Python: una guía práctica</span></a>.</p>
+<p>Cuando una aplicación LangChain crece en complejidad y empieza a manejar múltiples peticiones simultáneas, la ejecución secuencial (síncrona) se convierte rápidamente en el cuello de botella. Llamadas a modelos de lenguaje a través de la red, consultas a bases de datos vectoriales o integraciones con APIs externas son operaciones donde el programa pasa la mayor parte del tiempo <strong>esperando</strong>, no computando.</p>
+<p>La programación asíncrona con <code class="docutils literal notranslate"><span class="pre">asyncio</span></code> permite que, durante esas esperas, el hilo siga atendiendo otras tareas. El resultado es una mejora sustancial en el rendimiento y la capacidad de respuesta de la aplicación.</p>
+<section id="soporte-asincrono-nativo-en-langchain">
+<h2><span class="section-number">8.1. </span>1. Soporte asíncrono nativo en LangChain<a class="headerlink" href="#soporte-asincrono-nativo-en-langchain" title="Link to this heading">#</a></h2>
+<p id="index-0">LangChain está diseñado desde el principio para trabajar en entornos asíncronos. Casi todos sus componentes que implican I/O ofrecen una versión asíncrona siguiendo una convención sencilla:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Método síncrono</p></th>
+<th class="head"><p>Método asíncrono</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">invoke()</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ainvoke()</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">batch()</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">abatch()</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">stream()</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">astream()</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">transform_documents()</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">atransform_documents()</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Para usar estos métodos solo necesitas escribir tu código con las palabras clave <code class="docutils literal notranslate"><span class="pre">async</span></code> y <code class="docutils literal notranslate"><span class="pre">await</span></code> de Python.</p>
+</section>
+<section id="conceptos-esenciales-de-asyncio">
+<h2><span class="section-number">8.2. </span>2. Conceptos esenciales de <code class="docutils literal notranslate"><span class="pre">asyncio</span></code><a class="headerlink" href="#conceptos-esenciales-de-asyncio" title="Link to this heading">#</a></h2>
+<p>Antes de ver ejemplos con LangChain, conviene tener claros cinco conceptos:</p>
+<ol class="arabic simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">async</span> <span class="pre">def</span></code></strong> — declara una función como corrutina. Las corrutinas pueden pausarse y reanudarse.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">await</span></code></strong> — pausa la corrutina actual hasta que la operación indicada termine. Mientras tanto, el bucle de eventos puede atender otras tareas.</p></li>
+<li><p><strong>Bucle de eventos</strong> — el núcleo de <code class="docutils literal notranslate"><span class="pre">asyncio</span></code>. Orquesta y distribuye la ejecución de todas las tareas asíncronas registradas.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">asyncio.run(coroutine())</span></code></strong> — punto de entrada habitual para arrancar el bucle de eventos y ejecutar una corrutina de nivel superior.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">asyncio.gather(*coroutines)</span></code></strong> — ejecuta múltiples corrutinas de forma concurrente y devuelve sus resultados como lista cuando todas han terminado.</p></li>
+</ol>
+</section>
+<section id="de-sincrono-a-asincrono-usando-ainvoke">
+<h2><span class="section-number">8.3. </span>3. De síncrono a asíncrono: usando <code class="docutils literal notranslate"><span class="pre">ainvoke</span></code><a class="headerlink" href="#de-sincrono-a-asincrono-usando-ainvoke" title="Link to this heading">#</a></h2>
+<p>Veamos cómo transformar una cadena síncrona básica en su versión asíncrona. La definición de la cadena con LCEL (<code class="docutils literal notranslate"><span class="pre">prompt</span> <span class="pre">|</span> <span class="pre">model</span> <span class="pre">|</span> <span class="pre">parser</span></code>) no cambia; solo cambia la forma de invocarla.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Versión SÍNCRONA (bloquea el hilo mientras espera la respuesta)</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># from langchain_core.prompts import ChatPromptTemplate</span>
+<span class="c1"># from langchain_openai import ChatOpenAI</span>
+<span class="c1"># from langchain_core.output_parsers import StrOutputParser</span>
+<span class="c1">#</span>
+<span class="c1"># plantilla = ChatPromptTemplate.from_template(&quot;Explica brevemente qué es {concepto}&quot;)</span>
+<span class="c1"># modelo    = ChatOpenAI()</span>
+<span class="c1"># parser    = StrOutputParser()</span>
+<span class="c1"># cadena    = plantilla | modelo | parser</span>
+<span class="c1">#</span>
+<span class="c1"># resultado = cadena.invoke({&quot;concepto&quot;: &quot;la entropía en termodinámica&quot;})</span>
+<span class="c1"># print(resultado)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;(Ejemplo síncrono comentado para no requerir API key)&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(Ejemplo síncrono comentado para no requerir API key)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+
+<span class="c1"># Versión ASÍNCRONA: misma cadena, distinto método de invocación</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># from langchain_core.prompts import ChatPromptTemplate</span>
+<span class="c1"># from langchain_openai import ChatOpenAI</span>
+<span class="c1"># from langchain_core.output_parsers import StrOutputParser</span>
+<span class="c1">#</span>
+<span class="c1"># plantilla = ChatPromptTemplate.from_template(&quot;Explica brevemente qué es {concepto}&quot;)</span>
+<span class="c1"># modelo    = ChatOpenAI()</span>
+<span class="c1"># parser    = StrOutputParser()</span>
+<span class="c1"># cadena    = plantilla | modelo | parser</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">ejecutar_cadena_asincrona</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Lanzando cadena asíncrona...&quot;</span><span class="p">)</span>
+    <span class="c1"># resultado = await cadena.ainvoke({&quot;concepto&quot;: &quot;la entropía en termodinámica&quot;})</span>
+    <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># simula la espera de red</span>
+    <span class="n">resultado</span> <span class="o">=</span> <span class="s2">&quot;La entropía mide el grado de desorden de un sistema termodinámico.&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Resultado: </span><span class="si">{</span><span class="n">resultado</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># En Jupyter usamos await directamente (el bucle ya está activo)</span>
+<span class="k">await</span> <span class="n">ejecutar_cadena_asincrona</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Lanzando cadena asíncrona...
+Resultado: La entropía mide el grado de desorden de un sistema termodinámico.
+</pre></div>
+</div>
+</div>
+</div>
+<blockquote>
+<div><p><strong>Nota sobre LCEL:</strong> Si llamas <code class="docutils literal notranslate"><span class="pre">ainvoke</span></code> sobre una cadena LCEL, LangChain intentará invocar <code class="docutils literal notranslate"><span class="pre">ainvoke</span></code> en cada componente de la cadena. Si algún componente no tiene soporte asíncrono nativo, LCEL lo ejecutará en un <code class="docutils literal notranslate"><span class="pre">ThreadPoolExecutor</span></code> para no bloquear el bucle de eventos, aunque esto añade algo de sobrecarga. Para máximo rendimiento, elige componentes con soporte asíncrono nativo en todas las etapas que impliquen I/O.</p>
+</div></blockquote>
+</section>
+<section id="ejecucion-concurrente-con-asyncio-gather">
+<h2><span class="section-number">8.4. </span>4. Ejecución concurrente con <code class="docutils literal notranslate"><span class="pre">asyncio.gather</span></code><a class="headerlink" href="#ejecucion-concurrente-con-asyncio-gather" title="Link to this heading">#</a></h2>
+<p>El verdadero poder de la asincronía aparece cuando necesitas lanzar varias operaciones al mismo tiempo: consultar el LLM con distintos prompts, recuperar documentos de fuentes diferentes o validar múltiples entradas en paralelo.</p>
+<p><code class="docutils literal notranslate"><span class="pre">asyncio.gather</span></code> es la herramienta para esto. Recibe varias corrutinas y las ejecuta de forma concurrente, devolviendo los resultados en el mismo orden en que se pasaron.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">consultar_modelo</span><span class="p">(</span><span class="n">concepto</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  → Iniciando consulta: &#39;</span><span class="si">{</span><span class="n">concepto</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+    <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">1.5</span><span class="p">)</span>  <span class="c1"># simula latencia de red hacia el LLM</span>
+    <span class="c1"># En producción sería: return await cadena.ainvoke({&quot;concepto&quot;: concepto})</span>
+    <span class="n">respuesta</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Resumen generado sobre &#39;</span><span class="si">{</span><span class="n">concepto</span><span class="si">}</span><span class="s2">&#39;.&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  ✓ Consulta completada: &#39;</span><span class="si">{</span><span class="n">concepto</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">respuesta</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">ejecutar_consultas_concurrentes</span><span class="p">():</span>
+    <span class="n">conceptos</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;redes neuronales&quot;</span><span class="p">,</span> <span class="s2">&quot;transformers&quot;</span><span class="p">,</span> <span class="s2">&quot;aprendizaje por refuerzo&quot;</span><span class="p">]</span>
+    
+    <span class="n">inicio</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+    <span class="c1"># Creamos la lista de corrutinas y las lanzamos todas a la vez</span>
+    <span class="n">corrutinas</span> <span class="o">=</span> <span class="p">[</span><span class="n">consultar_modelo</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">conceptos</span><span class="p">]</span>
+    <span class="n">resultados</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="n">corrutinas</span><span class="p">)</span>
+
+    <span class="n">fin</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Resultados obtenidos:&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resultados</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  • </span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Tiempo total: </span><span class="si">{</span><span class="n">fin</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">inicio</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">s  &quot;</span>
+          <span class="sa">f</span><span class="s2">&quot;(secuencial hubiera tardado ~</span><span class="si">{</span><span class="mf">1.5</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">conceptos</span><span class="p">)</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">s)&quot;</span><span class="p">)</span>
+
+<span class="k">await</span> <span class="n">ejecutar_consultas_concurrentes</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  → Iniciando consulta: &#39;redes neuronales&#39;
+  → Iniciando consulta: &#39;transformers&#39;
+  → Iniciando consulta: &#39;aprendizaje por refuerzo&#39;
+  ✓ Consulta completada: &#39;redes neuronales&#39;
+  ✓ Consulta completada: &#39;transformers&#39;
+  ✓ Consulta completada: &#39;aprendizaje por refuerzo&#39;
+
+Resultados obtenidos:
+  • Resumen generado sobre &#39;redes neuronales&#39;.
+  • Resumen generado sobre &#39;transformers&#39;.
+  • Resumen generado sobre &#39;aprendizaje por refuerzo&#39;.
+
+Tiempo total: 1.51s  (secuencial hubiera tardado ~4.5s)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Con ejecución secuencial, tres llamadas de 1,5 s cada una sumarían <strong>4,5 s</strong>. Con <code class="docutils literal notranslate"><span class="pre">asyncio.gather</span></code>, al superponerse las esperas de red, el tiempo total se acerca a <strong>1,5 s</strong> (la duración de la operación más larga), más un pequeño overhead.</p>
+</section>
+<section id="streaming-asincrono-con-astream">
+<h2><span class="section-number">8.5. </span>5. Streaming asíncrono con <code class="docutils literal notranslate"><span class="pre">astream</span></code><a class="headerlink" href="#streaming-asincrono-con-astream" title="Link to this heading">#</a></h2>
+<p>Los modelos de lenguaje generan texto token a token. Con <code class="docutils literal notranslate"><span class="pre">astream()</span></code> puedes procesar cada fragmento conforme llega, sin esperar a que la respuesta esté completa. Esto mejora enormemente la experiencia en aplicaciones conversacionales: el usuario empieza a leer la respuesta casi de inmediato.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fragmentos_simulados</span><span class="p">(</span><span class="n">tema</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generador asíncrono que simula tokens llegando del LLM.&quot;&quot;&quot;</span>
+    <span class="n">tokens</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;El concepto de &#39;</span><span class="si">{</span><span class="n">tema</span><span class="si">}</span><span class="s2">&#39; es fundamental en el campo de la IA moderna.&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
+        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.15</span><span class="p">)</span>  <span class="c1"># simula el intervalo entre tokens</span>
+        <span class="k">yield</span> <span class="n">token</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">mostrar_respuesta_en_streaming</span><span class="p">():</span>
+    <span class="n">tema</span> <span class="o">=</span> <span class="s2">&quot;atención multi-cabeza&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Respuesta en streaming sobre &#39;</span><span class="si">{</span><span class="n">tema</span><span class="si">}</span><span class="s2">&#39;:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># En producción sería: async for chunk in cadena.astream({&quot;concepto&quot;: tema}):</span>
+    <span class="k">async</span> <span class="k">for</span> <span class="n">fragmento</span> <span class="ow">in</span> <span class="n">fragmentos_simulados</span><span class="p">(</span><span class="n">tema</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">fragmento</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">--- Streaming finalizado ---&quot;</span><span class="p">)</span>
+
+<span class="k">await</span> <span class="n">mostrar_respuesta_en_streaming</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Respuesta en streaming sobre &#39;atención multi-cabeza&#39;:
+
+El concepto de &#39;atención multi-cabeza&#39; es fundamental en el campo de la IA moderna. 
+
+--- Streaming finalizado ---
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="procesamiento-por-lotes-con-abatch">
+<h2><span class="section-number">8.6. </span>6. Procesamiento por lotes con <code class="docutils literal notranslate"><span class="pre">abatch</span></code><a class="headerlink" href="#procesamiento-por-lotes-con-abatch" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">abatch()</span></code> es la versión asíncrona de <code class="docutils literal notranslate"><span class="pre">batch()</span></code>. Acepta múltiples entradas y las envía al componente subyacente de forma concurrente. Si el proveedor (modelo, API de embeddings, etc.) soporta peticiones en bloque reales, <code class="docutils literal notranslate"><span class="pre">abatch</span></code> puede ser más eficiente que varios <code class="docutils literal notranslate"><span class="pre">ainvoke</span></code> en paralelo porque reduce el número de llamadas a la red.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+<span class="c1"># Simulamos un objeto que tiene abatch (como haría una cadena LCEL real)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CadenaSimulada</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">abatch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entradas</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Procesa todas las entradas de forma concurrente.&quot;&quot;&quot;</span>
+        <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">procesar_una</span><span class="p">(</span><span class="n">entrada</span><span class="p">):</span>
+            <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">1.2</span><span class="p">)</span>  <span class="c1"># simula llamada al LLM</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Análisis completado: </span><span class="si">{</span><span class="n">entrada</span><span class="p">[</span><span class="s1">&#39;tema&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="k">return</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">procesar_una</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">entradas</span><span class="p">])</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">ejecutar_batch</span><span class="p">():</span>
+    <span class="n">temas</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ética en IA&quot;</span><span class="p">,</span> <span class="s2">&quot;computación cuántica&quot;</span><span class="p">,</span> <span class="s2">&quot;arquitecturas serverless&quot;</span><span class="p">]</span>
+    <span class="n">entradas</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;tema&quot;</span><span class="p">:</span> <span class="n">t</span><span class="p">}</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">temas</span><span class="p">]</span>
+
+    <span class="n">cadena</span> <span class="o">=</span> <span class="n">CadenaSimulada</span><span class="p">()</span>
+    <span class="n">inicio</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Procesando lote de </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">entradas</span><span class="p">)</span><span class="si">}</span><span class="s2"> entradas...&quot;</span><span class="p">)</span>
+    <span class="n">resultados</span> <span class="o">=</span> <span class="k">await</span> <span class="n">cadena</span><span class="o">.</span><span class="n">abatch</span><span class="p">(</span><span class="n">entradas</span><span class="p">)</span>
+
+    <span class="n">fin</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Resultados del batch:&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resultados</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  • </span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Tiempo total: </span><span class="si">{</span><span class="n">fin</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">inicio</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">)</span>
+
+<span class="k">await</span> <span class="n">ejecutar_batch</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Procesando lote de 3 entradas...
+
+Resultados del batch:
+  • Análisis completado: ética en IA
+  • Análisis completado: computación cuántica
+  • Análisis completado: arquitecturas serverless
+
+Tiempo total: 1.21s
+</pre></div>
+</div>
+</div>
+</div>
+<blockquote>
+<div><p>La mejora real de <code class="docutils literal notranslate"><span class="pre">abatch</span></code> frente a múltiples <code class="docutils literal notranslate"><span class="pre">ainvoke</span></code> depende de si el servicio subyacente (API del LLM, modelo de embeddings) optimiza genuinamente las peticiones en bloque. Si no lo hace, el comportamiento será equivalente a <code class="docutils literal notranslate"><span class="pre">asyncio.gather</span></code> con varios <code class="docutils literal notranslate"><span class="pre">ainvoke</span></code>.</p>
+</div></blockquote>
+</section>
+<section id="consideraciones-para-produccion">
+<h2><span class="section-number">8.7. </span>7. Consideraciones para producción<a class="headerlink" href="#consideraciones-para-produccion" title="Link to this heading">#</a></h2>
+<section id="manejo-de-errores-en-asyncio-gather">
+<h3><span class="section-number">8.7.1. </span>7.1 Manejo de errores en <code class="docutils literal notranslate"><span class="pre">asyncio.gather</span></code><a class="headerlink" href="#manejo-de-errores-en-asyncio-gather" title="Link to this heading">#</a></h3>
+<p>Por defecto, si una corrutina lanza una excepción dentro de <code class="docutils literal notranslate"><span class="pre">gather</span></code>, esta se propaga de inmediato y puede cancelar las demás. Usa <code class="docutils literal notranslate"><span class="pre">return_exceptions=True</span></code> para capturar los errores como valores y seguir procesando el resto.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">analizar_documento</span><span class="p">(</span><span class="n">doc_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">doc_id</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ConnectionError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No se pudo acceder al documento #</span><span class="si">{</span><span class="n">doc_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.8</span><span class="p">)</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Documento #</span><span class="si">{</span><span class="n">doc_id</span><span class="si">}</span><span class="s2"> analizado correctamente.&quot;</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">procesar_varios_documentos</span><span class="p">():</span>
+    <span class="n">ids</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+
+    <span class="n">resultados</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
+        <span class="o">*</span><span class="p">[</span><span class="n">analizar_documento</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">],</span>
+        <span class="n">return_exceptions</span><span class="o">=</span><span class="kc">True</span>  <span class="c1"># los errores se devuelven como valores, no interrumpen</span>
+    <span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">resultado</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ids</span><span class="p">,</span> <span class="n">resultados</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">resultado</span><span class="p">,</span> <span class="ne">Exception</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  ✗ Doc #</span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">resultado</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> — </span><span class="si">{</span><span class="n">resultado</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  ✓ Doc #</span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">resultado</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">await</span> <span class="n">procesar_varios_documentos</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  ✓ Doc #1: Documento #1 analizado correctamente.
+  ✗ Doc #2: ConnectionError — No se pudo acceder al documento #2
+  ✓ Doc #3: Documento #3 analizado correctamente.
+  ✓ Doc #4: Documento #4 analizado correctamente.
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="limitar-la-concurrencia-con-asyncio-semaphore">
+<h3><span class="section-number">8.7.2. </span>7.2 Limitar la concurrencia con <code class="docutils literal notranslate"><span class="pre">asyncio.Semaphore</span></code><a class="headerlink" href="#limitar-la-concurrencia-con-asyncio-semaphore" title="Link to this heading">#</a></h3>
+<p>Lanzar demasiadas corrutinas a la vez puede saturar la API del LLM o agotar los recursos locales. Un <code class="docutils literal notranslate"><span class="pre">Semaphore</span></code> actúa como válvula: limita cuántas corrutinas pueden ejecutarse simultáneamente.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+
+<span class="n">MAX_CONCURRENTES</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># máximo de llamadas simultáneas al LLM</span>
+<span class="n">semaforo</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Semaphore</span><span class="p">(</span><span class="n">MAX_CONCURRENTES</span><span class="p">)</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">llamar_llm_con_limite</span><span class="p">(</span><span class="n">pregunta</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">with</span> <span class="n">semaforo</span><span class="p">:</span>  <span class="c1"># espera hasta que haya un slot libre</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Procesando: &#39;</span><span class="si">{</span><span class="n">pregunta</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># simula llamada al LLM</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Respuesta a &#39;</span><span class="si">{</span><span class="n">pregunta</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">gestionar_cola_preguntas</span><span class="p">():</span>
+    <span class="n">preguntas</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;¿Qué es RAG?&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;¿Cómo funciona LCEL?&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;¿Qué es un agente?&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;¿Para qué sirven los embeddings?&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;¿Qué es LangSmith?&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cola de </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">preguntas</span><span class="p">)</span><span class="si">}</span><span class="s2"> preguntas con límite de </span><span class="si">{</span><span class="n">MAX_CONCURRENTES</span><span class="si">}</span><span class="s2"> concurrentes:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">resultados</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">llamar_llm_con_limite</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">preguntas</span><span class="p">])</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Respuestas obtenidas:&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resultados</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  • </span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">await</span> <span class="n">gestionar_cola_preguntas</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Cola de 5 preguntas con límite de 2 concurrentes:
+
+  Procesando: &#39;¿Qué es RAG?&#39;
+  Procesando: &#39;¿Cómo funciona LCEL?&#39;
+  Procesando: &#39;¿Qué es un agente?&#39;
+  Procesando: &#39;¿Para qué sirven los embeddings?&#39;
+  Procesando: &#39;¿Qué es LangSmith?&#39;
+
+Respuestas obtenidas:
+  • Respuesta a &#39;¿Qué es RAG?&#39;
+  • Respuesta a &#39;¿Cómo funciona LCEL?&#39;
+  • Respuesta a &#39;¿Qué es un agente?&#39;
+  • Respuesta a &#39;¿Para qué sirven los embeddings?&#39;
+  • Respuesta a &#39;¿Qué es LangSmith?&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="integrar-codigo-sincrono-bloqueante-con-run-in-executor">
+<h3><span class="section-number">8.7.3. </span>7.3 Integrar código síncrono bloqueante con <code class="docutils literal notranslate"><span class="pre">run_in_executor</span></code><a class="headerlink" href="#integrar-codigo-sincrono-bloqueante-con-run-in-executor" title="Link to this heading">#</a></h3>
+<p>A veces necesitas llamar a una librería que solo tiene API síncrona (por ejemplo, lectura de archivos pesados, operaciones con bases de datos sin driver async, etc.). Para no bloquear el bucle de eventos, usa <code class="docutils literal notranslate"><span class="pre">loop.run_in_executor()</span></code>, que ejecuta la función en un hilo separado.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">cargar_datos_sincrono</span><span class="p">(</span><span class="n">fuente</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Función síncrona bloqueante (simula lectura de disco o BD legacy).&quot;&quot;&quot;</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># operación bloqueante</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Datos cargados desde &#39;</span><span class="si">{</span><span class="n">fuente</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">cargar_sin_bloquear</span><span class="p">(</span><span class="n">fuente</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">bucle</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_running_loop</span><span class="p">()</span>
+    <span class="c1"># Ejecuta la función síncrona en un ThreadPoolExecutor</span>
+    <span class="n">resultado</span> <span class="o">=</span> <span class="k">await</span> <span class="n">bucle</span><span class="o">.</span><span class="n">run_in_executor</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">cargar_datos_sincrono</span><span class="p">,</span> <span class="n">fuente</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">resultado</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">pipeline_mixto</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cargando datos de forma no bloqueante...&quot;</span><span class="p">)</span>
+    <span class="n">resultado</span> <span class="o">=</span> <span class="k">await</span> <span class="n">cargar_sin_bloquear</span><span class="p">(</span><span class="s2">&quot;base_de_datos_legacy&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">resultado</span><span class="p">)</span>
+
+<span class="k">await</span> <span class="n">pipeline_mixto</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Cargando datos de forma no bloqueante...
+Datos cargados desde &#39;base_de_datos_legacy&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="resumen">
+<h2><span class="section-number">8.8. </span>Resumen<a class="headerlink" href="#resumen" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Patrón</p></th>
+<th class="head"><p>Cuándo usarlo</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ainvoke</span></code></p></td>
+<td><p>Una sola llamada asíncrona a una cadena o componente</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">asyncio.gather</span></code></p></td>
+<td><p>Varias operaciones independientes en paralelo</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">astream</span></code></p></td>
+<td><p>Respuestas de LLMs token a token (chatbots, UIs reactivas)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">abatch</span></code></p></td>
+<td><p>Múltiples entradas cuando el backend soporta batching real</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Semaphore</span></code></p></td>
+<td><p>Limitar concurrencia para no saturar APIs externas</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">run_in_executor</span></code></p></td>
+<td><p>Integrar código síncrono bloqueante sin detener el bucle</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Dominar estos patrones es imprescindible para construir aplicaciones LangChain que escalen de verdad en producción: mayor throughput, menor latencia percibida y un uso más eficiente de los recursos disponibles.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./jupyters"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="tools.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">7. </span>Introducción a las Tools.</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="init_langGraph.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">9. </span>Introducción</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#soporte-asincrono-nativo-en-langchain">8.1. 1. Soporte asíncrono nativo en LangChain</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conceptos-esenciales-de-asyncio">8.2. 2. Conceptos esenciales de <code class="docutils literal notranslate"><span class="pre">asyncio</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#de-sincrono-a-asincrono-usando-ainvoke">8.3. 3. De síncrono a asíncrono: usando <code class="docutils literal notranslate"><span class="pre">ainvoke</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ejecucion-concurrente-con-asyncio-gather">8.4. 4. Ejecución concurrente con <code class="docutils literal notranslate"><span class="pre">asyncio.gather</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streaming-asincrono-con-astream">8.5. 5. Streaming asíncrono con <code class="docutils literal notranslate"><span class="pre">astream</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#procesamiento-por-lotes-con-abatch">8.6. 6. Procesamiento por lotes con <code class="docutils literal notranslate"><span class="pre">abatch</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#consideraciones-para-produccion">8.7. 7. Consideraciones para producción</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manejo-de-errores-en-asyncio-gather">8.7.1. 7.1 Manejo de errores en <code class="docutils literal notranslate"><span class="pre">asyncio.gather</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#limitar-la-concurrencia-con-asyncio-semaphore">8.7.2. 7.2 Limitar la concurrencia con <code class="docutils literal notranslate"><span class="pre">asyncio.Semaphore</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integrar-codigo-sincrono-bloqueante-con-run-in-executor">8.7.3. 7.3 Integrar código síncrono bloqueante con <code class="docutils literal notranslate"><span class="pre">run_in_executor</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resumen">8.8. Resumen</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Francisco Rodríguez
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

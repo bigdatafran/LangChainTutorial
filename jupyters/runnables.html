@@ -1,0 +1,1355 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>2. Los runnables de LangChain &#8212; LangChain &amp; LangGraph</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'jupyters/runnables';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="3. GESTION DE PROMPTS EN LANGCHAIN - PYTHON" href="prompts.html" />
+    <link rel="prev" title="1. Generación de Modelos de IA con LangChain" href="modelosLangChain.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../introduccion.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">LangChain & LangGraph</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Langchain.</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="modelosLangChain.html">1. Modelos de IA con LangChain</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">2. Los runnables de LangChain</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="prompts.html">3. Prompts template en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="salidas_estructuradas.html">4. Salidas estructuradas en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="messages.html">5. Messages en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="agentes.html">6. Agentes en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">7. Tools (herramientas) en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="langchain_async_concurrencia.html">8. Ejecución asíncrona en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="init_langGraph.html">9. Primer acercamiento a LangGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="base_datos.html">10. Base de datos con LangGraph</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Apendices.</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="asyncio.html">11. Asincronia con asyncio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ollama.html">12. Ollama</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sitiosweb.html">13. Sitios web</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Índice de términos</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">Índice de términos</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Los runnables de LangChain</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">2. Los runnables de LangChain</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#componentes-que-son-runnables">2.1. Componentes que son Runnables</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#la-interfaz-runnable">2.2. La Interfaz Runnable</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#estructura-base">2.2.1. Estructura Base</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#beneficios-de-la-interfaz-runnable">2.2.2. Beneficios de la Interfaz Runnable</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#lcel-langchain-expression-language">2. LCEL: LangChain Expression Language</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sintaxis-basica-del-pipe">2.1. Sintaxis Básica del Pipe</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#por-que-usar-lcel">2.2. ¿Por Qué Usar LCEL?</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#metodos-principales-de-runnable">2. Métodos Principales de Runnable</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#invoke-ejecucion-simple">2.1. invoke() - Ejecución Simple</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-procesamiento-en-lote">2.2. batch() - Procesamiento en Lote</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-as-completed-streaming-de-batch">2.3. batch_as_completed() - Streaming de Batch</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stream-streaming-incremental">2.4. stream() - Streaming Incremental</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#metodos-asincronos">2.5. Métodos Asíncronos</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#composicion-de-chains-con-lcel">2. Composición de Chains con LCEL</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#composicion-secuencial">2.1. Composición Secuencial</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#runnablepassthrough-pasar-datos-sin-modificar">2.2. RunnablePassthrough - Pasar Datos Sin Modificar</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#runnableparallel-ejecucion-paralela">2.3. RunnableParallel - Ejecución Paralela</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#runnablelambda-funciones-personalizadas">2.4. RunnableLambda - Funciones Personalizadas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#runnablebranch-enrutamiento-condicional">2.5. RunnableBranch - Enrutamiento Condicional</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#runnables-especializados">2. Runnables Especializados</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#runnablesequence-secuencia-explicita">2.1. RunnableSequence - Secuencia Explícita</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#runnablemap-mapeo-de-datos">2.1.1. RunnableMap - Mapeo de Datos</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#runnablewithfallbacks-respaldo-en-errores">2.2. RunnableWithFallbacks - Respaldo en Errores</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#runnableretry-reintentos-automaticos">2.3. RunnableRetry - Reintentos Automáticos</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#configuracion-avanzada">2. Configuración Avanzada</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#runnableconfig">2.1. RunnableConfig</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configurar-componentes-con-with-config">2.2. Configurar Componentes con .with_config()</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#binding-vincular-parametros">2.2.1. Binding - Vincular Parámetros</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplos-practicos-completos">2. Ejemplos Prácticos Completos</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-1-sistema-rag-completo">2.1. Ejemplo 1: Sistema RAG Completo</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-2-analisis-multi-modelo-con-fallbacks">2.2. Ejemplo 2: Análisis Multi-Modelo con Fallbacks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-3-sistema-de-enrutamiento-inteligente">2.3. Ejemplo 3: Sistema de Enrutamiento Inteligente</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-4-pipeline-de-procesamiento-con-validacion">2.4. Ejemplo 4: Pipeline de Procesamiento con Validación</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="los-runnables-de-langchain">
+<h1><span class="section-number">2. </span>Los runnables de LangChain<a class="headerlink" href="#los-runnables-de-langchain" title="Link to this heading">#</a></h1>
+<p id="index-0">LangChain proporciona una interfaz unificada llamada Runnable que sirve como base para todos los componentes ejecutables en el framework. Esta interfaz estandariza la forma en que interactúas con diferentes componentes, permitiendo una composición elegante y consistente.</p>
+<p>La interfaz Runnable es ahora el componente principal de LangChain. Estandariza cómo se ejecutan y componen los componentes, como LLM, analizadores de salida, recuperadores y flujos de trabajo de agentes .</p>
+<p>Un Runnable es cualquier objeto que implementa la interfaz estándar de LangChain con los siguientes métodos principales:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">invoke()</span></code>: Ejecuta el runnable con una entrada y devuelve una salida</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">batch()</span></code>: Ejecuta el runnable con múltiples entradas en paralelo</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stream()</span></code>: Ejecuta el runnable y devuelve resultados progresivamente</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ainvoke()</span></code>, <code class="docutils literal notranslate"><span class="pre">abatch()</span></code>, <code class="docutils literal notranslate"><span class="pre">astream()</span></code>: Versiones asíncronas de los métodos anteriores</p></li>
+</ul>
+<p>Veamos a continuación un ejemplo de invocación de un Runnable con configuración personalizada:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">some_runnable</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
+    <span class="n">some_input</span><span class="p">,</span>
+    <span class="n">config</span><span class="o">=</span><span class="p">{</span>
+    <span class="s1">&#39;run_name&#39;</span><span class="p">:</span> <span class="s1">&#39;my_run&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;tags&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;tag1&#39;</span><span class="p">,</span> <span class="s1">&#39;tag2&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;metadata&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;key&#39;</span><span class="p">:</span> <span class="s1">&#39;value&#39;</span><span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p id="index-1">Como puede verse cualquier runable puede admitir como parámetro otro objeto denominado <code class="docutils literal notranslate"><span class="pre">RunnableConfig</span></code>, cuya exposición detallada <a href="https://reference.langchain.com/python/langchain-core/runnables/config/RunnableConfig" target="_blank">la podemos encontrar en el siguiente enlace </a>:</p>
+<p><img alt="" src="../_images/runnableConfig.png" /></p>
+<section id="componentes-que-son-runnables">
+<h2><span class="section-number">2.1. </span>Componentes que son Runnables<a class="headerlink" href="#componentes-que-son-runnables" title="Link to this heading">#</a></h2>
+<p>Prácticamente todos los componentes principales de LangChain son Runnables:</p>
+<ul class="simple">
+<li><p>Modelos de lenguaje (LLMs y Chat Models)</p></li>
+<li><p>Prompts (ChatPromptTemplate, PromptTemplate)</p></li>
+<li><p>Output Parsers</p></li>
+<li><p>Retrievers</p></li>
+<li><p>Tools</p></li>
+<li><p>Chains personalizados</p></li>
+</ul>
+</section>
+<section id="la-interfaz-runnable">
+<h2><span class="section-number">2.2. </span>La Interfaz Runnable<a class="headerlink" href="#la-interfaz-runnable" title="Link to this heading">#</a></h2>
+<section id="estructura-base">
+<h3><span class="section-number">2.2.1. </span>Estructura Base<a class="headerlink" href="#estructura-base" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.runnables</span><span class="w"> </span><span class="kn">import</span> <span class="n">Runnable</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MyCustomRunnable</span><span class="p">(</span><span class="n">Runnable</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">invoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># Implementar lógica de procesamiento</span>
+        <span class="k">return</span> <span class="n">output</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># Procesar múltiples inputs</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span> <span class="k">for</span> <span class="n">inp</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">]</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># Devolver resultados progresivamente</span>
+        <span class="k">yield</span> <span class="n">chunk</span>
+</pre></div>
+</div>
+</section>
+<section id="beneficios-de-la-interfaz-runnable">
+<h3><span class="section-number">2.2.2. </span>Beneficios de la Interfaz Runnable<a class="headerlink" href="#beneficios-de-la-interfaz-runnable" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Composición Declarativa</strong>: Combina componentes usando operadores simples</p></li>
+<li><p><strong>Ejecución Flexible</strong>: Soporte para síncrono, asíncrono, batch y streaming</p></li>
+<li><p><strong>Observabilidad</strong>: Trazabilidad automática con LangSmith</p></li>
+<li><p><strong>Configuración Unificada</strong>: Configuración consistente a través de <code class="docutils literal notranslate"><span class="pre">RunnableConfig</span></code></p></li>
+</ol>
+</section>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="lcel-langchain-expression-language">
+<h1><span class="section-number">2. </span>LCEL: LangChain Expression Language<a class="headerlink" href="#lcel-langchain-expression-language" title="Link to this heading">#</a></h1>
+<p id="index-2">LCEL es una sintaxis declarativa para componer runnables de manera elegante y eficiente. El operador principal es el <strong>pipe</strong> (<code class="docutils literal notranslate"><span class="pre">|</span></code>).</p>
+<p>LCEL (LangChain Expression Language) permite componer ejecutables de manera eficiente utilizando una sintaxis similar a las tuberías de Linux :</p>
+<p>´´´python
+chain = prompt | llm | output_parser
+´´´</p>
+<p>En lugar de gestionar manualmente la ejecución , LCEL optimiza automáticamente el flujo de trabajo, lo que facilita la creación de aplicaciones de IA escalables .</p>
+<p>La transición de las cadenas tradicionales a ejecutables y LCEL proporciona mayor flexibilidad, eficiencia y componibilidad . Los desarrolladores ahora pueden crear pipelines de IA complejos con menos código repetitivo, centrándose en definir flujos de trabajo en lugar de gestionar la ejecución</p>
+<section id="sintaxis-basica-del-pipe">
+<h2><span class="section-number">2.1. </span>Sintaxis Básica del Pipe<a class="headerlink" href="#sintaxis-basica-del-pipe" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">StrOutputParser</span>
+
+<span class="c1"># Componentes individuales</span>
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_template</span><span class="p">(</span><span class="s2">&quot;Cuéntame un chiste sobre </span><span class="si">{tema}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4&quot;</span><span class="p">)</span>
+<span class="n">parser</span> <span class="o">=</span> <span class="n">StrOutputParser</span><span class="p">()</span>
+
+<span class="c1"># Composición con LCEL</span>
+<span class="n">chain</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">model</span> <span class="o">|</span> <span class="n">parser</span>
+
+<span class="c1"># Ejecución</span>
+<span class="n">resultado</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;tema&quot;</span><span class="p">:</span> <span class="s2">&quot;programación&quot;</span><span class="p">})</span>
+</pre></div>
+</div>
+</section>
+<section id="por-que-usar-lcel">
+<h2><span class="section-number">2.2. </span>¿Por Qué Usar LCEL?<a class="headerlink" href="#por-que-usar-lcel" title="Link to this heading">#</a></h2>
+<p><strong>Ventajas sobre composición manual:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Código más limpio</strong>: Sintaxis declarativa vs imperativa</p></li>
+<li><p><strong>Streaming automático</strong>: Los componentes se ejecutan de forma incremental</p></li>
+<li><p><strong>Paralelización</strong>: Ejecución paralela de branches independientes</p></li>
+<li><p><strong>Trazabilidad</strong>: Cada paso es rastreado automáticamente</p></li>
+<li><p><strong>Configuración propagada</strong>: Config se propaga a través de la cadena</p></li>
+</ol>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="metodos-principales-de-runnable">
+<h1><span class="section-number">2. </span>Métodos Principales de Runnable<a class="headerlink" href="#metodos-principales-de-runnable" title="Link to this heading">#</a></h1>
+<section id="invoke-ejecucion-simple">
+<h2><span class="section-number">2.1. </span>invoke() - Ejecución Simple<a class="headerlink" href="#invoke-ejecucion-simple" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ejecutar un solo input</span>
+<span class="n">resultado</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="s2">&quot;valor&quot;</span><span class="p">})</span>
+
+<span class="c1"># Con configuración</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.runnables</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunnableConfig</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">RunnableConfig</span><span class="p">(</span>
+    <span class="n">run_name</span><span class="o">=</span><span class="s2">&quot;Mi Ejecución Personalizada&quot;</span><span class="p">,</span>
+    <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;produccion&quot;</span><span class="p">,</span> <span class="s2">&quot;v1&quot;</span><span class="p">],</span>
+    <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;usuario&quot;</span><span class="p">:</span> <span class="s2">&quot;juan&quot;</span><span class="p">}</span>
+<span class="p">)</span>
+
+<span class="n">resultado</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="s2">&quot;valor&quot;</span><span class="p">},</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="batch-procesamiento-en-lote">
+<h2><span class="section-number">2.2. </span>batch() - Procesamiento en Lote<a class="headerlink" href="#batch-procesamiento-en-lote" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Procesar múltiples inputs en paralelo</span>
+<span class="n">inputs</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span><span class="s2">&quot;tema&quot;</span><span class="p">:</span> <span class="s2">&quot;perros&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;tema&quot;</span><span class="p">:</span> <span class="s2">&quot;gatos&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;tema&quot;</span><span class="p">:</span> <span class="s2">&quot;pájaros&quot;</span><span class="p">}</span>
+<span class="p">]</span>
+
+<span class="n">resultados</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">batch</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+
+<span class="c1"># Controlar concurrencia</span>
+<span class="n">resultados</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">batch</span><span class="p">(</span>
+    <span class="n">inputs</span><span class="p">,</span>
+    <span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;max_concurrency&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="batch-as-completed-streaming-de-batch">
+<h2><span class="section-number">2.3. </span>batch_as_completed() - Streaming de Batch<a class="headerlink" href="#batch-as-completed-streaming-de-batch" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Recibir resultados conforme se completan</span>
+<span class="k">for</span> <span class="n">resultado_info</span> <span class="ow">in</span> <span class="n">chain</span><span class="o">.</span><span class="n">batch_as_completed</span><span class="p">(</span><span class="n">inputs</span><span class="p">):</span>
+    <span class="n">indice</span> <span class="o">=</span> <span class="n">resultado_info</span><span class="p">[</span><span class="s2">&quot;index&quot;</span><span class="p">]</span>
+    <span class="n">resultado</span> <span class="o">=</span> <span class="n">resultado_info</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Completado </span><span class="si">{</span><span class="n">indice</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">resultado</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="stream-streaming-incremental">
+<h2><span class="section-number">2.4. </span>stream() - Streaming Incremental<a class="headerlink" href="#stream-streaming-incremental" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Stream de texto</span>
+<span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">chain</span><span class="o">.</span><span class="n">stream</span><span class="p">({</span><span class="s2">&quot;tema&quot;</span><span class="p">:</span> <span class="s2">&quot;inteligencia artificial&quot;</span><span class="p">}):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">chunk</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Stream con eventos</span>
+<span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">chain</span><span class="o">.</span><span class="n">stream</span><span class="p">(</span>
+    <span class="p">{</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="s2">&quot;¿Qué es Python?&quot;</span><span class="p">},</span>
+    <span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;run_name&quot;</span><span class="p">:</span> <span class="s2">&quot;ConsultaStreaming&quot;</span><span class="p">}</span>
+<span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="metodos-asincronos">
+<h2><span class="section-number">2.5. </span>Métodos Asíncronos<a class="headerlink" href="#metodos-asincronos" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">procesar_async</span><span class="p">():</span>
+    <span class="c1"># Async invoke</span>
+    <span class="n">resultado</span> <span class="o">=</span> <span class="k">await</span> <span class="n">chain</span><span class="o">.</span><span class="n">ainvoke</span><span class="p">({</span><span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="s2">&quot;valor&quot;</span><span class="p">})</span>
+    
+    <span class="c1"># Async batch</span>
+    <span class="n">resultados</span> <span class="o">=</span> <span class="k">await</span> <span class="n">chain</span><span class="o">.</span><span class="n">abatch</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+    
+    <span class="c1"># Async stream</span>
+    <span class="k">async</span> <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">chain</span><span class="o">.</span><span class="n">astream</span><span class="p">({</span><span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="s2">&quot;valor&quot;</span><span class="p">}):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">chunk</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">procesar_async</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="composicion-de-chains-con-lcel">
+<h1><span class="section-number">2. </span>Composición de Chains con LCEL<a class="headerlink" href="#composicion-de-chains-con-lcel" title="Link to this heading">#</a></h1>
+<section id="composicion-secuencial">
+<h2><span class="section-number">2.1. </span>Composición Secuencial<a class="headerlink" href="#composicion-secuencial" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Chain básico: prompt -&gt; modelo -&gt; parser</span>
+<span class="n">chain</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">model</span> <span class="o">|</span> <span class="n">parser</span>
+
+<span class="c1"># Chain con múltiples pasos</span>
+<span class="n">step1</span> <span class="o">=</span> <span class="n">prompt1</span> <span class="o">|</span> <span class="n">model</span> <span class="o">|</span> <span class="n">parser</span>
+<span class="n">step2</span> <span class="o">=</span> <span class="n">prompt2</span> <span class="o">|</span> <span class="n">model</span> <span class="o">|</span> <span class="n">parser</span>
+<span class="n">step3</span> <span class="o">=</span> <span class="n">prompt3</span> <span class="o">|</span> <span class="n">model</span> <span class="o">|</span> <span class="n">parser</span>
+
+<span class="c1"># Componer en secuencia</span>
+<span class="n">full_chain</span> <span class="o">=</span> <span class="n">step1</span> <span class="o">|</span> <span class="n">step2</span> <span class="o">|</span> <span class="n">step3</span>
+</pre></div>
+</div>
+</section>
+<section id="runnablepassthrough-pasar-datos-sin-modificar">
+<h2><span class="section-number">2.2. </span>RunnablePassthrough - Pasar Datos Sin Modificar<a class="headerlink" href="#runnablepassthrough-pasar-datos-sin-modificar" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.runnables</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunnablePassthrough</span>
+
+<span class="c1"># Pasar input directamente</span>
+<span class="n">chain</span> <span class="o">=</span> <span class="n">RunnablePassthrough</span><span class="p">()</span> <span class="o">|</span> <span class="n">model</span>
+
+<span class="c1"># Pasar y añadir datos</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.runnables</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunnableParallel</span>
+
+<span class="n">chain</span> <span class="o">=</span> <span class="n">RunnableParallel</span><span class="p">({</span>
+    <span class="s2">&quot;original&quot;</span><span class="p">:</span> <span class="n">RunnablePassthrough</span><span class="p">(),</span>
+    <span class="s2">&quot;procesado&quot;</span><span class="p">:</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">model</span>
+<span class="p">})</span>
+
+<span class="n">resultado</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;texto&quot;</span><span class="p">:</span> <span class="s2">&quot;Hola mundo&quot;</span><span class="p">})</span>
+<span class="c1"># {&#39;original&#39;: {&#39;texto&#39;: &#39;Hola mundo&#39;}, &#39;procesado&#39;: &#39;...&#39;}</span>
+</pre></div>
+</div>
+</section>
+<section id="runnableparallel-ejecucion-paralela">
+<h2><span class="section-number">2.3. </span>RunnableParallel - Ejecución Paralela<a class="headerlink" href="#runnableparallel-ejecucion-paralela" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.runnables</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunnableParallel</span>
+
+<span class="c1"># Ejecutar múltiples chains en paralelo</span>
+<span class="n">parallel_chain</span> <span class="o">=</span> <span class="n">RunnableParallel</span><span class="p">({</span>
+    <span class="s2">&quot;resumen&quot;</span><span class="p">:</span> <span class="n">prompt_resumen</span> <span class="o">|</span> <span class="n">model</span> <span class="o">|</span> <span class="n">parser</span><span class="p">,</span>
+    <span class="s2">&quot;sentimiento&quot;</span><span class="p">:</span> <span class="n">prompt_sentimiento</span> <span class="o">|</span> <span class="n">model</span> <span class="o">|</span> <span class="n">parser</span><span class="p">,</span>
+    <span class="s2">&quot;keywords&quot;</span><span class="p">:</span> <span class="n">prompt_keywords</span> <span class="o">|</span> <span class="n">model</span> <span class="o">|</span> <span class="n">parser</span>
+<span class="p">})</span>
+
+<span class="n">resultado</span> <span class="o">=</span> <span class="n">parallel_chain</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;texto&quot;</span><span class="p">:</span> <span class="s2">&quot;Texto a analizar&quot;</span><span class="p">})</span>
+<span class="c1"># {</span>
+<span class="c1">#   &#39;resumen&#39;: &#39;...&#39;,</span>
+<span class="c1">#   &#39;sentimiento&#39;: &#39;positivo&#39;,</span>
+<span class="c1">#   &#39;keywords&#39;: [&#39;palabra1&#39;, &#39;palabra2&#39;]</span>
+<span class="c1"># }</span>
+</pre></div>
+</div>
+</section>
+<section id="runnablelambda-funciones-personalizadas">
+<h2><span class="section-number">2.4. </span>RunnableLambda - Funciones Personalizadas<a class="headerlink" href="#runnablelambda-funciones-personalizadas" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.runnables</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunnableLambda</span>
+
+<span class="c1"># Función personalizada</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">procesar_texto</span><span class="p">(</span><span class="n">input_dict</span><span class="p">):</span>
+    <span class="n">texto</span> <span class="o">=</span> <span class="n">input_dict</span><span class="p">[</span><span class="s2">&quot;texto&quot;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;texto_procesado&quot;</span><span class="p">:</span> <span class="n">texto</span><span class="o">.</span><span class="n">upper</span><span class="p">()}</span>
+
+<span class="c1"># Convertir a Runnable</span>
+<span class="n">lambda_runnable</span> <span class="o">=</span> <span class="n">RunnableLambda</span><span class="p">(</span><span class="n">procesar_texto</span><span class="p">)</span>
+
+<span class="c1"># Usar en chain</span>
+<span class="n">chain</span> <span class="o">=</span> <span class="n">lambda_runnable</span> <span class="o">|</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">model</span>
+
+<span class="c1"># También con decorador</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.runnables</span><span class="w"> </span><span class="kn">import</span> <span class="n">chain</span>
+
+<span class="nd">@chain</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">mi_funcion_personalizada</span><span class="p">(</span><span class="n">input_dict</span><span class="p">):</span>
+    <span class="c1"># Lógica personalizada</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;resultado&quot;</span><span class="p">:</span> <span class="s2">&quot;procesado&quot;</span><span class="p">}</span>
+
+<span class="c1"># Usar directamente</span>
+<span class="n">chain</span> <span class="o">=</span> <span class="n">mi_funcion_personalizada</span> <span class="o">|</span> <span class="n">model</span>
+</pre></div>
+</div>
+</section>
+<section id="runnablebranch-enrutamiento-condicional">
+<h2><span class="section-number">2.5. </span>RunnableBranch - Enrutamiento Condicional<a class="headerlink" href="#runnablebranch-enrutamiento-condicional" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.runnables</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunnableBranch</span>
+
+<span class="c1"># Definir ramas condicionales</span>
+<span class="n">branch</span> <span class="o">=</span> <span class="n">RunnableBranch</span><span class="p">(</span>
+    <span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s2">&quot;urgente&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;texto&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+        <span class="n">prompt_urgente</span> <span class="o">|</span> <span class="n">model</span>  <span class="c1"># Si es urgente</span>
+    <span class="p">),</span>
+    <span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s2">&quot;consulta&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;texto&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+        <span class="n">prompt_consulta</span> <span class="o">|</span> <span class="n">model</span>  <span class="c1"># Si es consulta</span>
+    <span class="p">),</span>
+    <span class="n">prompt_general</span> <span class="o">|</span> <span class="n">model</span>  <span class="c1"># Ruta por defecto</span>
+<span class="p">)</span>
+
+<span class="n">resultado</span> <span class="o">=</span> <span class="n">branch</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;texto&quot;</span><span class="p">:</span> <span class="s2">&quot;Tengo una consulta urgente&quot;</span><span class="p">})</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="runnables-especializados">
+<h1><span class="section-number">2. </span>Runnables Especializados<a class="headerlink" href="#runnables-especializados" title="Link to this heading">#</a></h1>
+<section id="runnablesequence-secuencia-explicita">
+<h2><span class="section-number">2.1. </span>RunnableSequence - Secuencia Explícita<a class="headerlink" href="#runnablesequence-secuencia-explicita" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.runnables</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunnableSequence</span>
+
+<span class="c1"># Crear secuencia explícitamente</span>
+<span class="n">sequence</span> <span class="o">=</span> <span class="n">RunnableSequence</span><span class="p">(</span>
+    <span class="n">first</span><span class="o">=</span><span class="n">prompt</span><span class="p">,</span>
+    <span class="n">middle</span><span class="o">=</span><span class="p">[</span><span class="n">model</span><span class="p">,</span> <span class="n">parser</span><span class="p">],</span>
+    <span class="n">last</span><span class="o">=</span><span class="n">otro_paso</span>
+<span class="p">)</span>
+
+<span class="c1"># Equivalente a usar pipe</span>
+<span class="n">sequence</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">model</span> <span class="o">|</span> <span class="n">parser</span> <span class="o">|</span> <span class="n">otro_paso</span>
+</pre></div>
+</div>
+<section id="runnablemap-mapeo-de-datos">
+<h3><span class="section-number">2.1.1. </span>RunnableMap - Mapeo de Datos<a class="headerlink" href="#runnablemap-mapeo-de-datos" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.runnables</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunnableMap</span>
+
+<span class="c1"># Mapear múltiples operaciones</span>
+<span class="n">mapped</span> <span class="o">=</span> <span class="n">RunnableMap</span><span class="p">({</span>
+    <span class="s2">&quot;uppercase&quot;</span><span class="p">:</span> <span class="n">RunnableLambda</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">upper</span><span class="p">()),</span>
+    <span class="s2">&quot;lowercase&quot;</span><span class="p">:</span> <span class="n">RunnableLambda</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">lower</span><span class="p">()),</span>
+    <span class="s2">&quot;length&quot;</span><span class="p">:</span> <span class="n">RunnableLambda</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="p">})</span>
+
+<span class="n">resultado</span> <span class="o">=</span> <span class="n">mapped</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;Hola Mundo&quot;</span><span class="p">)</span>
+<span class="c1"># {&#39;uppercase&#39;: &#39;HOLA MUNDO&#39;, &#39;lowercase&#39;: &#39;hola mundo&#39;, &#39;length&#39;: 10}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="runnablewithfallbacks-respaldo-en-errores">
+<h2><span class="section-number">2.2. </span>RunnableWithFallbacks - Respaldo en Errores<a class="headerlink" href="#runnablewithfallbacks-respaldo-en-errores" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.runnables</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunnableWithFallbacks</span>
+
+<span class="c1"># Chain principal con fallback</span>
+<span class="n">chain_con_fallback</span> <span class="o">=</span> <span class="n">model_principal</span><span class="o">.</span><span class="n">with_fallbacks</span><span class="p">(</span>
+    <span class="n">fallbacks</span><span class="o">=</span><span class="p">[</span><span class="n">model_secundario</span><span class="p">,</span> <span class="n">model_terciario</span><span class="p">],</span>
+    <span class="n">exceptions_to_handle</span><span class="o">=</span><span class="p">(</span><span class="ne">Exception</span><span class="p">,)</span>
+<span class="p">)</span>
+
+<span class="c1"># Usar en chain completo</span>
+<span class="n">chain</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">chain_con_fallback</span> <span class="o">|</span> <span class="n">parser</span>
+</pre></div>
+</div>
+</section>
+<section id="runnableretry-reintentos-automaticos">
+<h2><span class="section-number">2.3. </span>RunnableRetry - Reintentos Automáticos<a class="headerlink" href="#runnableretry-reintentos-automaticos" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Configurar reintentos</span>
+<span class="n">chain_con_retry</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">with_retry</span><span class="p">(</span>
+    <span class="n">stop_after_attempt</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="n">wait_exponential_jitter</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
+<span class="n">chain</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">chain_con_retry</span> <span class="o">|</span> <span class="n">parser</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="configuracion-avanzada">
+<h1><span class="section-number">2. </span>Configuración Avanzada<a class="headerlink" href="#configuracion-avanzada" title="Link to this heading">#</a></h1>
+<section id="runnableconfig">
+<span id="index-3"></span><h2><span class="section-number">2.1. </span>RunnableConfig<a class="headerlink" href="#runnableconfig" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.runnables</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunnableConfig</span>
+
+<span class="c1"># Configuración completa</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">RunnableConfig</span><span class="p">(</span>
+    <span class="c1"># Identificación</span>
+    <span class="n">run_name</span><span class="o">=</span><span class="s2">&quot;Procesamiento de Documento&quot;</span><span class="p">,</span>
+    <span class="n">run_id</span><span class="o">=</span><span class="s2">&quot;unique-run-id-123&quot;</span><span class="p">,</span>
+    
+    <span class="c1"># Metadatos</span>
+    <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;produccion&quot;</span><span class="p">,</span> <span class="s2">&quot;alta-prioridad&quot;</span><span class="p">],</span>
+    <span class="n">metadata</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;usuario&quot;</span><span class="p">:</span> <span class="s2">&quot;juan@example.com&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;documento_id&quot;</span><span class="p">:</span> <span class="s2">&quot;DOC-123&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;2.0&quot;</span>
+    <span class="p">},</span>
+    
+    <span class="c1"># Control de ejecución</span>
+    <span class="n">max_concurrency</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">recursion_limit</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
+    
+    <span class="c1"># Callbacks personalizados</span>
+    <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">mi_callback_handler</span><span class="p">],</span>
+    
+    <span class="c1"># Configuración específica del componente</span>
+    <span class="n">configurable</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;thread_id&quot;</span><span class="p">:</span> <span class="s2">&quot;conversation-456&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;user_id&quot;</span><span class="p">:</span> <span class="s2">&quot;user-789&quot;</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+
+<span class="n">resultado</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="s2">&quot;datos&quot;</span><span class="p">},</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="configurar-componentes-con-with-config">
+<h2><span class="section-number">2.2. </span>Configurar Componentes con .with_config()<a class="headerlink" href="#configurar-componentes-con-with-config" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Configurar un runnable específico</span>
+<span class="n">model_configurado</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">with_config</span><span class="p">({</span>
+    <span class="s2">&quot;run_name&quot;</span><span class="p">:</span> <span class="s2">&quot;ModeloGPT4&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tags&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;llm&quot;</span><span class="p">,</span> <span class="s2">&quot;openai&quot;</span><span class="p">]</span>
+<span class="p">})</span>
+
+<span class="n">chain</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">model_configurado</span> <span class="o">|</span> <span class="n">parser</span>
+</pre></div>
+</div>
+<section id="binding-vincular-parametros">
+<h3><span class="section-number">2.2.1. </span>Binding - Vincular Parámetros<a class="headerlink" href="#binding-vincular-parametros" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Vincular parámetros específicos al modelo</span>
+<span class="n">model_con_tools</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">bind_tools</span><span class="p">(</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">herramienta1</span><span class="p">,</span> <span class="n">herramienta2</span><span class="p">],</span>
+    <span class="n">tool_choice</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># Vincular parámetros adicionales</span>
+<span class="n">model_personalizado</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span>
+    <span class="n">temperature</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>
+    <span class="n">max_tokens</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+    <span class="n">stop_sequences</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;FIN&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">chain</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">model_personalizado</span> <span class="o">|</span> <span class="n">parser</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="ejemplos-practicos-completos">
+<h1><span class="section-number">2. </span>Ejemplos Prácticos Completos<a class="headerlink" href="#ejemplos-practicos-completos" title="Link to this heading">#</a></h1>
+<section id="ejemplo-1-sistema-rag-completo">
+<h2><span class="section-number">2.1. </span>Ejemplo 1: Sistema RAG Completo<a class="headerlink" href="#ejemplo-1-sistema-rag-completo" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span><span class="p">,</span> <span class="n">OpenAIEmbeddings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">StrOutputParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.runnables</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunnablePassthrough</span><span class="p">,</span> <span class="n">RunnableParallel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_community.vectorstores</span><span class="w"> </span><span class="kn">import</span> <span class="n">FAISS</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.documents</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span>
+
+<span class="c1"># 1. Configurar componentes</span>
+<span class="n">embeddings</span> <span class="o">=</span> <span class="n">OpenAIEmbeddings</span><span class="p">()</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># 2. Crear vector store con documentos</span>
+<span class="n">documents</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Document</span><span class="p">(</span><span class="n">page_content</span><span class="o">=</span><span class="s2">&quot;Python es un lenguaje de programación interpretado.&quot;</span><span class="p">),</span>
+    <span class="n">Document</span><span class="p">(</span><span class="n">page_content</span><span class="o">=</span><span class="s2">&quot;JavaScript es el lenguaje de la web.&quot;</span><span class="p">),</span>
+    <span class="n">Document</span><span class="p">(</span><span class="n">page_content</span><span class="o">=</span><span class="s2">&quot;Java es un lenguaje de programación orientado a objetos.&quot;</span><span class="p">)</span>
+<span class="p">]</span>
+
+<span class="n">vectorstore</span> <span class="o">=</span> <span class="n">FAISS</span><span class="o">.</span><span class="n">from_documents</span><span class="p">(</span><span class="n">documents</span><span class="p">,</span> <span class="n">embeddings</span><span class="p">)</span>
+<span class="n">retriever</span> <span class="o">=</span> <span class="n">vectorstore</span><span class="o">.</span><span class="n">as_retriever</span><span class="p">(</span><span class="n">search_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;k&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
+
+<span class="c1"># 3. Crear prompt template</span>
+<span class="n">template</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Responde la pregunta basándote ÚNICAMENTE en el siguiente contexto:</span>
+
+<span class="s2">Contexto:</span>
+<span class="si">{context}</span>
+
+<span class="s2">Pregunta: </span><span class="si">{question}</span>
+
+<span class="s2">Respuesta:&quot;&quot;&quot;</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_template</span><span class="p">(</span><span class="n">template</span><span class="p">)</span>
+
+<span class="c1"># 4. Función para formatear documentos</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">format_docs</span><span class="p">(</span><span class="n">docs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">page_content</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">docs</span><span class="p">)</span>
+
+<span class="c1"># 5. Construir chain RAG con LCEL</span>
+<span class="n">rag_chain</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;context&quot;</span><span class="p">:</span> <span class="n">retriever</span> <span class="o">|</span> <span class="n">format_docs</span><span class="p">,</span>
+        <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="n">RunnablePassthrough</span><span class="p">()</span>
+    <span class="p">}</span>
+    <span class="o">|</span> <span class="n">prompt</span>
+    <span class="o">|</span> <span class="n">model</span>
+    <span class="o">|</span> <span class="n">StrOutputParser</span><span class="p">()</span>
+<span class="p">)</span>
+
+<span class="c1"># 6. Ejecutar</span>
+<span class="n">pregunta</span> <span class="o">=</span> <span class="s2">&quot;¿Qué es Python?&quot;</span>
+<span class="n">respuesta</span> <span class="o">=</span> <span class="n">rag_chain</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">pregunta</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">respuesta</span><span class="p">)</span>
+
+<span class="c1"># 7. Streaming</span>
+<span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">rag_chain</span><span class="o">.</span><span class="n">stream</span><span class="p">(</span><span class="s2">&quot;Háblame sobre JavaScript&quot;</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">chunk</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="ejemplo-2-analisis-multi-modelo-con-fallbacks">
+<h2><span class="section-number">2.2. </span>Ejemplo 2: Análisis Multi-Modelo con Fallbacks<a class="headerlink" href="#ejemplo-2-analisis-multi-modelo-con-fallbacks" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_anthropic</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatAnthropic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">JsonOutputParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.runnables</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunnableParallel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+
+<span class="c1"># 1. Definir esquema de salida</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AnalisisTexto</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">sentimiento</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;positivo, negativo o neutral&quot;</span><span class="p">)</span>
+    <span class="n">temas</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;lista de temas principales&quot;</span><span class="p">)</span>
+    <span class="n">resumen</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;resumen en una oración&quot;</span><span class="p">)</span>
+    <span class="n">puntuacion_calidad</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;puntuación de 1 a 10&quot;</span><span class="p">)</span>
+
+<span class="c1"># 2. Configurar modelos con fallback</span>
+<span class="n">modelo_principal</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4&quot;</span><span class="p">)</span>
+<span class="n">modelo_fallback</span> <span class="o">=</span> <span class="n">ChatAnthropic</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;claude-3-sonnet-20240229&quot;</span><span class="p">)</span>
+
+<span class="n">modelo_con_fallback</span> <span class="o">=</span> <span class="n">modelo_principal</span><span class="o">.</span><span class="n">with_fallbacks</span><span class="p">(</span>
+    <span class="n">fallbacks</span><span class="o">=</span><span class="p">[</span><span class="n">modelo_fallback</span><span class="p">],</span>
+    <span class="n">exceptions_to_handle</span><span class="o">=</span><span class="p">(</span><span class="ne">Exception</span><span class="p">,)</span>
+<span class="p">)</span>
+
+<span class="c1"># 3. Configurar parser</span>
+<span class="n">parser</span> <span class="o">=</span> <span class="n">JsonOutputParser</span><span class="p">(</span><span class="n">pydantic_object</span><span class="o">=</span><span class="n">AnalisisTexto</span><span class="p">)</span>
+
+<span class="c1"># 4. Crear prompts especializados</span>
+<span class="n">prompt_analisis</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">([</span>
+    <span class="p">(</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;Eres un analista de texto experto. Analiza el texto y devuelve un JSON con tu análisis.&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{texto}</span><span class="se">\n\n</span><span class="si">{format_instructions}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="p">])</span>
+
+<span class="n">prompt_extraccion</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">([</span>
+    <span class="p">(</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;Extrae las entidades clave del texto.&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{texto}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="p">])</span>
+
+<span class="c1"># 5. Crear análisis paralelo</span>
+<span class="n">analisis_completo</span> <span class="o">=</span> <span class="n">RunnableParallel</span><span class="p">({</span>
+    <span class="s2">&quot;analisis_estructurado&quot;</span><span class="p">:</span> <span class="p">(</span>
+        <span class="n">prompt_analisis</span> 
+        <span class="o">|</span> <span class="n">modelo_con_fallback</span> 
+        <span class="o">|</span> <span class="n">parser</span>
+    <span class="p">),</span>
+    <span class="s2">&quot;entidades&quot;</span><span class="p">:</span> <span class="p">(</span>
+        <span class="n">prompt_extraccion</span> 
+        <span class="o">|</span> <span class="n">modelo_con_fallback</span> 
+        <span class="o">|</span> <span class="n">StrOutputParser</span><span class="p">()</span>
+    <span class="p">),</span>
+    <span class="s2">&quot;texto_original&quot;</span><span class="p">:</span> <span class="n">RunnablePassthrough</span><span class="p">()</span>
+<span class="p">})</span>
+
+<span class="c1"># 6. Añadir post-procesamiento</span>
+<span class="nd">@chain</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">consolidar_resultados</span><span class="p">(</span><span class="n">resultados</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;analisis&quot;</span><span class="p">:</span> <span class="n">resultados</span><span class="p">[</span><span class="s2">&quot;analisis_estructurado&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;entidades&quot;</span><span class="p">:</span> <span class="n">resultados</span><span class="p">[</span><span class="s2">&quot;entidades&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;longitud_original&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">resultados</span><span class="p">[</span><span class="s2">&quot;texto_original&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;procesado_en&quot;</span><span class="p">:</span> <span class="s2">&quot;UTC timestamp&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+<span class="c1"># 7. Chain completo</span>
+<span class="n">chain_completo</span> <span class="o">=</span> <span class="n">analisis_completo</span> <span class="o">|</span> <span class="n">consolidar_resultados</span>
+
+<span class="c1"># 8. Ejecutar con configuración</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">RunnableConfig</span><span class="p">(</span>
+    <span class="n">run_name</span><span class="o">=</span><span class="s2">&quot;AnálisisTextoCompleto&quot;</span><span class="p">,</span>
+    <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;analisis&quot;</span><span class="p">,</span> <span class="s2">&quot;multi-modelo&quot;</span><span class="p">],</span>
+    <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">}</span>
+<span class="p">)</span>
+
+<span class="n">texto_ejemplo</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">La nueva tecnología de IA ha revolucionado la industria. </span>
+<span class="s2">Los expertos están entusiasmados con las posibilidades.</span>
+<span class="s2">Sin embargo, también existen preocupaciones sobre la ética.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">resultado</span> <span class="o">=</span> <span class="n">chain_completo</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;texto&quot;</span><span class="p">:</span> <span class="n">texto_ejemplo</span><span class="p">,</span>
+        <span class="s2">&quot;format_instructions&quot;</span><span class="p">:</span> <span class="n">parser</span><span class="o">.</span><span class="n">get_format_instructions</span><span class="p">()</span>
+    <span class="p">},</span>
+    <span class="n">config</span><span class="o">=</span><span class="n">config</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">resultado</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="ejemplo-3-sistema-de-enrutamiento-inteligente">
+<h2><span class="section-number">2.3. </span>Ejemplo 3: Sistema de Enrutamiento Inteligente<a class="headerlink" href="#ejemplo-3-sistema-de-enrutamiento-inteligente" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">StrOutputParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.runnables</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunnableBranch</span><span class="p">,</span> <span class="n">RunnableLambda</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
+
+<span class="c1"># 1. Modelo para clasificación</span>
+<span class="n">classifier_model</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-3.5-turbo&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># 2. Prompt de clasificación</span>
+<span class="n">classification_prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_template</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Clasifica la siguiente consulta en UNA de estas categorías:</span>
+<span class="sd">    - tecnica: preguntas técnicas sobre programación o tecnología</span>
+<span class="sd">    - general: preguntas generales de conocimiento</span>
+<span class="sd">    - creativa: solicitudes de contenido creativo</span>
+<span class="sd">    </span>
+<span class="sd">    Consulta: {query}</span>
+<span class="sd">    </span>
+<span class="sd">    Responde SOLO con la categoría (tecnica, general o creativa):&quot;&quot;&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># 3. Chain de clasificación</span>
+<span class="n">classification_chain</span> <span class="o">=</span> <span class="n">classification_prompt</span> <span class="o">|</span> <span class="n">classifier_model</span> <span class="o">|</span> <span class="n">StrOutputParser</span><span class="p">()</span>
+
+<span class="c1"># 4. Prompts especializados</span>
+<span class="n">prompt_tecnico</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">([</span>
+    <span class="p">(</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;Eres un experto técnico en programación. Proporciona respuestas detalladas y precisas.&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{query}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="p">])</span>
+
+<span class="n">prompt_general</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">([</span>
+    <span class="p">(</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;Eres un asistente general educado y útil.&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{query}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="p">])</span>
+
+<span class="n">prompt_creativo</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">([</span>
+    <span class="p">(</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;Eres un escritor creativo. Genera contenido original e imaginativo.&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{query}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="p">])</span>
+
+<span class="c1"># 5. Modelos especializados</span>
+<span class="n">model_tecnico</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">model_general</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-3.5-turbo&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+<span class="n">model_creativo</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+
+<span class="c1"># 6. Chains especializados</span>
+<span class="n">chain_tecnico</span> <span class="o">=</span> <span class="n">prompt_tecnico</span> <span class="o">|</span> <span class="n">model_tecnico</span> <span class="o">|</span> <span class="n">StrOutputParser</span><span class="p">()</span>
+<span class="n">chain_general</span> <span class="o">=</span> <span class="n">prompt_general</span> <span class="o">|</span> <span class="n">model_general</span> <span class="o">|</span> <span class="n">StrOutputParser</span><span class="p">()</span>
+<span class="n">chain_creativo</span> <span class="o">=</span> <span class="n">prompt_creativo</span> <span class="o">|</span> <span class="n">model_creativo</span> <span class="o">|</span> <span class="n">StrOutputParser</span><span class="p">()</span>
+
+<span class="c1"># 7. Función de routing</span>
+<span class="nd">@chain</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">route_query</span><span class="p">(</span><span class="n">input_dict</span><span class="p">):</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="n">input_dict</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">]</span>
+    <span class="n">categoria</span> <span class="o">=</span> <span class="n">classification_chain</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">query</span><span class="p">})</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">query</span><span class="p">,</span>
+        <span class="s2">&quot;categoria&quot;</span><span class="p">:</span> <span class="n">categoria</span>
+    <span class="p">}</span>
+
+<span class="c1"># 8. Branch con routing</span>
+<span class="n">routing_branch</span> <span class="o">=</span> <span class="n">RunnableBranch</span><span class="p">(</span>
+    <span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s2">&quot;tecnica&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;categoria&quot;</span><span class="p">],</span>
+        <span class="n">chain_tecnico</span>
+    <span class="p">),</span>
+    <span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s2">&quot;creativa&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;categoria&quot;</span><span class="p">],</span>
+        <span class="n">chain_creativo</span>
+    <span class="p">),</span>
+    <span class="n">chain_general</span>  <span class="c1"># Default</span>
+<span class="p">)</span>
+
+<span class="c1"># 9. Chain completo con logging</span>
+<span class="nd">@chain</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">log_and_process</span><span class="p">(</span><span class="n">routed_data</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Categoría detectada: </span><span class="si">{</span><span class="n">routed_data</span><span class="p">[</span><span class="s1">&#39;categoria&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">routed_data</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">]}</span>
+
+<span class="c1"># 10. Sistema completo</span>
+<span class="n">sistema_enrutamiento</span> <span class="o">=</span> <span class="n">route_query</span> <span class="o">|</span> <span class="n">log_and_process</span> <span class="o">|</span> <span class="n">routing_branch</span>
+
+<span class="c1"># 11. Probar con diferentes tipos de consultas</span>
+<span class="n">consultas_test</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;¿Cómo implemento un binary search tree en Python?&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;¿Cuál es la capital de Francia?&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Escribe un poema sobre el océano&quot;</span>
+<span class="p">]</span>
+
+<span class="k">for</span> <span class="n">consulta</span> <span class="ow">in</span> <span class="n">consultas_test</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Consulta: </span><span class="si">{</span><span class="n">consulta</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">respuesta</span> <span class="o">=</span> <span class="n">sistema_enrutamiento</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">consulta</span><span class="p">})</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Respuesta: </span><span class="si">{</span><span class="n">respuesta</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="ejemplo-4-pipeline-de-procesamiento-con-validacion">
+<h2><span class="section-number">2.4. </span>Ejemplo 4: Pipeline de Procesamiento con Validación<a class="headerlink" href="#ejemplo-4-pipeline-de-procesamiento-con-validacion" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">JsonOutputParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.runnables</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">RunnablePassthrough</span><span class="p">,</span>
+    <span class="n">RunnableLambda</span><span class="p">,</span>
+    <span class="n">RunnableParallel</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span><span class="p">,</span> <span class="n">validator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span>
+
+<span class="c1"># 1. Definir modelos de datos con validación</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ContactoValidado</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">nombre</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">min_length</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">email</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">regex</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;^[\w\.-]+@[\w\.-]+\.\w+$&#39;</span><span class="p">)</span>
+    <span class="n">telefono</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">regex</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;^\+?[\d\s-]{10,}$&#39;</span><span class="p">)</span>
+    <span class="n">intereses</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">min_items</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="nd">@validator</span><span class="p">(</span><span class="s1">&#39;nombre&#39;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validar_nombre</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">char</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">v</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;El nombre no debe contener números&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">v</span><span class="o">.</span><span class="n">title</span><span class="p">()</span>
+
+<span class="c1"># 2. Funciones de pre-procesamiento</span>
+<span class="nd">@chain</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">limpiar_datos</span><span class="p">(</span><span class="n">input_dict</span><span class="p">):</span>
+    <span class="n">texto</span> <span class="o">=</span> <span class="n">input_dict</span><span class="p">[</span><span class="s2">&quot;texto_crudo&quot;</span><span class="p">]</span>
+    <span class="c1"># Limpiar y normalizar</span>
+    <span class="n">texto_limpio</span> <span class="o">=</span> <span class="n">texto</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;texto&quot;</span><span class="p">:</span> <span class="n">texto_limpio</span><span class="p">}</span>
+
+<span class="nd">@chain</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">validar_longitud</span><span class="p">(</span><span class="n">input_dict</span><span class="p">):</span>
+    <span class="n">texto</span> <span class="o">=</span> <span class="n">input_dict</span><span class="p">[</span><span class="s2">&quot;texto&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">texto</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Texto demasiado corto para extraer información&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">texto</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1000</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;texto&quot;</span><span class="p">:</span> <span class="n">texto</span><span class="p">[:</span><span class="mi">1000</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;...&quot;</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">input_dict</span>
+
+<span class="c1"># 3. Parser con manejo de errores</span>
+<span class="n">parser</span> <span class="o">=</span> <span class="n">JsonOutputParser</span><span class="p">(</span><span class="n">pydantic_object</span><span class="o">=</span><span class="n">ContactoValidado</span><span class="p">)</span>
+
+<span class="c1"># 4. Prompt de extracción</span>
+<span class="n">prompt_extraccion</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_template</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extrae la información de contacto del siguiente texto.</span>
+<span class="sd">    </span>
+<span class="sd">    Texto: {texto}</span>
+<span class="sd">    </span>
+<span class="sd">    {format_instructions}</span>
+<span class="sd">    </span>
+<span class="sd">    Si falta alguna información, usa valores razonables o null.&quot;&quot;&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># 5. Modelo con retry</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">with_retry</span><span class="p">(</span>
+    <span class="n">stop_after_attempt</span><span class="o">=</span><span class="mi">3</span>
+<span class="p">)</span>
+
+<span class="c1"># 6. Validación post-extracción</span>
+<span class="nd">@chain</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">validar_extraccion</span><span class="p">(</span><span class="n">contacto_dict</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Intentar crear objeto Pydantic para validar</span>
+        <span class="n">contacto</span> <span class="o">=</span> <span class="n">ContactoValidado</span><span class="p">(</span><span class="o">**</span><span class="n">contacto_dict</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;valido&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;contacto&quot;</span><span class="p">:</span> <span class="n">contacto</span><span class="o">.</span><span class="n">dict</span><span class="p">(),</span>
+            <span class="s2">&quot;errores&quot;</span><span class="p">:</span> <span class="p">[]</span>
+        <span class="p">}</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;valido&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;contacto&quot;</span><span class="p">:</span> <span class="n">contacto_dict</span><span class="p">,</span>
+            <span class="s2">&quot;errores&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)]</span>
+        <span class="p">}</span>
+
+<span class="c1"># 7. Enriquecimiento paralelo</span>
+<span class="nd">@chain</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">generar_metadata</span><span class="p">(</span><span class="n">input_dict</span><span class="p">):</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;procesado_en&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+        <span class="s2">&quot;longitud_texto&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;texto&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)),</span>
+        <span class="s2">&quot;version_pipeline&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0&quot;</span>
+    <span class="p">}</span>
+
+<span class="c1"># 8. Pipeline completo con validación</span>
+<span class="n">pipeline</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">limpiar_datos</span>
+    <span class="o">|</span> <span class="n">validar_longitud</span>
+    <span class="o">|</span> <span class="n">RunnableParallel</span><span class="p">({</span>
+        <span class="s2">&quot;extraccion&quot;</span><span class="p">:</span> <span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;texto&quot;</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;texto&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;format_instructions&quot;</span><span class="p">:</span> <span class="n">parser</span><span class="o">.</span><span class="n">get_format_instructions</span><span class="p">()</span>
+            <span class="p">}</span>
+            <span class="o">|</span> <span class="n">prompt_extraccion</span>
+            <span class="o">|</span> <span class="n">model</span>
+            <span class="o">|</span> <span class="n">parser</span>
+        <span class="p">),</span>
+        <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="n">generar_metadata</span><span class="p">,</span>
+        <span class="s2">&quot;texto_original&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;texto&quot;</span><span class="p">]</span>
+    <span class="p">})</span>
+    <span class="o">|</span> <span class="n">RunnableLambda</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">{</span>
+        <span class="o">**</span><span class="n">x</span><span class="p">,</span>
+        <span class="s2">&quot;validacion&quot;</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;extraccion&quot;</span><span class="p">]</span>
+    <span class="p">})</span>
+    <span class="o">|</span> <span class="n">RunnableLambda</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;resultado&quot;</span><span class="p">:</span> <span class="n">validar_extraccion</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s2">&quot;validacion&quot;</span><span class="p">]),</span>
+        <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;texto_procesado&quot;</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;texto_original&quot;</span><span class="p">]</span>
+    <span class="p">})</span>
+<span class="p">)</span>
+
+<span class="c1"># 9. Ejecutar con manejo de errores</span>
+<span class="n">texto_test</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Juan Pérez</span>
+<span class="s2">Email: juan.perez@example.com</span>
+<span class="s2">Teléfono: +34 612 345 678</span>
+<span class="s2">Intereses: Python, Machine Learning, Data Science</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">resultado</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;texto_crudo&quot;</span><span class="p">:</span> <span class="n">texto_test</span><span class="p">})</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Resultado de validación:&quot;</span><span class="p">,</span> <span class="n">resultado</span><span class="p">[</span><span class="s2">&quot;resultado&quot;</span><span class="p">][</span><span class="s2">&quot;valido&quot;</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">resultado</span><span class="p">[</span><span class="s2">&quot;resultado&quot;</span><span class="p">][</span><span class="s2">&quot;valido&quot;</span><span class="p">]:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Contacto extraído:&quot;</span><span class="p">,</span> <span class="n">resultado</span><span class="p">[</span><span class="s2">&quot;resultado&quot;</span><span class="p">][</span><span class="s2">&quot;contacto&quot;</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Errores:&quot;</span><span class="p">,</span> <span class="n">resultado</span><span class="p">[</span><span class="s2">&quot;resultado&quot;</span><span class="p">][</span><span class="s2">&quot;errores&quot;</span><span class="p">])</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Metadata:&quot;</span><span class="p">,</span> <span class="n">resultado</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">])</span>
+    
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error en pipeline: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./jupyters"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="modelosLangChain.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">1. </span>Generación de Modelos de IA con LangChain</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="prompts.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">3. </span>GESTION DE PROMPTS EN LANGCHAIN - PYTHON</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">2. Los runnables de LangChain</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#componentes-que-son-runnables">2.1. Componentes que son Runnables</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#la-interfaz-runnable">2.2. La Interfaz Runnable</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#estructura-base">2.2.1. Estructura Base</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#beneficios-de-la-interfaz-runnable">2.2.2. Beneficios de la Interfaz Runnable</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#lcel-langchain-expression-language">2. LCEL: LangChain Expression Language</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sintaxis-basica-del-pipe">2.1. Sintaxis Básica del Pipe</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#por-que-usar-lcel">2.2. ¿Por Qué Usar LCEL?</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#metodos-principales-de-runnable">2. Métodos Principales de Runnable</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#invoke-ejecucion-simple">2.1. invoke() - Ejecución Simple</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-procesamiento-en-lote">2.2. batch() - Procesamiento en Lote</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-as-completed-streaming-de-batch">2.3. batch_as_completed() - Streaming de Batch</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stream-streaming-incremental">2.4. stream() - Streaming Incremental</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#metodos-asincronos">2.5. Métodos Asíncronos</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#composicion-de-chains-con-lcel">2. Composición de Chains con LCEL</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#composicion-secuencial">2.1. Composición Secuencial</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#runnablepassthrough-pasar-datos-sin-modificar">2.2. RunnablePassthrough - Pasar Datos Sin Modificar</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#runnableparallel-ejecucion-paralela">2.3. RunnableParallel - Ejecución Paralela</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#runnablelambda-funciones-personalizadas">2.4. RunnableLambda - Funciones Personalizadas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#runnablebranch-enrutamiento-condicional">2.5. RunnableBranch - Enrutamiento Condicional</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#runnables-especializados">2. Runnables Especializados</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#runnablesequence-secuencia-explicita">2.1. RunnableSequence - Secuencia Explícita</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#runnablemap-mapeo-de-datos">2.1.1. RunnableMap - Mapeo de Datos</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#runnablewithfallbacks-respaldo-en-errores">2.2. RunnableWithFallbacks - Respaldo en Errores</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#runnableretry-reintentos-automaticos">2.3. RunnableRetry - Reintentos Automáticos</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#configuracion-avanzada">2. Configuración Avanzada</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#runnableconfig">2.1. RunnableConfig</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configurar-componentes-con-with-config">2.2. Configurar Componentes con .with_config()</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#binding-vincular-parametros">2.2.1. Binding - Vincular Parámetros</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplos-practicos-completos">2. Ejemplos Prácticos Completos</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-1-sistema-rag-completo">2.1. Ejemplo 1: Sistema RAG Completo</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-2-analisis-multi-modelo-con-fallbacks">2.2. Ejemplo 2: Análisis Multi-Modelo con Fallbacks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-3-sistema-de-enrutamiento-inteligente">2.3. Ejemplo 3: Sistema de Enrutamiento Inteligente</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-4-pipeline-de-procesamiento-con-validacion">2.4. Ejemplo 4: Pipeline de Procesamiento con Validación</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Francisco Rodríguez
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

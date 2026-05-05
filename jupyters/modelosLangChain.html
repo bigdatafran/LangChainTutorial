@@ -1,0 +1,1590 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>1. Generación de Modelos de IA con LangChain &#8212; LangChain &amp; LangGraph</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'jupyters/modelosLangChain';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="2. Los runnables de LangChain" href="runnables.html" />
+    <link rel="prev" title="Introducción" href="../introduccion.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../introduccion.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">LangChain & LangGraph</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Langchain.</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">1. Modelos de IA con LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="runnables.html">2. Los runnables de LangChain</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="prompts.html">3. Prompts template en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="salidas_estructuradas.html">4. Salidas estructuradas en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="messages.html">5. Messages en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="agentes.html">6. Agentes en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">7. Tools (herramientas) en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="langchain_async_concurrencia.html">8. Ejecución asíncrona en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="init_langGraph.html">9. Primer acercamiento a LangGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="base_datos.html">10. Base de datos con LangGraph</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Apendices.</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="asyncio.html">11. Asincronia con asyncio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ollama.html">12. Ollama</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sitiosweb.html">13. Sitios web</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Índice de términos</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">Índice de términos</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Generación de Modelos de IA con LangChain</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#que-es-langchain">1.1. ¿Qué es LangChain?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#instalacion">1.2. Instalación</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paquete-base">1.2.1. Paquete base</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paquetes-por-proveedor">1.2.2. Paquetes por proveedor</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gestion-de-claves-api-con-dotenv">1.2.3. Gestión de claves API con dotenv</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conceptos-fundamentales">1.3. Conceptos Fundamentales</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#la-interfaz-chatmodel">1.3.1. La interfaz ChatModel</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tipos-de-mensajes">1.3.2. Tipos de mensajes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prompttemplates">1.3.3. PromptTemplates</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#output-parsers">1.3.4. Output Parsers</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#openai-con-langchain">1.4. OpenAI con LangChain</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#configuracion-basica">1.4.1. Configuración básica</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modelos-disponibles-de-openai">1.4.2. Modelos disponibles de OpenAI</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#streaming-de-respuestas">1.4.3. Streaming de respuestas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chain-basica-con-lcel">1.4.4. Chain básica con LCEL</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#salida-estructurada-con-openai">1.4.5. Salida estructurada con OpenAI</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#vision-imagenes-con-gpt-4o">1.4.6. Visión (imágenes) con GPT-4o</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ollama-con-langchain">1.5. Ollama con LangChain</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">1.5.1. Configuración básica</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modelos-recomendados-para-ollama">1.5.2. Modelos recomendados para Ollama</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chain-con-modelo-local">1.5.3. Chain con modelo local</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#streaming-local">1.5.4. Streaming local</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#embeddings-locales-con-ollama">1.5.5. Embeddings locales con Ollama</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cambio-dinamico-de-modelo-fallback">1.5.6. Cambio dinámico de modelo (fallback)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#google-gemini-con-langchain">1.6. Google Gemini con LangChain</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">1.6.1. Configuración básica</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modelos-disponibles-de-gemini">1.6.2. Modelos disponibles de Gemini</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chain-con-gemini">1.6.3. Chain con Gemini</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#vision-multimodal-con-gemini">1.6.4. Visión multimodal con Gemini</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#embeddings-de-google">1.6.5. Embeddings de Google</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#salida-estructurada-con-gemini">1.6.6. Salida estructurada con Gemini</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#anthropic-claude-con-langchain">1.7. Anthropic Claude con LangChain</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">1.7.1. Configuración básica</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modelos-disponibles-de-anthropic">1.7.2. Modelos disponibles de Anthropic</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chain-con-claude">1.7.3. Chain con Claude</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conversacion-con-memoria-usando-claude">1.7.4. Conversación con memoria usando Claude</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#salida-estructurada-con-claude">1.7.5. Salida estructurada con Claude</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chains-avanzadas-con-lcel">1.8. Chains Avanzadas con LCEL</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chain-secuencial">1.8.1. Chain secuencial</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chain-paralela-con-runnableparallel">1.8.2. Chain paralela con RunnableParallel</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rag-retrieval-augmented-generation">1.9. RAG (Retrieval-Augmented Generation)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rag-basico-con-faiss">1.9.1. RAG básico con FAISS</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rag-con-ollama-completamente-local-y-gratuito">1.9.2. RAG con Ollama (completamente local y gratuito)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#agentes-con-langchain">1.10. Agentes con LangChain</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#agente-con-herramientas-personalizadas">1.10.1. Agente con herramientas personalizadas</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#memoria-y-gestion-del-historial">1.11. Memoria y Gestión del Historial</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#memoria-con-runnablewithmessagehistory">1.11.1. Memoria con RunnableWithMessageHistory</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparativa-de-proveedores-en-langchain">1.12. Comparativa de Proveedores en LangChain</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#depuracion-con-langsmith">1.13. Depuración con LangSmith</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#buenas-practicas">1.14. Buenas Prácticas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#recursos-adicionales">1.15. Recursos Adicionales</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="generacion-de-modelos-de-ia-con-langchain">
+<h1><span class="section-number">1. </span>Generación de Modelos de IA con LangChain<a class="headerlink" href="#generacion-de-modelos-de-ia-con-langchain" title="Link to this heading">#</a></h1>
+<p>LangChain es un framework de código abierto diseñado para construir aplicaciones impulsadas por modelos de lenguaje (LLMs). Su principal fortaleza reside en proporcionar una <strong>interfaz unificada</strong> para interactuar con múltiples proveedores de IA, facilitando el encadenamiento de operaciones, la gestión de memoria, la integración con herramientas externas y la construcción de agentes inteligentes.</p>
+<hr class="docutils" />
+<section id="que-es-langchain">
+<h2><span class="section-number">1.1. </span>¿Qué es LangChain?<a class="headerlink" href="#que-es-langchain" title="Link to this heading">#</a></h2>
+<p>LangChain actúa como una capa de abstracción sobre los diferentes proveedores de LLMs. Sus características principales son:</p>
+<ul class="simple">
+<li><p><strong>Interfaz unificada</strong>: cambia de OpenAI a Anthropic o Gemini con mínimos cambios de código.</p></li>
+<li><p><strong>Chains</strong>: encadena múltiples operaciones de forma declarativa.</p></li>
+<li><p><strong>Agentes</strong>: modelos que deciden dinámicamente qué herramientas usar.</p></li>
+<li><p><strong>Memory</strong>: gestión de historial de conversaciones.</p></li>
+<li><p><strong>RAG</strong>: integración nativa con bases de datos vectoriales para recuperación de contexto.</p></li>
+<li><p><strong>LCEL</strong> (LangChain Expression Language): sintaxis de composición fluida con operador <code class="docutils literal notranslate"><span class="pre">|</span></code>.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="instalacion">
+<h2><span class="section-number">1.2. </span>Instalación<a class="headerlink" href="#instalacion" title="Link to this heading">#</a></h2>
+<section id="paquete-base">
+<h3><span class="section-number">1.2.1. </span>Paquete base<a class="headerlink" href="#paquete-base" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>langchain
+</pre></div>
+</div>
+</section>
+<section id="paquetes-por-proveedor">
+<h3><span class="section-number">1.2.2. </span>Paquetes por proveedor<a class="headerlink" href="#paquetes-por-proveedor" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># OpenAI</span>
+pip<span class="w"> </span>install<span class="w"> </span>langchain-openai
+
+<span class="c1"># Anthropic</span>
+pip<span class="w"> </span>install<span class="w"> </span>langchain-anthropic
+
+<span class="c1"># Google Gemini</span>
+pip<span class="w"> </span>install<span class="w"> </span>langchain-google-genai
+
+<span class="c1"># Ollama (modelos locales)</span>
+pip<span class="w"> </span>install<span class="w"> </span>langchain-ollama
+
+<span class="c1"># Herramientas adicionales comunes</span>
+pip<span class="w"> </span>install<span class="w"> </span>langchain-community<span class="w"> </span>python-dotenv
+</pre></div>
+</div>
+</section>
+<section id="gestion-de-claves-api-con-dotenv">
+<h3><span class="section-number">1.2.3. </span>Gestión de claves API con dotenv<a class="headerlink" href="#gestion-de-claves-api-con-dotenv" title="Link to this heading">#</a></h3>
+<p id="index-0">La librería python-dotenv sirve para leer datos, por ejemplo claves apis que se encuentran en un fichero denominado.env</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Archivo .env</span>
+<span class="nv">OPENAI_API_KEY</span><span class="o">=</span>sk-...
+<span class="nv">ANTHROPIC_API_KEY</span><span class="o">=</span>sk-ant-...
+<span class="nv">GOOGLE_API_KEY</span><span class="o">=</span>AIza...
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+<span class="n">load_dotenv</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="conceptos-fundamentales">
+<h2><span class="section-number">1.3. </span>Conceptos Fundamentales<a class="headerlink" href="#conceptos-fundamentales" title="Link to this heading">#</a></h2>
+<section id="la-interfaz-chatmodel">
+<h3><span class="section-number">1.3.1. </span>La interfaz ChatModel<a class="headerlink" href="#la-interfaz-chatmodel" title="Link to this heading">#</a></h3>
+<p>Todos los modelos en LangChain comparten la misma interfaz base. Esto significa que el resto de tu código (chains, agentes, memoria) funciona igual independientemente del proveedor.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Todos estos objetos son intercambiables</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_anthropic</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatAnthropic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_google_genai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatGoogleGenerativeAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_ollama</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOllama</span>
+
+<span class="c1"># Todos exponen los mismos métodos: .invoke(), .stream(), .batch()</span>
+</pre></div>
+</div>
+</section>
+<section id="tipos-de-mensajes">
+<h3><span class="section-number">1.3.2. </span>Tipos de mensajes<a class="headerlink" href="#tipos-de-mensajes" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">SystemMessage</span><span class="p">,</span> <span class="n">HumanMessage</span><span class="p">,</span> <span class="n">AIMessage</span>
+
+<span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">SystemMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;Eres un experto en ciencia de datos.&quot;</span><span class="p">),</span>
+    <span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;¿Qué es el sobreajuste?&quot;</span><span class="p">),</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="prompttemplates">
+<h3><span class="section-number">1.3.3. </span>PromptTemplates<a class="headerlink" href="#prompttemplates" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">([</span>
+    <span class="p">(</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;Eres un asistente especializado en </span><span class="si">{materia}</span><span class="s2">.&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{pregunta}</span><span class="s2">&quot;</span><span class="p">),</span>
+<span class="p">])</span>
+
+<span class="c1"># Rellenar variables</span>
+<span class="n">messages</span> <span class="o">=</span> <span class="n">prompt</span><span class="o">.</span><span class="n">format_messages</span><span class="p">(</span>
+    <span class="n">materia</span><span class="o">=</span><span class="s2">&quot;física cuántica&quot;</span><span class="p">,</span>
+    <span class="n">pregunta</span><span class="o">=</span><span class="s2">&quot;¿Qué es la superposición?&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="output-parsers">
+<h3><span class="section-number">1.3.4. </span>Output Parsers<a class="headerlink" href="#output-parsers" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">StrOutputParser</span><span class="p">,</span> <span class="n">JsonOutputParser</span>
+
+<span class="c1"># Parser de texto plano</span>
+<span class="n">parser</span> <span class="o">=</span> <span class="n">StrOutputParser</span><span class="p">()</span>
+
+<span class="c1"># Parser de JSON estructurado</span>
+<span class="n">json_parser</span> <span class="o">=</span> <span class="n">JsonOutputParser</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="openai-con-langchain">
+<h2><span class="section-number">1.4. </span>OpenAI con LangChain<a class="headerlink" href="#openai-con-langchain" title="Link to this heading">#</a></h2>
+<section id="configuracion-basica">
+<h3><span class="section-number">1.4.1. </span>Configuración básica<a class="headerlink" href="#configuracion-basica" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span><span class="p">,</span> <span class="n">SystemMessage</span>
+
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o&quot;</span><span class="p">,</span>
+    <span class="n">temperature</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+    <span class="n">max_tokens</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span>
+    <span class="c1"># api_key se lee automáticamente de OPENAI_API_KEY</span>
+<span class="p">)</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span>
+    <span class="n">SystemMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;Responde siempre en español.&quot;</span><span class="p">),</span>
+    <span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;¿Cuál es la diferencia entre ML y DL?&quot;</span><span class="p">)</span>
+<span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="modelos-disponibles-de-openai">
+<h3><span class="section-number">1.4.2. </span>Modelos disponibles de OpenAI<a class="headerlink" href="#modelos-disponibles-de-openai" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Modelo</p></th>
+<th class="head"><p>Identificador</p></th>
+<th class="head"><p>Características</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>GPT-4o</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">gpt-4o</span></code></p></td>
+<td><p>Multimodal, más capaz</p></td>
+</tr>
+<tr class="row-odd"><td><p>GPT-4o Mini</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">gpt-4o-mini</span></code></p></td>
+<td><p>Rápido y económico</p></td>
+</tr>
+<tr class="row-even"><td><p>GPT-4 Turbo</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">gpt-4-turbo</span></code></p></td>
+<td><p>Contexto 128K tokens</p></td>
+</tr>
+<tr class="row-odd"><td><p>o1</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">o1</span></code></p></td>
+<td><p>Razonamiento avanzado</p></td>
+</tr>
+<tr class="row-even"><td><p>o3 Mini</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">o3-mini</span></code></p></td>
+<td><p>Razonamiento eficiente</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="streaming-de-respuestas">
+<h3><span class="section-number">1.4.3. </span>Streaming de respuestas<a class="headerlink" href="#streaming-de-respuestas" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">llm</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o&quot;</span><span class="p">,</span> <span class="n">streaming</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">llm</span><span class="o">.</span><span class="n">stream</span><span class="p">(</span><span class="s2">&quot;Escribe un poema sobre la IA.&quot;</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="chain-basica-con-lcel">
+<h3><span class="section-number">1.4.4. </span>Chain básica con LCEL<a class="headerlink" href="#chain-basica-con-lcel" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">StrOutputParser</span>
+
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">)</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">([</span>
+    <span class="p">(</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;Eres un traductor profesional.&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;Traduce al </span><span class="si">{idioma}</span><span class="s2">: </span><span class="si">{texto}</span><span class="s2">&quot;</span><span class="p">),</span>
+<span class="p">])</span>
+
+<span class="n">chain</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">llm</span> <span class="o">|</span> <span class="n">StrOutputParser</span><span class="p">()</span>
+
+<span class="n">resultado</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span>
+    <span class="s2">&quot;idioma&quot;</span><span class="p">:</span> <span class="s2">&quot;francés&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;texto&quot;</span><span class="p">:</span> <span class="s2">&quot;La inteligencia artificial cambia el mundo.&quot;</span>
+<span class="p">})</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">resultado</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="salida-estructurada-con-openai">
+<h3><span class="section-number">1.4.5. </span>Salida estructurada con OpenAI<a class="headerlink" href="#salida-estructurada-con-openai" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Resumen</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">titulo</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Título del resumen&quot;</span><span class="p">)</span>
+    <span class="n">puntos_clave</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Lista de puntos clave&quot;</span><span class="p">)</span>
+    <span class="n">conclusion</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Conclusión final&quot;</span><span class="p">)</span>
+
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o&quot;</span><span class="p">)</span>
+<span class="n">llm_estructurado</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">with_structured_output</span><span class="p">(</span><span class="n">Resumen</span><span class="p">)</span>
+
+<span class="n">resumen</span> <span class="o">=</span> <span class="n">llm_estructurado</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
+    <span class="s2">&quot;Resume los beneficios del aprendizaje automático en medicina.&quot;</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">resumen</span><span class="o">.</span><span class="n">titulo</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resumen</span><span class="o">.</span><span class="n">puntos_clave</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="vision-imagenes-con-gpt-4o">
+<h3><span class="section-number">1.4.6. </span>Visión (imágenes) con GPT-4o<a class="headerlink" href="#vision-imagenes-con-gpt-4o" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o&quot;</span><span class="p">)</span>
+
+<span class="n">mensaje</span> <span class="o">=</span> <span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="p">[</span>
+    <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;¿Qué aparece en esta imagen?&quot;</span><span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;image_url&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;image_url&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://ejemplo.com/imagen.jpg&quot;</span><span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">])</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">mensaje</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="ollama-con-langchain">
+<h2><span class="section-number">1.5. </span>Ollama con LangChain<a class="headerlink" href="#ollama-con-langchain" title="Link to this heading">#</a></h2>
+<p>Ollama permite ejecutar modelos de forma completamente local, garantizando privacidad total y sin costes por API. Para ver la parte teórica de estos modelos, <a class="reference internal" href="ollama.html#ollama2"><span class="std std-ref">ir al apartado de este enlace</span></a>.</p>
+<section id="id1">
+<h3><span class="section-number">1.5.1. </span>Configuración básica<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_ollama</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOllama</span>
+
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatOllama</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;llama3.1&quot;</span><span class="p">,</span>
+    <span class="n">temperature</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="c1"># Por defecto conecta a http://localhost:11434</span>
+<span class="p">)</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;¿Qué es LangChain?&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="modelos-recomendados-para-ollama">
+<h3><span class="section-number">1.5.2. </span>Modelos recomendados para Ollama<a class="headerlink" href="#modelos-recomendados-para-ollama" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Modelo</p></th>
+<th class="head"><p>Comando pull</p></th>
+<th class="head"><p>Especialidad</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Llama 3.1 8B</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ollama</span> <span class="pre">pull</span> <span class="pre">llama3.1</span></code></p></td>
+<td><p>Propósito general</p></td>
+</tr>
+<tr class="row-odd"><td><p>Llama 3.1 70B</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ollama</span> <span class="pre">pull</span> <span class="pre">llama3.1:70b</span></code></p></td>
+<td><p>Alta calidad</p></td>
+</tr>
+<tr class="row-even"><td><p>Mistral 7B</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ollama</span> <span class="pre">pull</span> <span class="pre">mistral</span></code></p></td>
+<td><p>Rápido y eficiente</p></td>
+</tr>
+<tr class="row-odd"><td><p>DeepSeek-R1</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ollama</span> <span class="pre">pull</span> <span class="pre">deepseek-r1</span></code></p></td>
+<td><p>Razonamiento</p></td>
+</tr>
+<tr class="row-even"><td><p>Phi-4</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ollama</span> <span class="pre">pull</span> <span class="pre">phi4</span></code></p></td>
+<td><p>Hardware limitado</p></td>
+</tr>
+<tr class="row-odd"><td><p>Gemma 3</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ollama</span> <span class="pre">pull</span> <span class="pre">gemma3</span></code></p></td>
+<td><p>Google open-source</p></td>
+</tr>
+<tr class="row-even"><td><p>LLaVA</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ollama</span> <span class="pre">pull</span> <span class="pre">llava</span></code></p></td>
+<td><p>Visión multimodal</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="chain-con-modelo-local">
+<h3><span class="section-number">1.5.3. </span>Chain con modelo local<a class="headerlink" href="#chain-con-modelo-local" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_ollama</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOllama</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">StrOutputParser</span>
+
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatOllama</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;llama3.1&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">([</span>
+    <span class="p">(</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;Eres un experto en </span><span class="si">{dominio}</span><span class="s2">. Responde de forma concisa.&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{pregunta}</span><span class="s2">&quot;</span><span class="p">),</span>
+<span class="p">])</span>
+
+<span class="n">chain</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">llm</span> <span class="o">|</span> <span class="n">StrOutputParser</span><span class="p">()</span>
+
+<span class="n">respuesta</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span>
+    <span class="s2">&quot;dominio&quot;</span><span class="p">:</span> <span class="s2">&quot;desarrollo web&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;pregunta&quot;</span><span class="p">:</span> <span class="s2">&quot;¿Cuáles son las ventajas de usar TypeScript?&quot;</span>
+<span class="p">})</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">respuesta</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="streaming-local">
+<h3><span class="section-number">1.5.4. </span>Streaming local<a class="headerlink" href="#streaming-local" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_ollama</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOllama</span>
+
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatOllama</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;mistral&quot;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">llm</span><span class="o">.</span><span class="n">stream</span><span class="p">(</span><span class="s2">&quot;Explica la arquitectura transformer paso a paso.&quot;</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="embeddings-locales-con-ollama">
+<h3><span class="section-number">1.5.5. </span>Embeddings locales con Ollama<a class="headerlink" href="#embeddings-locales-con-ollama" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_ollama</span><span class="w"> </span><span class="kn">import</span> <span class="n">OllamaEmbeddings</span>
+
+<span class="n">embeddings</span> <span class="o">=</span> <span class="n">OllamaEmbeddings</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;nomic-embed-text&quot;</span><span class="p">)</span>
+
+<span class="c1"># Generar embedding de un texto</span>
+<span class="n">vector</span> <span class="o">=</span> <span class="n">embeddings</span><span class="o">.</span><span class="n">embed_query</span><span class="p">(</span><span class="s2">&quot;Aprendizaje profundo con redes neuronales&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Dimensiones: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">vector</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># 768</span>
+
+<span class="c1"># Embeddings de múltiples documentos</span>
+<span class="n">vectores</span> <span class="o">=</span> <span class="n">embeddings</span><span class="o">.</span><span class="n">embed_documents</span><span class="p">([</span>
+    <span class="s2">&quot;LangChain facilita el desarrollo con LLMs.&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Ollama ejecuta modelos localmente.&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Los transformers revolucionaron el NLP.&quot;</span><span class="p">,</span>
+<span class="p">])</span>
+</pre></div>
+</div>
+</section>
+<section id="cambio-dinamico-de-modelo-fallback">
+<h3><span class="section-number">1.5.6. </span>Cambio dinámico de modelo (fallback)<a class="headerlink" href="#cambio-dinamico-de-modelo-fallback" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_ollama</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOllama</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+
+<span class="c1"># Intenta con el modelo local; si falla, usa OpenAI</span>
+<span class="n">llm_local</span> <span class="o">=</span> <span class="n">ChatOllama</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;llama3.1&quot;</span><span class="p">)</span>
+<span class="n">llm_nube</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">)</span>
+
+<span class="n">llm_con_fallback</span> <span class="o">=</span> <span class="n">llm_local</span><span class="o">.</span><span class="n">with_fallbacks</span><span class="p">([</span><span class="n">llm_nube</span><span class="p">])</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">llm_con_fallback</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;¿Qué es RAG en IA?&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="google-gemini-con-langchain">
+<h2><span class="section-number">1.6. </span>Google Gemini con LangChain<a class="headerlink" href="#google-gemini-con-langchain" title="Link to this heading">#</a></h2>
+<section id="id2">
+<h3><span class="section-number">1.6.1. </span>Configuración básica<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_google_genai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatGoogleGenerativeAI</span>
+
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatGoogleGenerativeAI</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-2.0-flash&quot;</span><span class="p">,</span>
+    <span class="n">temperature</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+    <span class="c1"># api_key se lee de GOOGLE_API_KEY</span>
+<span class="p">)</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;¿Cómo funciona la atención en los transformers?&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="modelos-disponibles-de-gemini">
+<h3><span class="section-number">1.6.2. </span>Modelos disponibles de Gemini<a class="headerlink" href="#modelos-disponibles-de-gemini" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Modelo</p></th>
+<th class="head"><p>Identificador</p></th>
+<th class="head"><p>Características</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Gemini 2.0 Flash</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">gemini-2.0-flash</span></code></p></td>
+<td><p>Rápido, multimodal</p></td>
+</tr>
+<tr class="row-odd"><td><p>Gemini 2.5 Pro</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">gemini-2.5-pro-preview-05-06</span></code></p></td>
+<td><p>Máxima capacidad</p></td>
+</tr>
+<tr class="row-even"><td><p>Gemini 1.5 Flash</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">gemini-1.5-flash</span></code></p></td>
+<td><p>Contexto 1M tokens</p></td>
+</tr>
+<tr class="row-odd"><td><p>Gemini 1.5 Pro</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">gemini-1.5-pro</span></code></p></td>
+<td><p>Análisis profundo</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="chain-con-gemini">
+<h3><span class="section-number">1.6.3. </span>Chain con Gemini<a class="headerlink" href="#chain-con-gemini" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_google_genai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatGoogleGenerativeAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">StrOutputParser</span>
+
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatGoogleGenerativeAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-2.0-flash&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_template</span><span class="p">(</span>
+    <span class="s2">&quot;Actúa como un tutor de </span><span class="si">{materia}</span><span class="s2">. Explica </span><span class="si">{concepto}</span><span class="s2"> con un ejemplo práctico.&quot;</span>
+<span class="p">)</span>
+
+<span class="n">chain</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">llm</span> <span class="o">|</span> <span class="n">StrOutputParser</span><span class="p">()</span>
+
+<span class="n">respuesta</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span>
+    <span class="s2">&quot;materia&quot;</span><span class="p">:</span> <span class="s2">&quot;estadística&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;concepto&quot;</span><span class="p">:</span> <span class="s2">&quot;la desviación estándar&quot;</span>
+<span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">respuesta</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="vision-multimodal-con-gemini">
+<h3><span class="section-number">1.6.4. </span>Visión multimodal con Gemini<a class="headerlink" href="#vision-multimodal-con-gemini" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_google_genai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatGoogleGenerativeAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">base64</span>
+
+<span class="c1"># Leer imagen local</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;diagrama.png&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">imagen_b64</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatGoogleGenerativeAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-2.0-flash&quot;</span><span class="p">)</span>
+
+<span class="n">mensaje</span> <span class="o">=</span> <span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;image_url&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;image_url&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;data:image/png;base64,</span><span class="si">{</span><span class="n">imagen_b64</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}</span>
+    <span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Describe este diagrama de arquitectura.&quot;</span><span class="p">}</span>
+<span class="p">])</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">invoke</span><span class="p">([</span><span class="n">mensaje</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="embeddings-de-google">
+<h3><span class="section-number">1.6.5. </span>Embeddings de Google<a class="headerlink" href="#embeddings-de-google" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_google_genai</span><span class="w"> </span><span class="kn">import</span> <span class="n">GoogleGenerativeAIEmbeddings</span>
+
+<span class="n">embeddings</span> <span class="o">=</span> <span class="n">GoogleGenerativeAIEmbeddings</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;models/text-embedding-004&quot;</span><span class="p">)</span>
+
+<span class="n">vector</span> <span class="o">=</span> <span class="n">embeddings</span><span class="o">.</span><span class="n">embed_query</span><span class="p">(</span><span class="s2">&quot;Redes neuronales convolucionales&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Dimensiones: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">vector</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># 768</span>
+
+<span class="c1"># Para documentos</span>
+<span class="n">vectores</span> <span class="o">=</span> <span class="n">embeddings</span><span class="o">.</span><span class="n">embed_documents</span><span class="p">([</span>
+    <span class="s2">&quot;Primer documento sobre IA.&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Segundo documento sobre ML.&quot;</span><span class="p">,</span>
+<span class="p">])</span>
+</pre></div>
+</div>
+</section>
+<section id="salida-estructurada-con-gemini">
+<h3><span class="section-number">1.6.6. </span>Salida estructurada con Gemini<a class="headerlink" href="#salida-estructurada-con-gemini" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_google_genai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatGoogleGenerativeAI</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">AnalisisSentimiento</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">sentimiento</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;positivo, negativo o neutro&quot;</span><span class="p">)</span>
+    <span class="n">puntuacion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Puntuación entre -1.0 y 1.0&quot;</span><span class="p">)</span>
+    <span class="n">razon</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Explicación breve del análisis&quot;</span><span class="p">)</span>
+
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatGoogleGenerativeAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-2.0-flash&quot;</span><span class="p">)</span>
+<span class="n">analizador</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">with_structured_output</span><span class="p">(</span><span class="n">AnalisisSentimiento</span><span class="p">)</span>
+
+<span class="n">resultado</span> <span class="o">=</span> <span class="n">analizador</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
+    <span class="s2">&quot;Me encanta cómo LangChain simplifica el trabajo con LLMs.&quot;</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sentimiento: </span><span class="si">{</span><span class="n">resultado</span><span class="o">.</span><span class="n">sentimiento</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Puntuación: </span><span class="si">{</span><span class="n">resultado</span><span class="o">.</span><span class="n">puntuacion</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="anthropic-claude-con-langchain">
+<h2><span class="section-number">1.7. </span>Anthropic Claude con LangChain<a class="headerlink" href="#anthropic-claude-con-langchain" title="Link to this heading">#</a></h2>
+<section id="id3">
+<h3><span class="section-number">1.7.1. </span>Configuración básica<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_anthropic</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatAnthropic</span>
+
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatAnthropic</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;claude-sonnet-4-5&quot;</span><span class="p">,</span>
+    <span class="n">temperature</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+    <span class="n">max_tokens</span><span class="o">=</span><span class="mi">2048</span><span class="p">,</span>
+    <span class="c1"># api_key se lee de ANTHROPIC_API_KEY</span>
+<span class="p">)</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;Explica el concepto de embeddings vectoriales.&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="modelos-disponibles-de-anthropic">
+<h3><span class="section-number">1.7.2. </span>Modelos disponibles de Anthropic<a class="headerlink" href="#modelos-disponibles-de-anthropic" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Modelo</p></th>
+<th class="head"><p>Identificador</p></th>
+<th class="head"><p>Características</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Claude Sonnet 4.5</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">claude-sonnet-4-5</span></code></p></td>
+<td><p>Equilibrio calidad/velocidad</p></td>
+</tr>
+<tr class="row-odd"><td><p>Claude Opus 4.5</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">claude-opus-4-5</span></code></p></td>
+<td><p>Máxima capacidad</p></td>
+</tr>
+<tr class="row-even"><td><p>Claude Haiku 3.5</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">claude-haiku-3-5</span></code></p></td>
+<td><p>Ultrarrápido y económico</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="chain-con-claude">
+<h3><span class="section-number">1.7.3. </span>Chain con Claude<a class="headerlink" href="#chain-con-claude" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_anthropic</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatAnthropic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">StrOutputParser</span>
+
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatAnthropic</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;claude-sonnet-4-5&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">([</span>
+    <span class="p">(</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Eres un revisor de código experto. </span>
+<span class="s2">    Analiza el código, identifica problemas y sugiere mejoras claras.&quot;&quot;&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;Revisa este código:</span><span class="se">\n\n</span><span class="s2">```</span><span class="si">{lenguaje}</span><span class="se">\n</span><span class="si">{codigo}</span><span class="se">\n</span><span class="s2">```&quot;</span><span class="p">),</span>
+<span class="p">])</span>
+
+<span class="n">chain</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">llm</span> <span class="o">|</span> <span class="n">StrOutputParser</span><span class="p">()</span>
+
+<span class="n">revision</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span>
+    <span class="s2">&quot;lenguaje&quot;</span><span class="p">:</span> <span class="s2">&quot;python&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;codigo&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">def calcular_promedio(numeros):</span>
+<span class="s2">    suma = 0</span>
+<span class="s2">    for n in numeros:</span>
+<span class="s2">        suma = suma + n</span>
+<span class="s2">    return suma / len(numeros)</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+<span class="p">})</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">revision</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="conversacion-con-memoria-usando-claude">
+<h3><span class="section-number">1.7.4. </span>Conversación con memoria usando Claude<a class="headerlink" href="#conversacion-con-memoria-usando-claude" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_anthropic</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatAnthropic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span><span class="p">,</span> <span class="n">AIMessage</span><span class="p">,</span> <span class="n">SystemMessage</span>
+
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatAnthropic</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;claude-sonnet-4-5&quot;</span><span class="p">)</span>
+
+<span class="c1"># Historial de conversación (gestionado manualmente)</span>
+<span class="n">historial</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">SystemMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;Eres un asistente de programación en Python.&quot;</span><span class="p">)</span>
+<span class="p">]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">chat</span><span class="p">(</span><span class="n">pregunta</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">historial</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">pregunta</span><span class="p">))</span>
+    <span class="n">respuesta</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">historial</span><span class="p">)</span>
+    <span class="n">historial</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">AIMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">respuesta</span><span class="o">.</span><span class="n">content</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">respuesta</span><span class="o">.</span><span class="n">content</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">chat</span><span class="p">(</span><span class="s2">&quot;¿Cómo se usa un decorador en Python?&quot;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">chat</span><span class="p">(</span><span class="s2">&quot;¿Puedes darme un ejemplo más avanzado?&quot;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">chat</span><span class="p">(</span><span class="s2">&quot;¿Cómo lo aplicaría para medir el tiempo de ejecución?&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<section id="salida-estructurada-con-claude">
+<h3><span class="section-number">1.7.5. </span>Salida estructurada con Claude<a class="headerlink" href="#salida-estructurada-con-claude" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_anthropic</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatAnthropic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PlanAprendizaje</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">tema</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Tema principal del plan&quot;</span><span class="p">)</span>
+    <span class="n">duracion_semanas</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Duración estimada en semanas&quot;</span><span class="p">)</span>
+    <span class="n">objetivos</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Objetivos de aprendizaje&quot;</span><span class="p">)</span>
+    <span class="n">recursos</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Recursos recomendados&quot;</span><span class="p">)</span>
+    <span class="n">proyectos</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Proyectos prácticos sugeridos&quot;</span><span class="p">)</span>
+
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatAnthropic</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;claude-sonnet-4-5&quot;</span><span class="p">)</span>
+<span class="n">planificador</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">with_structured_output</span><span class="p">(</span><span class="n">PlanAprendizaje</span><span class="p">)</span>
+
+<span class="n">plan</span> <span class="o">=</span> <span class="n">planificador</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
+    <span class="s2">&quot;Crea un plan de aprendizaje para dominar LangChain desde cero.&quot;</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tema: </span><span class="si">{</span><span class="n">plan</span><span class="o">.</span><span class="n">tema</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Duración: </span><span class="si">{</span><span class="n">plan</span><span class="o">.</span><span class="n">duracion_semanas</span><span class="si">}</span><span class="s2"> semanas&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Objetivos:&quot;</span><span class="p">,</span> <span class="n">plan</span><span class="o">.</span><span class="n">objetivos</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="chains-avanzadas-con-lcel">
+<h2><span class="section-number">1.8. </span>Chains Avanzadas con LCEL<a class="headerlink" href="#chains-avanzadas-con-lcel" title="Link to this heading">#</a></h2>
+<p>LCEL (LangChain Expression Language) usa el operador <code class="docutils literal notranslate"><span class="pre">|</span></code> para componer componentes de forma declarativa.</p>
+<section id="chain-secuencial">
+<h3><span class="section-number">1.8.1. </span>Chain secuencial<a class="headerlink" href="#chain-secuencial" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">StrOutputParser</span>
+
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">)</span>
+
+<span class="c1"># Primer chain: genera una pregunta</span>
+<span class="n">prompt_pregunta</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_template</span><span class="p">(</span>
+    <span class="s2">&quot;Formula una pregunta difícil sobre </span><span class="si">{tema}</span><span class="s2">.&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># Segundo chain: responde la pregunta</span>
+<span class="n">prompt_respuesta</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_template</span><span class="p">(</span>
+    <span class="s2">&quot;Responde esta pregunta de forma experta: </span><span class="si">{pregunta}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+
+<span class="n">parser</span> <span class="o">=</span> <span class="n">StrOutputParser</span><span class="p">()</span>
+
+<span class="c1"># Chain anidada</span>
+<span class="n">chain_completa</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">prompt_pregunta</span>
+    <span class="o">|</span> <span class="n">llm</span>
+    <span class="o">|</span> <span class="n">parser</span>
+    <span class="o">|</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">pregunta</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;pregunta&quot;</span><span class="p">:</span> <span class="n">pregunta</span><span class="p">})</span>
+    <span class="o">|</span> <span class="n">prompt_respuesta</span>
+    <span class="o">|</span> <span class="n">llm</span>
+    <span class="o">|</span> <span class="n">parser</span>
+<span class="p">)</span>
+
+<span class="n">resultado</span> <span class="o">=</span> <span class="n">chain_completa</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;tema&quot;</span><span class="p">:</span> <span class="s2">&quot;redes neuronales recurrentes&quot;</span><span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resultado</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="chain-paralela-con-runnableparallel">
+<h3><span class="section-number">1.8.2. </span>Chain paralela con RunnableParallel<a class="headerlink" href="#chain-paralela-con-runnableparallel" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.runnables</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunnableParallel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">StrOutputParser</span>
+
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">)</span>
+<span class="n">parser</span> <span class="o">=</span> <span class="n">StrOutputParser</span><span class="p">()</span>
+
+<span class="c1"># Ejecutar múltiples chains en paralelo</span>
+<span class="n">analisis_paralelo</span> <span class="o">=</span> <span class="n">RunnableParallel</span><span class="p">(</span>
+    <span class="n">ventajas</span><span class="o">=</span><span class="p">(</span>
+        <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_template</span><span class="p">(</span><span class="s2">&quot;Lista las ventajas de </span><span class="si">{tecnologia}</span><span class="s2">.&quot;</span><span class="p">)</span> 
+        <span class="o">|</span> <span class="n">llm</span> <span class="o">|</span> <span class="n">parser</span>
+    <span class="p">),</span>
+    <span class="n">desventajas</span><span class="o">=</span><span class="p">(</span>
+        <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_template</span><span class="p">(</span><span class="s2">&quot;Lista las desventajas de </span><span class="si">{tecnologia}</span><span class="s2">.&quot;</span><span class="p">)</span>
+        <span class="o">|</span> <span class="n">llm</span> <span class="o">|</span> <span class="n">parser</span>
+    <span class="p">),</span>
+    <span class="n">casos_de_uso</span><span class="o">=</span><span class="p">(</span>
+        <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_template</span><span class="p">(</span><span class="s2">&quot;Describe casos de uso de </span><span class="si">{tecnologia}</span><span class="s2">.&quot;</span><span class="p">)</span>
+        <span class="o">|</span> <span class="n">llm</span> <span class="o">|</span> <span class="n">parser</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">resultado</span> <span class="o">=</span> <span class="n">analisis_paralelo</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;tecnologia&quot;</span><span class="p">:</span> <span class="s2">&quot;LangChain&quot;</span><span class="p">})</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;VENTAJAS:&quot;</span><span class="p">,</span> <span class="n">resultado</span><span class="p">[</span><span class="s2">&quot;ventajas&quot;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DESVENTAJAS:&quot;</span><span class="p">,</span> <span class="n">resultado</span><span class="p">[</span><span class="s2">&quot;desventajas&quot;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;CASOS DE USO:&quot;</span><span class="p">,</span> <span class="n">resultado</span><span class="p">[</span><span class="s2">&quot;casos_de_uso&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="rag-retrieval-augmented-generation">
+<h2><span class="section-number">1.9. </span>RAG (Retrieval-Augmented Generation)<a class="headerlink" href="#rag-retrieval-augmented-generation" title="Link to this heading">#</a></h2>
+<p id="index-1">RAG combina la recuperación de documentos relevantes con la generación de respuestas, permitiendo que el modelo acceda a conocimiento externo y actualizado.</p>
+<section id="rag-basico-con-faiss">
+<h3><span class="section-number">1.9.1. </span>RAG básico con FAISS<a class="headerlink" href="#rag-basico-con-faiss" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>faiss-cpu<span class="w"> </span>langchain-community
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span><span class="p">,</span> <span class="n">OpenAIEmbeddings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">StrOutputParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.runnables</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunnablePassthrough</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_community.vectorstores</span><span class="w"> </span><span class="kn">import</span> <span class="n">FAISS</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.text_splitter</span><span class="w"> </span><span class="kn">import</span> <span class="n">RecursiveCharacterTextSplitter</span>
+
+<span class="c1"># Documentos de ejemplo</span>
+<span class="n">documentos_texto</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;LangChain es un framework para construir aplicaciones con LLMs.&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;LCEL permite encadenar componentes usando el operador pipe |.&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Los agentes en LangChain pueden usar herramientas externas dinámicamente.&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;RAG mejora las respuestas al recuperar contexto relevante de documentos.&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;LangSmith permite depurar y monitorizar aplicaciones LangChain.&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="c1"># Dividir en chunks</span>
+<span class="n">splitter</span> <span class="o">=</span> <span class="n">RecursiveCharacterTextSplitter</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">chunk_overlap</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">chunks</span> <span class="o">=</span> <span class="n">splitter</span><span class="o">.</span><span class="n">create_documents</span><span class="p">(</span><span class="n">documentos_texto</span><span class="p">)</span>
+
+<span class="c1"># Crear vectorstore</span>
+<span class="n">embeddings</span> <span class="o">=</span> <span class="n">OpenAIEmbeddings</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;text-embedding-3-small&quot;</span><span class="p">)</span>
+<span class="n">vectorstore</span> <span class="o">=</span> <span class="n">FAISS</span><span class="o">.</span><span class="n">from_documents</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">embeddings</span><span class="p">)</span>
+<span class="n">retriever</span> <span class="o">=</span> <span class="n">vectorstore</span><span class="o">.</span><span class="n">as_retriever</span><span class="p">(</span><span class="n">search_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;k&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">})</span>
+
+<span class="c1"># Prompt RAG</span>
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_template</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Responde la pregunta basándote ÚNICAMENTE en el siguiente contexto:</span>
+
+<span class="si">{contexto}</span>
+
+<span class="s2">Pregunta: </span><span class="si">{pregunta}</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">)</span>
+
+<span class="c1"># Chain RAG completa</span>
+<span class="n">chain_rag</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="p">{</span><span class="s2">&quot;contexto&quot;</span><span class="p">:</span> <span class="n">retriever</span><span class="p">,</span> <span class="s2">&quot;pregunta&quot;</span><span class="p">:</span> <span class="n">RunnablePassthrough</span><span class="p">()}</span>
+    <span class="o">|</span> <span class="n">prompt</span>
+    <span class="o">|</span> <span class="n">llm</span>
+    <span class="o">|</span> <span class="n">StrOutputParser</span><span class="p">()</span>
+<span class="p">)</span>
+
+<span class="n">respuesta</span> <span class="o">=</span> <span class="n">chain_rag</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;¿Qué es LCEL en LangChain?&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">respuesta</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="rag-con-ollama-completamente-local-y-gratuito">
+<h3><span class="section-number">1.9.2. </span>RAG con Ollama (completamente local y gratuito)<a class="headerlink" href="#rag-con-ollama-completamente-local-y-gratuito" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_ollama</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOllama</span><span class="p">,</span> <span class="n">OllamaEmbeddings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_community.vectorstores</span><span class="w"> </span><span class="kn">import</span> <span class="n">FAISS</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">StrOutputParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.runnables</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunnablePassthrough</span>
+
+<span class="c1"># Embeddings y LLM 100% locales</span>
+<span class="n">embeddings</span> <span class="o">=</span> <span class="n">OllamaEmbeddings</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;nomic-embed-text&quot;</span><span class="p">)</span>
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatOllama</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;llama3.1&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+<span class="c1"># Crear vectorstore local</span>
+<span class="n">textos</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Documento uno...&quot;</span><span class="p">,</span> <span class="s2">&quot;Documento dos...&quot;</span><span class="p">,</span> <span class="s2">&quot;Documento tres...&quot;</span><span class="p">]</span>
+<span class="n">vectorstore</span> <span class="o">=</span> <span class="n">FAISS</span><span class="o">.</span><span class="n">from_texts</span><span class="p">(</span><span class="n">textos</span><span class="p">,</span> <span class="n">embeddings</span><span class="p">)</span>
+<span class="n">retriever</span> <span class="o">=</span> <span class="n">vectorstore</span><span class="o">.</span><span class="n">as_retriever</span><span class="p">()</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_template</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Usa el siguiente contexto para responder.</span>
+<span class="s2">Contexto: </span><span class="si">{contexto}</span>
+<span class="s2">Pregunta: </span><span class="si">{pregunta}</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+
+<span class="n">chain</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="p">{</span><span class="s2">&quot;contexto&quot;</span><span class="p">:</span> <span class="n">retriever</span><span class="p">,</span> <span class="s2">&quot;pregunta&quot;</span><span class="p">:</span> <span class="n">RunnablePassthrough</span><span class="p">()}</span>
+    <span class="o">|</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">llm</span> <span class="o">|</span> <span class="n">StrOutputParser</span><span class="p">()</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">chain</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;¿Qué información hay en los documentos?&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="agentes-con-langchain">
+<h2><span class="section-number">1.10. </span>Agentes con LangChain<a class="headerlink" href="#agentes-con-langchain" title="Link to this heading">#</a></h2>
+<p>Los agentes permiten al modelo decidir dinámicamente qué herramientas usar para resolver una tarea.</p>
+<section id="agente-con-herramientas-personalizadas">
+<h3><span class="section-number">1.10.1. </span>Agente con herramientas personalizadas<a class="headerlink" href="#agente-con-herramientas-personalizadas" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_tool_calling_agent</span><span class="p">,</span> <span class="n">AgentExecutor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">obtener_fecha_actual</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Devuelve la fecha y hora actual.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">calcular</span><span class="p">(</span><span class="n">expresion</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Evalúa una expresión matemática. Ejemplo: &#39;2 + 2 * 10&#39;&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">resultado</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">expresion</span><span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;El resultado de </span><span class="si">{</span><span class="n">expresion</span><span class="si">}</span><span class="s2"> es </span><span class="si">{</span><span class="n">resultado</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Error al calcular: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">buscar_definicion</span><span class="p">(</span><span class="n">termino</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Proporciona una definición básica de un término de IA.&quot;&quot;&quot;</span>
+    <span class="n">definiciones</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;llm&quot;</span><span class="p">:</span> <span class="s2">&quot;Modelo de Lenguaje Grande: modelo entrenado con grandes cantidades de texto.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;rag&quot;</span><span class="p">:</span> <span class="s2">&quot;Retrieval-Augmented Generation: técnica que combina recuperación y generación.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;embedding&quot;</span><span class="p">:</span> <span class="s2">&quot;Representación vectorial densa de texto en un espacio de alta dimensión.&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">definiciones</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">termino</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="sa">f</span><span class="s2">&quot;No tengo definición para &#39;</span><span class="si">{</span><span class="n">termino</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+
+<span class="c1"># Configurar el agente</span>
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">herramientas</span> <span class="o">=</span> <span class="p">[</span><span class="n">obtener_fecha_actual</span><span class="p">,</span> <span class="n">calcular</span><span class="p">,</span> <span class="n">buscar_definicion</span><span class="p">]</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">([</span>
+    <span class="p">(</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;Eres un asistente útil con acceso a herramientas.&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{input}</span><span class="s2">&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;placeholder&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{agent_scratchpad}</span><span class="s2">&quot;</span><span class="p">),</span>
+<span class="p">])</span>
+
+<span class="n">agente</span> <span class="o">=</span> <span class="n">create_tool_calling_agent</span><span class="p">(</span><span class="n">llm</span><span class="p">,</span> <span class="n">herramientas</span><span class="p">,</span> <span class="n">prompt</span><span class="p">)</span>
+<span class="n">ejecutor</span> <span class="o">=</span> <span class="n">AgentExecutor</span><span class="p">(</span><span class="n">agent</span><span class="o">=</span><span class="n">agente</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="n">herramientas</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">resultado</span> <span class="o">=</span> <span class="n">ejecutor</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span>
+    <span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="s2">&quot;¿Qué fecha es hoy? ¿Y cuánto es 15 al cuadrado?&quot;</span>
+<span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resultado</span><span class="p">[</span><span class="s2">&quot;output&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="memoria-y-gestion-del-historial">
+<h2><span class="section-number">1.11. </span>Memoria y Gestión del Historial<a class="headerlink" href="#memoria-y-gestion-del-historial" title="Link to this heading">#</a></h2>
+<section id="memoria-con-runnablewithmessagehistory">
+<h3><span class="section-number">1.11.1. </span>Memoria con RunnableWithMessageHistory<a class="headerlink" href="#memoria-con-runnablewithmessagehistory" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_anthropic</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatAnthropic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span><span class="p">,</span> <span class="n">MessagesPlaceholder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.chat_history</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseChatMessageHistory</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseMessage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_community.chat_message_histories</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatMessageHistory</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.runnables.history</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunnableWithMessageHistory</span>
+
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatAnthropic</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;claude-sonnet-4-5&quot;</span><span class="p">)</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">([</span>
+    <span class="p">(</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;Eres un asistente conversacional con memoria.&quot;</span><span class="p">),</span>
+    <span class="n">MessagesPlaceholder</span><span class="p">(</span><span class="n">variable_name</span><span class="o">=</span><span class="s2">&quot;history&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{input}</span><span class="s2">&quot;</span><span class="p">),</span>
+<span class="p">])</span>
+
+<span class="n">chain</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">llm</span>
+
+<span class="c1"># Almacén de sesiones en memoria</span>
+<span class="n">store</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">BaseChatMessageHistory</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_session_history</span><span class="p">(</span><span class="n">session_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseChatMessageHistory</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">session_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">store</span><span class="p">:</span>
+        <span class="n">store</span><span class="p">[</span><span class="n">session_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">ChatMessageHistory</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">store</span><span class="p">[</span><span class="n">session_id</span><span class="p">]</span>
+
+<span class="n">chain_con_memoria</span> <span class="o">=</span> <span class="n">RunnableWithMessageHistory</span><span class="p">(</span>
+    <span class="n">chain</span><span class="p">,</span>
+    <span class="n">get_session_history</span><span class="p">,</span>
+    <span class="n">input_messages_key</span><span class="o">=</span><span class="s2">&quot;input&quot;</span><span class="p">,</span>
+    <span class="n">history_messages_key</span><span class="o">=</span><span class="s2">&quot;history&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;configurable&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;session_id&quot;</span><span class="p">:</span> <span class="s2">&quot;usuario_001&quot;</span><span class="p">}}</span>
+
+<span class="c1"># El historial se mantiene automáticamente entre llamadas</span>
+<span class="n">r1</span> <span class="o">=</span> <span class="n">chain_con_memoria</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="s2">&quot;Me llamo Ana.&quot;</span><span class="p">},</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+<span class="n">r2</span> <span class="o">=</span> <span class="n">chain_con_memoria</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="s2">&quot;¿Cómo me llamo?&quot;</span><span class="p">},</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">r1</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">r2</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>  <span class="c1"># Recordará el nombre &quot;Ana&quot;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="comparativa-de-proveedores-en-langchain">
+<h2><span class="section-number">1.12. </span>Comparativa de Proveedores en LangChain<a class="headerlink" href="#comparativa-de-proveedores-en-langchain" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Característica</p></th>
+<th class="head"><p>OpenAI</p></th>
+<th class="head"><p>Ollama</p></th>
+<th class="head"><p>Google Gemini</p></th>
+<th class="head"><p>Anthropic</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Paquete</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">langchain-openai</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">langchain-ollama</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">langchain-google-genai</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">langchain-anthropic</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Clase principal</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ChatOpenAI</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ChatOllama</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ChatGoogleGenerativeAI</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ChatAnthropic</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Ejecución</p></td>
+<td><p>Nube</p></td>
+<td><p>Local</p></td>
+<td><p>Nube</p></td>
+<td><p>Nube</p></td>
+</tr>
+<tr class="row-odd"><td><p>Coste</p></td>
+<td><p>Por tokens</p></td>
+<td><p>Gratuito</p></td>
+<td><p>Por tokens (free tier)</p></td>
+<td><p>Por tokens</p></td>
+</tr>
+<tr class="row-even"><td><p>Privacidad</p></td>
+<td><p>Externa</p></td>
+<td><p>Total (local)</p></td>
+<td><p>Externa</p></td>
+<td><p>Externa</p></td>
+</tr>
+<tr class="row-odd"><td><p>Embeddings</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OpenAIEmbeddings</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OllamaEmbeddings</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GoogleGenerativeAIEmbeddings</span></code></p></td>
+<td><p>—</p></td>
+</tr>
+<tr class="row-even"><td><p>Multimodal</p></td>
+<td><p>✅ GPT-4o</p></td>
+<td><p>✅ LLaVA</p></td>
+<td><p>✅ Gemini</p></td>
+<td><p>✅ Claude 3+</p></td>
+</tr>
+<tr class="row-odd"><td><p>Contexto máx.</p></td>
+<td><p>128K tokens</p></td>
+<td><p>Según modelo</p></td>
+<td><p>1M tokens</p></td>
+<td><p>200K tokens</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="depuracion-con-langsmith">
+<h2><span class="section-number">1.13. </span>Depuración con LangSmith<a class="headerlink" href="#depuracion-con-langsmith" title="Link to this heading">#</a></h2>
+<p>LangSmith es la plataforma oficial de observabilidad para aplicaciones LangChain.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>langsmith
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Variables de entorno</span>
+<span class="nv">LANGCHAIN_TRACING_V2</span><span class="o">=</span><span class="nb">true</span>
+<span class="nv">LANGCHAIN_API_KEY</span><span class="o">=</span>ls__...
+<span class="nv">LANGCHAIN_PROJECT</span><span class="o">=</span>mi-proyecto-ia
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Con estas variables configuradas, todas las ejecuciones</span>
+<span class="c1"># se registran automáticamente en LangSmith sin cambios de código.</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">)</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;¿Qué es LangSmith?&quot;</span><span class="p">)</span>
+<span class="c1"># Esta llamada queda registrada en el dashboard de LangSmith</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="buenas-practicas">
+<h2><span class="section-number">1.14. </span>Buenas Prácticas<a class="headerlink" href="#buenas-practicas" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Usa <code class="docutils literal notranslate"><span class="pre">with_structured_output</span></code></strong> para extraer datos estructurados en lugar de parsear texto manualmente; es más robusto y tipado.</p></li>
+<li><p><strong>Prefiere LCEL</strong> sobre las chains heredadas (<code class="docutils literal notranslate"><span class="pre">LLMChain</span></code>); es más flexible, soporta streaming y es el estándar actual.</p></li>
+<li><p><strong>Ollama para desarrollo y pruebas</strong>: usa modelos locales durante el desarrollo para reducir costes y proteger datos sensibles.</p></li>
+<li><p><strong>Gestiona el contexto</strong>: los LLMs tienen límites de tokens; usa <code class="docutils literal notranslate"><span class="pre">RecursiveCharacterTextSplitter</span></code> con solapamiento para no perder coherencia entre chunks.</p></li>
+<li><p><strong>Temperatura según tarea</strong>: análisis y extracción → <code class="docutils literal notranslate"><span class="pre">0.0–0.2</span></code>; respuestas equilibradas → <code class="docutils literal notranslate"><span class="pre">0.5–0.7</span></code>; escritura creativa → <code class="docutils literal notranslate"><span class="pre">0.8–1.0</span></code>.</p></li>
+<li><p><strong>Fallbacks</strong>: define cadenas de respaldo con <code class="docutils literal notranslate"><span class="pre">.with_fallbacks()</span></code> para mayor resiliencia en producción.</p></li>
+<li><p><strong>Cachea embeddings</strong>: en pipelines RAG, almacena los vectores en disco (FAISS, Chroma) en lugar de regenerarlos en cada ejecución.</p></li>
+<li><p><strong>Monitoriza con LangSmith</strong>: es indispensable en producción para detectar latencias, tokens consumidos y errores en las chains.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="recursos-adicionales">
+<h2><span class="section-number">1.15. </span>Recursos Adicionales<a class="headerlink" href="#recursos-adicionales" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Documentación oficial: <a class="reference external" href="https://python.langchain.com">https://python.langchain.com</a></p></li>
+<li><p>LangChain en GitHub: <a class="github reference external" href="https://github.com/langchain-ai/langchain">langchain-ai/langchain</a></p></li>
+<li><p>LangSmith: <a class="reference external" href="https://smith.langchain.com">https://smith.langchain.com</a></p></li>
+<li><p>Hub de prompts: <a class="reference external" href="https://smith.langchain.com/hub">https://smith.langchain.com/hub</a></p></li>
+<li><p>API OpenAI: <a class="reference external" href="https://platform.openai.com/docs">https://platform.openai.com/docs</a></p></li>
+<li><p>API Anthropic: <a class="reference external" href="https://docs.anthropic.com">https://docs.anthropic.com</a></p></li>
+<li><p>API Google Gemini: <a class="reference external" href="https://ai.google.dev/docs">https://ai.google.dev/docs</a></p></li>
+<li><p>Modelos Ollama: <a class="reference external" href="https://ollama.com/library">https://ollama.com/library</a></p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./jupyters"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../introduccion.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Introducción</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="runnables.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">2. </span>Los runnables de LangChain</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#que-es-langchain">1.1. ¿Qué es LangChain?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#instalacion">1.2. Instalación</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paquete-base">1.2.1. Paquete base</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paquetes-por-proveedor">1.2.2. Paquetes por proveedor</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gestion-de-claves-api-con-dotenv">1.2.3. Gestión de claves API con dotenv</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conceptos-fundamentales">1.3. Conceptos Fundamentales</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#la-interfaz-chatmodel">1.3.1. La interfaz ChatModel</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tipos-de-mensajes">1.3.2. Tipos de mensajes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prompttemplates">1.3.3. PromptTemplates</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#output-parsers">1.3.4. Output Parsers</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#openai-con-langchain">1.4. OpenAI con LangChain</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#configuracion-basica">1.4.1. Configuración básica</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modelos-disponibles-de-openai">1.4.2. Modelos disponibles de OpenAI</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#streaming-de-respuestas">1.4.3. Streaming de respuestas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chain-basica-con-lcel">1.4.4. Chain básica con LCEL</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#salida-estructurada-con-openai">1.4.5. Salida estructurada con OpenAI</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#vision-imagenes-con-gpt-4o">1.4.6. Visión (imágenes) con GPT-4o</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ollama-con-langchain">1.5. Ollama con LangChain</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">1.5.1. Configuración básica</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modelos-recomendados-para-ollama">1.5.2. Modelos recomendados para Ollama</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chain-con-modelo-local">1.5.3. Chain con modelo local</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#streaming-local">1.5.4. Streaming local</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#embeddings-locales-con-ollama">1.5.5. Embeddings locales con Ollama</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cambio-dinamico-de-modelo-fallback">1.5.6. Cambio dinámico de modelo (fallback)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#google-gemini-con-langchain">1.6. Google Gemini con LangChain</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">1.6.1. Configuración básica</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modelos-disponibles-de-gemini">1.6.2. Modelos disponibles de Gemini</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chain-con-gemini">1.6.3. Chain con Gemini</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#vision-multimodal-con-gemini">1.6.4. Visión multimodal con Gemini</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#embeddings-de-google">1.6.5. Embeddings de Google</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#salida-estructurada-con-gemini">1.6.6. Salida estructurada con Gemini</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#anthropic-claude-con-langchain">1.7. Anthropic Claude con LangChain</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">1.7.1. Configuración básica</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modelos-disponibles-de-anthropic">1.7.2. Modelos disponibles de Anthropic</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chain-con-claude">1.7.3. Chain con Claude</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conversacion-con-memoria-usando-claude">1.7.4. Conversación con memoria usando Claude</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#salida-estructurada-con-claude">1.7.5. Salida estructurada con Claude</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chains-avanzadas-con-lcel">1.8. Chains Avanzadas con LCEL</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chain-secuencial">1.8.1. Chain secuencial</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chain-paralela-con-runnableparallel">1.8.2. Chain paralela con RunnableParallel</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rag-retrieval-augmented-generation">1.9. RAG (Retrieval-Augmented Generation)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rag-basico-con-faiss">1.9.1. RAG básico con FAISS</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rag-con-ollama-completamente-local-y-gratuito">1.9.2. RAG con Ollama (completamente local y gratuito)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#agentes-con-langchain">1.10. Agentes con LangChain</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#agente-con-herramientas-personalizadas">1.10.1. Agente con herramientas personalizadas</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#memoria-y-gestion-del-historial">1.11. Memoria y Gestión del Historial</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#memoria-con-runnablewithmessagehistory">1.11.1. Memoria con RunnableWithMessageHistory</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparativa-de-proveedores-en-langchain">1.12. Comparativa de Proveedores en LangChain</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#depuracion-con-langsmith">1.13. Depuración con LangSmith</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#buenas-practicas">1.14. Buenas Prácticas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#recursos-adicionales">1.15. Recursos Adicionales</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Francisco Rodríguez
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

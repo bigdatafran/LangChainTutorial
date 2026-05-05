@@ -1,0 +1,1286 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>6. Introdución a los Agentes en LangChain &#8212; LangChain &amp; LangGraph</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'jupyters/agentes';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="7. Introducción a las Tools." href="tools.html" />
+    <link rel="prev" title="5. Introducción: De “Prompts” a la Orquestación de Mensajes Orientada a Objetos" href="messages.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../introduccion.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">LangChain & LangGraph</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Langchain.</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="modelosLangChain.html">1. Modelos de IA con LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="runnables.html">2. Los runnables de LangChain</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="prompts.html">3. Prompts template en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="salidas_estructuradas.html">4. Salidas estructuradas en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="messages.html">5. Messages en LangChain</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">6. Agentes en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">7. Tools (herramientas) en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="langchain_async_concurrencia.html">8. Ejecución asíncrona en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="init_langGraph.html">9. Primer acercamiento a LangGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="base_datos.html">10. Base de datos con LangGraph</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Apendices.</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="asyncio.html">11. Asincronia con asyncio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ollama.html">12. Ollama</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sitiosweb.html">13. Sitios web</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Índice de términos</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">Índice de términos</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Introdución a los Agentes en LangChain</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#que-es-un-agente">6.1. ¿Qué es un Agente?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#el-bucle-react">6.2. El Bucle ReAct</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#componentes-principales">6.3. Componentes Principales</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#el-modelo">6.4. El Modelo</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modelo-estatico">6.4.1. Modelo Estático</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modelo-dinamico">6.4.2. Modelo Dinámico</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#las-herramientas-tools">6.5. Las Herramientas (Tools)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#herramientas-estaticas">6.5.1. Herramientas Estáticas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#herramientas-dinamicas-filtrado-por-estado">6.5.2. Herramientas Dinámicas (Filtrado por Estado)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manejo-de-errores-en-herramientas">6.5.3. Manejo de Errores en Herramientas</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#el-system-prompt">6.6. El System Prompt</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prompt-estatico">6.6.1. Prompt Estático</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prompt-dinamico">6.6.2. Prompt Dinámico</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#invocacion-del-agente">6.7. Invocación del Agente</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#salida-estructurada">6.8. Salida Estructurada</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#memoria-y-estado">6.9. Memoria y Estado</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streaming">6.10. Streaming</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#middleware">6.11. Middleware</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#middleware-con-decoradores-estilo-funcional">6.11.1. Middleware con decoradores (estilo funcional)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resumen-visual">6.12. Resumen Visual</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tabla-de-referencia-rapida">6.12.1. Tabla de referencia rápida</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apendice">6.13. Apéndice.</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="introducion-a-los-agentes-en-langchain">
+<h1><span class="section-number">6. </span>Introdución a los Agentes en LangChain<a class="headerlink" href="#introducion-a-los-agentes-en-langchain" title="Link to this heading">#</a></h1>
+<blockquote>
+<div><p>Basado en la documentación oficial: <a class="reference external" href="https://docs.langchain.com/oss/python/langchain/agents">LangChain Agents</a></p>
+</div></blockquote>
+<p><img alt="" src="../_images/agentes.png" /></p>
+<section id="que-es-un-agente">
+<h2><span class="section-number">6.1. </span>¿Qué es un Agente?<a class="headerlink" href="#que-es-un-agente" title="Link to this heading">#</a></h2>
+<p id="index-0">Un <strong>agente</strong> combina un modelo de lenguaje (LLM) con <strong>herramientas</strong> para crear sistemas capaces de:</p>
+<ul class="simple">
+<li><p>Razonar sobre tareas complejas</p></li>
+<li><p>Decidir qué herramientas usar en cada momento</p></li>
+<li><p>Trabajar iterativamente hasta alcanzar una solución</p></li>
+</ul>
+<blockquote>
+<div><p>💡 La función principal es <code class="docutils literal notranslate"><span class="pre">create_agent</span></code>, que construye un agente listo para producción usando <strong>LangGraph</strong> como motor de ejecución basado en grafos.</p>
+</div></blockquote>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Instalación necesaria</span>
+<span class="c1"># pip install langchain langchain-openai langgraph</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_agent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+
+<span class="c1"># Ejemplo mínimo de agente</span>
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sumar</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Suma dos números.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span><span class="s2">&quot;openai:gpt-4o-mini&quot;</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">sumar</span><span class="p">])</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span>
+    <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;¿Cuánto es 15 + 27?&quot;</span><span class="p">}]</span>
+<span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="el-bucle-react">
+<h2><span class="section-number">6.2. </span>El Bucle ReAct<a class="headerlink" href="#el-bucle-react" title="Link to this heading">#</a></h2>
+<p>Los agentes siguen el patrón <strong>ReAct</strong> (<strong>Reasoning + Acting</strong>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Usuario pregunta
+      ↓
+  [RAZONAR] → ¿Qué herramienta necesito?
+      ↓
+  [ACTUAR]  → Llamar a la herramienta
+      ↓
+  [OBSERVAR]→ Ver el resultado
+      ↓
+  ¿Tengo respuesta final? → Sí → Responder
+                          → No → volver a RAZONAR
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ejemplo ilustrativo del ciclo ReAct con dos herramientas encadenadas</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">buscar_producto</span><span class="p">(</span><span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Busca productos en el catálogo.&quot;&quot;&quot;</span>
+    <span class="c1"># En un caso real, consultaría una base de datos</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Productos encontrados para &#39;</span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="s2">&#39;: Laptop Pro X1, Laptop Air M2&quot;</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">verificar_stock</span><span class="p">(</span><span class="n">producto_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Verifica el stock de un producto.&quot;&quot;&quot;</span>
+    <span class="n">stocks</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Laptop Pro X1&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;Laptop Air M2&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+    <span class="n">cantidad</span> <span class="o">=</span> <span class="n">stocks</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">producto_id</span><span class="p">,</span> <span class="s2">&quot;desconocido&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Stock de </span><span class="si">{</span><span class="n">producto_id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">cantidad</span><span class="si">}</span><span class="s2"> unidades&quot;</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="s2">&quot;openai:gpt-4o-mini&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">buscar_producto</span><span class="p">,</span> <span class="n">verificar_stock</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># El agente encadenará automáticamente las dos herramientas:</span>
+<span class="c1"># 1. Buscará laptops  →  2. Verificará el stock del resultado</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span>
+    <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;¿Hay laptops disponibles?&quot;</span><span class="p">}]</span>
+<span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="componentes-principales">
+<h2><span class="section-number">6.3. </span>Componentes Principales<a class="headerlink" href="#componentes-principales" title="Link to this heading">#</a></h2>
+<p>Un agente en LangChain tiene estos bloques fundamentales:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Componente</p></th>
+<th class="head"><p>Descripción</p></th>
+<th class="head"><p>Obligatorio</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Modelo</strong></p></td>
+<td><p>El LLM que razona</p></td>
+<td><p>✅ Sí</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Tools</strong></p></td>
+<td><p>Las acciones que puede ejecutar</p></td>
+<td><p>❌ Opcional</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>System Prompt</strong></p></td>
+<td><p>Instrucciones de comportamiento</p></td>
+<td><p>❌ Opcional</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Middleware</strong></p></td>
+<td><p>Lógica adicional pre/post ejecución</p></td>
+<td><p>❌ Opcional</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>State Schema</strong></p></td>
+<td><p>Estado personalizado del agente</p></td>
+<td><p>❌ Opcional</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="el-modelo">
+<h2><span class="section-number">6.4. </span>El Modelo<a class="headerlink" href="#el-modelo" title="Link to this heading">#</a></h2>
+<section id="modelo-estatico">
+<h3><span class="section-number">6.4.1. </span>Modelo Estático<a class="headerlink" href="#modelo-estatico" title="Link to this heading">#</a></h3>
+<p>El modelo se configura una vez y no cambia durante la ejecución.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_agent</span>
+
+<span class="c1"># Opción A: usando un string identificador (más simple)</span>
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span><span class="s2">&quot;openai:gpt-4o-mini&quot;</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="p">[])</span>
+
+<span class="c1"># Opción B: instanciando el modelo directamente (más control)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+
+<span class="n">modelo</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span>
+    <span class="n">temperature</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>       <span class="c1"># Respuestas más deterministas</span>
+    <span class="n">max_tokens</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+    <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span>
+<span class="p">)</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span><span class="n">modelo</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="p">[])</span>
+</pre></div>
+</div>
+</section>
+<section id="modelo-dinamico">
+<h3><span class="section-number">6.4.2. </span>Modelo Dinámico<a class="headerlink" href="#modelo-dinamico" title="Link to this heading">#</a></h3>
+<p>Se puede cambiar el modelo en tiempo de ejecución según el contexto.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_agent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">wrap_model_call</span><span class="p">,</span> <span class="n">ModelRequest</span><span class="p">,</span> <span class="n">ModelResponse</span>
+
+<span class="n">modelo_basico</span>   <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">)</span>  <span class="c1"># Barato y rápido</span>
+<span class="n">modelo_avanzado</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o&quot;</span><span class="p">)</span>        <span class="c1"># Más potente</span>
+
+<span class="nd">@wrap_model_call</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">seleccion_dinamica</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">ModelRequest</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModelResponse</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Usa el modelo avanzado solo cuando la conversación es larga.&quot;&quot;&quot;</span>
+    <span class="n">num_mensajes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">num_mensajes</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
+        <span class="n">modelo</span> <span class="o">=</span> <span class="n">modelo_avanzado</span>  <span class="c1"># Conversación larga → modelo potente</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">modelo</span> <span class="o">=</span> <span class="n">modelo_basico</span>    <span class="c1"># Conversación corta → modelo económico</span>
+
+    <span class="k">return</span> <span class="n">handler</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">override</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">modelo</span><span class="p">))</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">modelo_basico</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[],</span>
+    <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">seleccion_dinamica</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="las-herramientas-tools">
+<h2><span class="section-number">6.5. </span>Las Herramientas (Tools)<a class="headerlink" href="#las-herramientas-tools" title="Link to this heading">#</a></h2>
+<p>Las herramientas son las <strong>acciones</strong> que el agente puede ejecutar. Se definen como funciones Python decoradas con <code class="docutils literal notranslate"><span class="pre">&#64;tool</span></code>.</p>
+<section id="herramientas-estaticas">
+<h3><span class="section-number">6.5.1. </span>Herramientas Estáticas<a class="headerlink" href="#herramientas-estaticas" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_agent</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">obtener_clima</span><span class="p">(</span><span class="n">ciudad</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Obtiene el clima actual de una ciudad.&quot;&quot;&quot;</span>
+    <span class="c1"># En producción, llamaría a una API real</span>
+    <span class="n">climas</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;Madrid&quot;</span><span class="p">:</span> <span class="s2">&quot;☀️ Soleado, 22°C&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Londres&quot;</span><span class="p">:</span> <span class="s2">&quot;🌧️ Lluvioso, 14°C&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;París&quot;</span><span class="p">:</span> <span class="s2">&quot;⛅ Nublado, 18°C&quot;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">climas</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ciudad</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Datos no disponibles para </span><span class="si">{</span><span class="n">ciudad</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">convertir_moneda</span><span class="p">(</span><span class="n">cantidad</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">de</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convierte una cantidad entre divisas.&quot;&quot;&quot;</span>
+    <span class="n">tasas</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;EUR_USD&quot;</span><span class="p">:</span> <span class="mf">1.08</span><span class="p">,</span> <span class="s2">&quot;USD_EUR&quot;</span><span class="p">:</span> <span class="mf">0.93</span><span class="p">,</span> <span class="s2">&quot;EUR_GBP&quot;</span><span class="p">:</span> <span class="mf">0.86</span><span class="p">}</span>
+    <span class="n">clave</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">de</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">if</span> <span class="n">clave</span> <span class="ow">in</span> <span class="n">tasas</span><span class="p">:</span>
+        <span class="n">resultado</span> <span class="o">=</span> <span class="n">cantidad</span> <span class="o">*</span> <span class="n">tasas</span><span class="p">[</span><span class="n">clave</span><span class="p">]</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cantidad</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">de</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">resultado</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">return</span> <span class="s2">&quot;Conversión no disponible&quot;</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;openai:gpt-4o-mini&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">obtener_clima</span><span class="p">,</span> <span class="n">convertir_moneda</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span>
+    <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;¿Qué clima hace en Madrid y cuánto son 100 EUR en USD?&quot;</span><span class="p">}]</span>
+<span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="herramientas-dinamicas-filtrado-por-estado">
+<h3><span class="section-number">6.5.2. </span>Herramientas Dinámicas (Filtrado por Estado)<a class="headerlink" href="#herramientas-dinamicas-filtrado-por-estado" title="Link to this heading">#</a></h3>
+<p>No siempre conviene exponer todas las herramientas al modelo. Se pueden filtrar según el contexto.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_agent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">wrap_model_call</span><span class="p">,</span> <span class="n">ModelRequest</span><span class="p">,</span> <span class="n">ModelResponse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ver_saldo</span><span class="p">(</span><span class="n">cuenta</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Consulta el saldo de una cuenta bancaria.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Saldo de </span><span class="si">{</span><span class="n">cuenta</span><span class="si">}</span><span class="s2">: 1.250,00 €&quot;</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">realizar_transferencia</span><span class="p">(</span><span class="n">origen</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">destino</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">cantidad</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Realiza una transferencia bancaria.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Transferencia de </span><span class="si">{</span><span class="n">cantidad</span><span class="si">}</span><span class="s2">€ de </span><span class="si">{</span><span class="n">origen</span><span class="si">}</span><span class="s2"> a </span><span class="si">{</span><span class="n">destino</span><span class="si">}</span><span class="s2">: ✅ Completada&quot;</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ver_movimientos</span><span class="p">(</span><span class="n">cuenta</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Muestra los últimos movimientos de una cuenta.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Últimos movimientos de </span><span class="si">{</span><span class="n">cuenta</span><span class="si">}</span><span class="s2">: -50€ supermercado, +1200€ nómina&quot;</span>
+
+<span class="nd">@wrap_model_call</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">filtrar_por_autenticacion</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">ModelRequest</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModelResponse</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Solo permite operaciones sensibles si el usuario está autenticado.&quot;&quot;&quot;</span>
+    <span class="n">autenticado</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;autenticado&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">autenticado</span><span class="p">:</span>
+        <span class="c1"># Sin autenticación: solo herramientas de consulta básica</span>
+        <span class="n">tools_disponibles</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">tools</span> <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;ver_saldo&quot;</span><span class="p">]</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">override</span><span class="p">(</span><span class="n">tools</span><span class="o">=</span><span class="n">tools_disponibles</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">handler</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;openai:gpt-4o-mini&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">ver_saldo</span><span class="p">,</span> <span class="n">realizar_transferencia</span><span class="p">,</span> <span class="n">ver_movimientos</span><span class="p">],</span>
+    <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">filtrar_por_autenticacion</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># Sin autenticación: solo puede ver el saldo</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span>
+    <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Muéstrame mi saldo y mis movimientos&quot;</span><span class="p">}],</span>
+    <span class="s2">&quot;autenticado&quot;</span><span class="p">:</span> <span class="kc">False</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+</section>
+<section id="manejo-de-errores-en-herramientas">
+<h3><span class="section-number">6.5.3. </span>Manejo de Errores en Herramientas<a class="headerlink" href="#manejo-de-errores-en-herramientas" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_agent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">wrap_tool_call</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">ToolMessage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">dividir</span><span class="p">(</span><span class="n">numerador</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">denominador</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Divide dos números.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">numerador</span> <span class="o">/</span> <span class="n">denominador</span><span class="p">)</span>  <span class="c1"># ⚠️ Puede lanzar ZeroDivisionError</span>
+
+<span class="nd">@wrap_tool_call</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">manejar_errores</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">handler</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Captura errores de herramientas y devuelve mensajes amigables.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">handler</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ZeroDivisionError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ToolMessage</span><span class="p">(</span>
+            <span class="n">content</span><span class="o">=</span><span class="s2">&quot;❌ Error: No se puede dividir entre cero. Por favor, usa un denominador diferente.&quot;</span><span class="p">,</span>
+            <span class="n">tool_call_id</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">tool_call</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ToolMessage</span><span class="p">(</span>
+            <span class="n">content</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;❌ Error inesperado: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">. Comprueba los parámetros e inténtalo de nuevo.&quot;</span><span class="p">,</span>
+            <span class="n">tool_call_id</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">tool_call</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;openai:gpt-4o-mini&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">dividir</span><span class="p">],</span>
+    <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">manejar_errores</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span>
+    <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;¿Cuánto es 10 dividido entre 0?&quot;</span><span class="p">}]</span>
+<span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+<span class="c1"># El agente recibirá el mensaje de error y explicará el problema al usuario</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="el-system-prompt">
+<h2><span class="section-number">6.6. </span>El System Prompt<a class="headerlink" href="#el-system-prompt" title="Link to this heading">#</a></h2>
+<p>Permite definir el comportamiento, tono y especialización del agente.</p>
+<section id="prompt-estatico">
+<h3><span class="section-number">6.6.1. </span>Prompt Estático<a class="headerlink" href="#prompt-estatico" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_agent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">buscar_informacion</span><span class="p">(</span><span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Busca información técnica.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Documentación técnica sobre: </span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="c1"># Prompt simple como string</span>
+<span class="n">agente_tecnico</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;openai:gpt-4o-mini&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">buscar_informacion</span><span class="p">],</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;Eres un asistente técnico especializado en Python y Machine Learning.</span>
+<span class="s2">    Responde siempre de forma precisa y concisa.</span>
+<span class="s2">    Cuando no sepas algo, indícalo claramente en lugar de inventar información.</span>
+<span class="s2">    Usa ejemplos de código cuando sea útil.&quot;&quot;&quot;</span>
+<span class="p">)</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">agente_tecnico</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span>
+    <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;¿Cómo funciona el gradient descent?&quot;</span><span class="p">}]</span>
+<span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="prompt-dinamico">
+<h3><span class="section-number">6.6.2. </span>Prompt Dinámico<a class="headerlink" href="#prompt-dinamico" title="Link to this heading">#</a></h3>
+<p>El system prompt cambia en función del contexto del usuario.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_agent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">dynamic_prompt</span><span class="p">,</span> <span class="n">ModelRequest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypedDict</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Contexto</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="n">nivel_usuario</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># &quot;principiante&quot;, &quot;intermedio&quot;, &quot;experto&quot;</span>
+
+<span class="nd">@dynamic_prompt</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">prompt_adaptativo</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">ModelRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Adapta el nivel de respuesta al perfil del usuario.&quot;&quot;&quot;</span>
+    <span class="n">nivel</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">runtime</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;nivel_usuario&quot;</span><span class="p">,</span> <span class="s2">&quot;intermedio&quot;</span><span class="p">)</span>
+
+    <span class="n">base</span> <span class="o">=</span> <span class="s2">&quot;Eres un asistente de programación Python.&quot;</span>
+
+    <span class="k">if</span> <span class="n">nivel</span> <span class="o">==</span> <span class="s2">&quot;principiante&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span><span class="si">{</span><span class="n">base</span><span class="si">}</span>
+<span class="s2">        Explica los conceptos con palabras sencillas, evita jerga técnica.</span>
+<span class="s2">        Usa analogías cotidianas y ejemplos muy básicos.</span>
+<span class="s2">        Anima al usuario y sé paciente.&quot;&quot;&quot;</span>
+
+    <span class="k">elif</span> <span class="n">nivel</span> <span class="o">==</span> <span class="s2">&quot;experto&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span><span class="si">{</span><span class="n">base</span><span class="si">}</span>
+<span class="s2">        El usuario tiene experiencia avanzada. Ve directo al punto.</span>
+<span class="s2">        Usa terminología técnica precisa. Omite explicaciones básicas.</span>
+<span class="s2">        Puedes discutir trade-offs, patrones de diseño y optimizaciones.&quot;&quot;&quot;</span>
+
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># intermedio</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span><span class="si">{</span><span class="n">base</span><span class="si">}</span>
+<span class="s2">        Usa un nivel técnico moderado. Explica los conceptos pero asume</span>
+<span class="s2">        conocimientos básicos de programación.&quot;&quot;&quot;</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;openai:gpt-4o-mini&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[],</span>
+    <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">prompt_adaptativo</span><span class="p">],</span>
+    <span class="n">context_schema</span><span class="o">=</span><span class="n">Contexto</span>
+<span class="p">)</span>
+
+<span class="c1"># Para un principiante</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
+    <span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;¿Qué es un decorador en Python?&quot;</span><span class="p">}]},</span>
+    <span class="n">context</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;nivel_usuario&quot;</span><span class="p">:</span> <span class="s2">&quot;principiante&quot;</span><span class="p">}</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="invocacion-del-agente">
+<h2><span class="section-number">6.7. </span>Invocación del Agente<a class="headerlink" href="#invocacion-del-agente" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_agent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">calcular</span><span class="p">(</span><span class="n">expresion</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Evalúa una expresión matemática simple.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">resultado</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">expresion</span><span class="p">)</span>  <span class="c1"># ⚠️ Solo para demo, no usar en producción</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">resultado</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;openai:gpt-4o-mini&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">calcular</span><span class="p">],</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;agente_matematico&quot;</span>  <span class="c1"># Nombre en snake_case (importante en multi-agente)</span>
+<span class="p">)</span>
+
+<span class="c1"># --- Invocación estándar ---</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span>
+    <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;¿Cuánto es (15 * 4) + (100 / 5)?&quot;</span><span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">})</span>
+
+<span class="c1"># Acceder al mensaje final del agente</span>
+<span class="n">ultimo_mensaje</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Respuesta:&quot;</span><span class="p">,</span> <span class="n">ultimo_mensaje</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+
+<span class="c1"># Acceder al historial completo de mensajes</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">--- Historial completo ---&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">msg</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">msg</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">]: </span><span class="si">{</span><span class="n">msg</span><span class="o">.</span><span class="n">content</span><span class="p">[:</span><span class="mi">80</span><span class="p">]</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">msg</span><span class="o">.</span><span class="n">content</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;(tool call)&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="salida-estructurada">
+<h2><span class="section-number">6.8. </span>Salida Estructurada<a class="headerlink" href="#salida-estructurada" title="Link to this heading">#</a></h2>
+<p>Cuando necesitas que el agente devuelva datos en un formato específico.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_agent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents.structured_output</span><span class="w"> </span><span class="kn">import</span> <span class="n">ToolStrategy</span><span class="p">,</span> <span class="n">ProviderStrategy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+
+<span class="c1"># Definir el esquema de salida con Pydantic</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ExtraccionDatos</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">nombre</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Nombre completo de la persona&quot;</span><span class="p">)</span>
+    <span class="n">email</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Dirección de correo electrónico&quot;</span><span class="p">)</span>
+    <span class="n">telefono</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Número de teléfono&quot;</span><span class="p">)</span>
+    <span class="n">empresa</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Empresa u organización&quot;</span><span class="p">)</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">procesar_texto</span><span class="p">(</span><span class="n">texto</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Procesa un bloque de texto.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">texto</span>
+
+<span class="c1"># --- Opción A: ToolStrategy (compatible con cualquier modelo con tool calling) ---</span>
+<span class="n">agent_tool</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;openai:gpt-4o-mini&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">procesar_texto</span><span class="p">],</span>
+    <span class="n">response_format</span><span class="o">=</span><span class="n">ToolStrategy</span><span class="p">(</span><span class="n">ExtraccionDatos</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">texto_ejemplo</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    Hola, soy María García de Acme Corp.</span>
+<span class="s2">    Puedes contactarme en maria.garcia@acme.com o al +34 612 345 678.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">agent_tool</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span>
+    <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Extrae los datos de contacto: </span><span class="si">{</span><span class="n">texto_ejemplo</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}]</span>
+<span class="p">})</span>
+
+<span class="n">datos</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;structured_response&quot;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Nombre:   </span><span class="si">{</span><span class="n">datos</span><span class="o">.</span><span class="n">nombre</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Email:    </span><span class="si">{</span><span class="n">datos</span><span class="o">.</span><span class="n">email</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Teléfono: </span><span class="si">{</span><span class="n">datos</span><span class="o">.</span><span class="n">telefono</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Empresa:  </span><span class="si">{</span><span class="n">datos</span><span class="o">.</span><span class="n">empresa</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># --- Opción B: ProviderStrategy (solo modelos con structured output nativo) ---</span>
+<span class="n">agent_provider</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;openai:gpt-4o&quot;</span><span class="p">,</span>           <span class="c1"># GPT-4o soporta structured output nativo</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[],</span>
+    <span class="n">response_format</span><span class="o">=</span><span class="n">ProviderStrategy</span><span class="p">(</span><span class="n">ExtraccionDatos</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="memoria-y-estado">
+<h2><span class="section-number">6.9. </span>Memoria y Estado<a class="headerlink" href="#memoria-y-estado" title="Link to this heading">#</a></h2>
+<p>El agente mantiene automáticamente el <strong>historial de mensajes</strong>. Para información adicional, se puede definir un estado personalizado.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypedDict</span><span class="p">,</span> <span class="n">Annotated</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentState</span><span class="p">,</span> <span class="n">create_agent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentMiddleware</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">operator</span>
+
+<span class="c1"># --- Estado personalizado ---</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">EstadoPersonalizado</span><span class="p">(</span><span class="n">AgentState</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extiende el estado base con campos adicionales.&quot;&quot;&quot;</span>
+    <span class="n">preferencias_usuario</span><span class="p">:</span> <span class="nb">dict</span>    <span class="c1"># Preferencias almacenadas durante la sesión</span>
+    <span class="n">contador_consultas</span><span class="p">:</span> <span class="nb">int</span>       <span class="c1"># Número de preguntas realizadas</span>
+
+<span class="c1"># --- Herramientas que acceden al estado ---</span>
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">guardar_preferencia</span><span class="p">(</span><span class="n">clave</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">valor</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Guarda una preferencia del usuario para esta sesión.&quot;&quot;&quot;</span>
+    <span class="c1"># En la implementación real, accedería al estado del agente</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;✅ Preferencia guardada: </span><span class="si">{</span><span class="n">clave</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">valor</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">obtener_recomendacion</span><span class="p">(</span><span class="n">categoria</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Obtiene una recomendación personalizada.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Recomendación para </span><span class="si">{</span><span class="n">categoria</span><span class="si">}</span><span class="s2">: Opción Premium basada en tus preferencias&quot;</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;openai:gpt-4o-mini&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">guardar_preferencia</span><span class="p">,</span> <span class="n">obtener_recomendacion</span><span class="p">],</span>
+    <span class="n">state_schema</span><span class="o">=</span><span class="n">EstadoPersonalizado</span>
+<span class="p">)</span>
+
+<span class="c1"># Invocar con estado inicial personalizado</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span>
+    <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Prefiero las respuestas en formato de lista&quot;</span><span class="p">}],</span>
+    <span class="s2">&quot;preferencias_usuario&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;idioma&quot;</span><span class="p">:</span> <span class="s2">&quot;español&quot;</span><span class="p">,</span> <span class="s2">&quot;formato&quot;</span><span class="p">:</span> <span class="s2">&quot;detallado&quot;</span><span class="p">},</span>
+    <span class="s2">&quot;contador_consultas&quot;</span><span class="p">:</span> <span class="mi">0</span>
+<span class="p">})</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="streaming">
+<h2><span class="section-number">6.10. </span>Streaming<a class="headerlink" href="#streaming" title="Link to this heading">#</a></h2>
+<p>En lugar de esperar la respuesta completa, el streaming permite ver los pasos intermedios en tiempo real.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_agent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">AIMessage</span><span class="p">,</span> <span class="n">HumanMessage</span><span class="p">,</span> <span class="n">ToolMessage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">analizar_texto</span><span class="p">(</span><span class="n">texto</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Analiza un texto y extrae información clave.&quot;&quot;&quot;</span>
+    <span class="n">palabras</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">texto</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Análisis: </span><span class="si">{</span><span class="n">palabras</span><span class="si">}</span><span class="s2"> palabras, tono: informativo, idioma: español&quot;</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">generar_resumen</span><span class="p">(</span><span class="n">texto</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">max_palabras</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Genera un resumen conciso de un texto.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Resumen (simulado): El texto trata sobre inteligencia artificial y sus aplicaciones.&quot;</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;openai:gpt-4o-mini&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">analizar_texto</span><span class="p">,</span> <span class="n">generar_resumen</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">texto_largo</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;La inteligencia artificial ha revolucionado múltiples sectores industriales</span>
+<span class="s2">en los últimos años, desde la medicina hasta la ingeniería de software...&quot;&quot;&quot;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔄 Ejecutando agente en modo streaming...</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">agent</span><span class="o">.</span><span class="n">stream</span><span class="p">(</span>
+    <span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Analiza y resume este texto: </span><span class="si">{</span><span class="n">texto_largo</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}]},</span>
+    <span class="n">stream_mode</span><span class="o">=</span><span class="s2">&quot;values&quot;</span>
+<span class="p">):</span>
+    <span class="n">ultimo</span> <span class="o">=</span> <span class="n">chunk</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ultimo</span><span class="p">,</span> <span class="n">HumanMessage</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;👤 Usuario: </span><span class="si">{</span><span class="n">ultimo</span><span class="o">.</span><span class="n">content</span><span class="p">[:</span><span class="mi">60</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ultimo</span><span class="p">,</span> <span class="n">AIMessage</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">ultimo</span><span class="o">.</span><span class="n">content</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🤖 Agente: </span><span class="si">{</span><span class="n">ultimo</span><span class="o">.</span><span class="n">content</span><span class="p">[:</span><span class="mi">80</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">ultimo</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">:</span>
+            <span class="n">nombres</span> <span class="o">=</span> <span class="p">[</span><span class="n">tc</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">tc</span> <span class="ow">in</span> <span class="n">ultimo</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🔧 Usando herramientas: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">nombres</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ultimo</span><span class="p">,</span> <span class="n">ToolMessage</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;📊 Resultado herramienta: </span><span class="si">{</span><span class="n">ultimo</span><span class="o">.</span><span class="n">content</span><span class="p">[:</span><span class="mi">60</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">✅ Ejecución completada&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="middleware">
+<h2><span class="section-number">6.11. </span>Middleware<a class="headerlink" href="#middleware" title="Link to this heading">#</a></h2>
+<p>El middleware permite interceptar y modificar el flujo del agente en diferentes puntos de ejecución.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_agent</span><span class="p">,</span> <span class="n">AgentState</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentMiddleware</span><span class="p">,</span> <span class="n">ModelRequest</span><span class="p">,</span> <span class="n">ModelResponse</span><span class="p">,</span> <span class="n">ToolCallRequest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">SystemMessage</span><span class="p">,</span> <span class="n">ToolMessage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+<span class="c1"># --- Middleware como clase (más completo) ---</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MiddlewareDeMonitoreo</span><span class="p">(</span><span class="n">AgentMiddleware</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Middleware que registra métricas de uso del agente.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">before_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">AgentState</span><span class="p">,</span> <span class="n">runtime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Se ejecuta ANTES de llamar al modelo.&quot;&quot;&quot;</span>
+        <span class="n">num_msgs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;📥 [before_model] Enviando </span><span class="si">{</span><span class="n">num_msgs</span><span class="si">}</span><span class="s2"> mensajes al modelo...&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_inicio</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># No modifica el estado</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">after_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">AgentState</span><span class="p">,</span> <span class="n">runtime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Se ejecuta DESPUÉS de recibir respuesta del modelo.&quot;&quot;&quot;</span>
+        <span class="n">duracion</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inicio</span>
+        <span class="n">ultimo</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">tiene_tools</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">ultimo</span><span class="p">,</span> <span class="s1">&#39;tool_calls&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;📤 [after_model] Respuesta recibida en </span><span class="si">{</span><span class="n">duracion</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">s | Usa tools: </span><span class="si">{</span><span class="n">tiene_tools</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">wrap_tool_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">ToolCallRequest</span><span class="p">,</span> <span class="n">handler</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Envuelve cada llamada a una herramienta.&quot;&quot;&quot;</span>
+        <span class="n">nombre</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">tool_call</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">tool_call</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;args&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🔧 [tool_call] Ejecutando &#39;</span><span class="si">{</span><span class="n">nombre</span><span class="si">}</span><span class="s2">&#39; con args: </span><span class="si">{</span><span class="n">args</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">inicio</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">resultado</span> <span class="o">=</span> <span class="n">handler</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+        <span class="n">duracion</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">inicio</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ [tool_call] &#39;</span><span class="si">{</span><span class="n">nombre</span><span class="si">}</span><span class="s2">&#39; completada en </span><span class="si">{</span><span class="n">duracion</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">resultado</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">buscar_en_web</span><span class="p">(</span><span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Simula una búsqueda en internet.&quot;&quot;&quot;</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>  <span class="c1"># Simular latencia de red</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Resultados para &#39;</span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="s2">&#39;: 3 artículos relevantes encontrados&quot;</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;openai:gpt-4o-mini&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">buscar_en_web</span><span class="p">],</span>
+    <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">MiddlewareDeMonitoreo</span><span class="p">()]</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== Ejecutando agente con middleware de monitoreo ===</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span>
+    <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Busca información sobre LangChain&quot;</span><span class="p">}]</span>
+<span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">💬 Respuesta final: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;messages&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<section id="middleware-con-decoradores-estilo-funcional">
+<h3><span class="section-number">6.11.1. </span>Middleware con decoradores (estilo funcional)<a class="headerlink" href="#middleware-con-decoradores-estilo-funcional" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">before_model</span><span class="p">,</span> <span class="n">after_model</span><span class="p">,</span> <span class="n">wrap_model_call</span>
+
+<span class="c1"># Decorador @before_model: ejecuta lógica antes de llamar al LLM</span>
+<span class="nd">@before_model</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">agregar_contexto_fecha</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">runtime</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Inyecta la fecha actual en el estado antes de cada llamada.&quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+    <span class="n">fecha_hoy</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%A, </span><span class="si">%d</span><span class="s2"> de %B de %Y&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;📅 Contexto: fecha actual = </span><span class="si">{</span><span class="n">fecha_hoy</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># No modifica el estado, solo registra</span>
+
+<span class="c1"># Decorador @after_model: valida o transforma la salida del modelo</span>
+<span class="nd">@after_model</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">registrar_respuesta</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">runtime</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Registra las respuestas del modelo para auditoría.&quot;&quot;&quot;</span>
+    <span class="n">ultimo</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ultimo</span><span class="p">,</span> <span class="s1">&#39;content&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">ultimo</span><span class="o">.</span><span class="n">content</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;📝 Auditoría: respuesta de </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">ultimo</span><span class="o">.</span><span class="n">content</span><span class="p">)</span><span class="si">}</span><span class="s2"> caracteres&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;openai:gpt-4o-mini&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[],</span>
+    <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">agregar_contexto_fecha</span><span class="p">,</span> <span class="n">registrar_respuesta</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="resumen-visual">
+<h2><span class="section-number">6.12. </span>Resumen Visual<a class="headerlink" href="#resumen-visual" title="Link to this heading">#</a></h2>
+<p><img alt="" src="../_images/agente_langchain_diagrama.svg" /></p>
+<section id="tabla-de-referencia-rapida">
+<h3><span class="section-number">6.12.1. </span>Tabla de referencia rápida<a class="headerlink" href="#tabla-de-referencia-rapida" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Concepto</p></th>
+<th class="head"><p>Función/Clase</p></th>
+<th class="head"><p>Cuándo usarlo</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Crear agente</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">create_agent(model,</span> <span class="pre">tools)</span></code></p></td>
+<td><p>Siempre</p></td>
+</tr>
+<tr class="row-odd"><td><p>Definir tool</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&#64;tool</span></code></p></td>
+<td><p>Para cada acción del agente</p></td>
+</tr>
+<tr class="row-even"><td><p>Modelo simple</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;openai:gpt-4o-mini&quot;</span></code></p></td>
+<td><p>Mayoría de casos</p></td>
+</tr>
+<tr class="row-odd"><td><p>Modelo con config</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ChatOpenAI(model=...,</span> <span class="pre">temperature=...)</span></code></p></td>
+<td><p>Necesitas ajuste fino</p></td>
+</tr>
+<tr class="row-even"><td><p>Prompt fijo</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">system_prompt=&quot;...&quot;</span></code></p></td>
+<td><p>Comportamiento constante</p></td>
+</tr>
+<tr class="row-odd"><td><p>Prompt dinámico</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&#64;dynamic_prompt</span></code></p></td>
+<td><p>Adaptar según usuario/contexto</p></td>
+</tr>
+<tr class="row-even"><td><p>Salida estructurada</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ToolStrategy(Modelo)</span></code></p></td>
+<td><p>Extraer datos estructurados</p></td>
+</tr>
+<tr class="row-odd"><td><p>Estado custom</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">class</span> <span class="pre">MiEstado(AgentState)</span></code></p></td>
+<td><p>Persistir datos en sesión</p></td>
+</tr>
+<tr class="row-even"><td><p>Streaming</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">agent.stream(...)</span></code></p></td>
+<td><p>UX en tiempo real</p></td>
+</tr>
+<tr class="row-odd"><td><p>Middleware clase</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">class</span> <span class="pre">Mi(AgentMiddleware)</span></code></p></td>
+<td><p>Lógica compleja multi-hook</p></td>
+</tr>
+<tr class="row-even"><td><p>Middleware función</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&#64;before_model</span></code>, <code class="docutils literal notranslate"><span class="pre">&#64;after_model</span></code></p></td>
+<td><p>Lógica simple en un solo punto</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr class="docutils" />
+<p id="index-1">Cuando usamos <code class="docutils literal notranslate"><span class="pre">create_agent()</span></code>, en principio no es fácil actualizar el estado del agente, por ello se ha creado el siguiente ejemplo para mostrar cómo podemos conseguir esto. Observar que en la función <code class="docutils literal notranslate"><span class="pre">create_agent()</span></code>, se debe usar el parámetro <code class="docutils literal notranslate"><span class="pre">state_schema</span></code>e igualarlo a una clase que hereda de AgentState</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">ToolMessage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">Command</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_agent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentState</span> 
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.tools.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">InjectedToolCallId</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Annotated</span>
+
+<span class="n">load_dotenv</span><span class="p">()</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MiEstado</span><span class="p">(</span><span class="n">AgentState</span><span class="p">):</span>
+    <span class="n">usuario</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">idioma</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">turno</span><span class="p">:</span> <span class="nb">int</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">check_weather</span><span class="p">(</span><span class="n">location</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Devuelve el tiempo para una ubicación.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Siempre hace sol en </span><span class="si">{</span><span class="n">location</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">actualizar_usuario</span><span class="p">(</span>
+    <span class="n">nuevo_nombre</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">tool_call_id</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">InjectedToolCallId</span><span class="p">]</span>  <span class="c1"># ← inyectado automáticamente</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Command</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Actualiza el nombre del usuario.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Command</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;usuario&quot;</span><span class="p">:</span> <span class="n">nuevo_nombre</span><span class="p">,</span>
+        <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">ToolMessage</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Usuario actualizado a </span><span class="si">{</span><span class="n">nuevo_nombre</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">tool_call_id</span><span class="o">=</span><span class="n">tool_call_id</span><span class="p">)]</span>
+    <span class="p">})</span>
+
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">llm</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">actualizar_usuario</span><span class="p">,</span> <span class="n">check_weather</span><span class="p">],</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;Eres un asistente útil.&quot;</span><span class="p">,</span>
+    <span class="n">state_schema</span><span class="o">=</span><span class="n">MiEstado</span>
+<span class="p">)</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span>
+    <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Cambia el usuario a Pedro&quot;</span><span class="p">}],</span>
+    <span class="s2">&quot;usuario&quot;</span><span class="p">:</span> <span class="s2">&quot;Carlos&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;turno&quot;</span><span class="p">:</span> <span class="mi">1</span>
+<span class="p">})</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;usuario&quot;</span><span class="p">])</span>  <span class="c1"># → &quot;Pedro&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Pedro
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="apendice">
+<h2><span class="section-number">6.13. </span>Apéndice.<a class="headerlink" href="#apendice" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="https://docs.langchain.com/oss/python/langchain/agents">Documentación oficial de Agentes</a></p></li>
+<li><p><a class="reference external" href="https://docs.langchain.com/oss/python/langchain/tools">Documentación de Tools</a></p></li>
+<li><p><a class="reference external" href="https://docs.langchain.com/oss/python/langchain/middleware">Documentación de Middleware</a></p></li>
+<li><p><a class="reference external" href="https://smith.langchain.com/">LangSmith para debugging</a></p></li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./jupyters"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="messages.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">5. </span>Introducción: De “Prompts” a la Orquestación de Mensajes Orientada a Objetos</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="tools.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">7. </span>Introducción a las Tools.</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#que-es-un-agente">6.1. ¿Qué es un Agente?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#el-bucle-react">6.2. El Bucle ReAct</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#componentes-principales">6.3. Componentes Principales</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#el-modelo">6.4. El Modelo</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modelo-estatico">6.4.1. Modelo Estático</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modelo-dinamico">6.4.2. Modelo Dinámico</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#las-herramientas-tools">6.5. Las Herramientas (Tools)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#herramientas-estaticas">6.5.1. Herramientas Estáticas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#herramientas-dinamicas-filtrado-por-estado">6.5.2. Herramientas Dinámicas (Filtrado por Estado)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manejo-de-errores-en-herramientas">6.5.3. Manejo de Errores en Herramientas</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#el-system-prompt">6.6. El System Prompt</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prompt-estatico">6.6.1. Prompt Estático</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prompt-dinamico">6.6.2. Prompt Dinámico</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#invocacion-del-agente">6.7. Invocación del Agente</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#salida-estructurada">6.8. Salida Estructurada</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#memoria-y-estado">6.9. Memoria y Estado</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streaming">6.10. Streaming</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#middleware">6.11. Middleware</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#middleware-con-decoradores-estilo-funcional">6.11.1. Middleware con decoradores (estilo funcional)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resumen-visual">6.12. Resumen Visual</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tabla-de-referencia-rapida">6.12.1. Tabla de referencia rápida</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apendice">6.13. Apéndice.</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Francisco Rodríguez
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

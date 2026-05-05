@@ -1,0 +1,1896 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>4. Salidas Estructuradas en LangChain &#8212; LangChain &amp; LangGraph</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'jupyters/salidas_estructuradas';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="5. Introducción: De “Prompts” a la Orquestación de Mensajes Orientada a Objetos" href="messages.html" />
+    <link rel="prev" title="3. GESTION DE PROMPTS EN LANGCHAIN - PYTHON" href="prompts.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../introduccion.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">LangChain & LangGraph</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Langchain.</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="modelosLangChain.html">1. Modelos de IA con LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="runnables.html">2. Los runnables de LangChain</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="prompts.html">3. Prompts template en LangChain</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">4. Salidas estructuradas en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="messages.html">5. Messages en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="agentes.html">6. Agentes en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">7. Tools (herramientas) en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="langchain_async_concurrencia.html">8. Ejecución asíncrona en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="init_langGraph.html">9. Primer acercamiento a LangGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="base_datos.html">10. Base de datos con LangGraph</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Apendices.</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="asyncio.html">11. Asincronia con asyncio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ollama.html">12. Ollama</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sitiosweb.html">13. Sitios web</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Índice de términos</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">Índice de términos</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Salidas Estructuradas en LangChain</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mapa-completo-de-parsers-disponibles">4.1. Mapa completo de parsers disponibles</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parte-1-parsers-de-texto-basico">4.2. Parte 1: Parsers de texto básico</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stroutputparser-el-mas-simple-de-todos">4.2.1. <code class="docutils literal notranslate"><span class="pre">StrOutputParser</span></code> — El más simple de todos</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parte-2-parsers-de-listas">4.3. Parte 2: Parsers de listas</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#commaseparatedlistoutputparser-lista-separada-por-comas">4.3.1. <code class="docutils literal notranslate"><span class="pre">CommaSeparatedListOutputParser</span></code> — Lista separada por comas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#numberedlistoutputparser-lista-numerada">4.3.2. <code class="docutils literal notranslate"><span class="pre">NumberedListOutputParser</span></code> — Lista numerada</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#markdownlistoutputparser-lista-markdown-con-asteriscos">4.3.3. <code class="docutils literal notranslate"><span class="pre">MarkdownListOutputParser</span></code> — Lista Markdown con asteriscos</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parte-3-parsers-json-y-estructurados">4.4. Parte 3: Parsers JSON y estructurados</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jsonoutputparser-diccionario-python">4.4.1. <code class="docutils literal notranslate"><span class="pre">JsonOutputParser</span></code> — Diccionario Python</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simplejsonoutputparser-alias-simplificado">4.4.2. <code class="docutils literal notranslate"><span class="pre">SimpleJsonOutputParser</span></code> — Alias simplificado</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydanticoutputparser-el-mas-potente-con-validacion">4.4.3. <code class="docutils literal notranslate"><span class="pre">PydanticOutputParser</span></code> — El más potente con validación</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#structuredoutputparser-esquema-con-responseschema">4.4.4. <code class="docutils literal notranslate"><span class="pre">StructuredOutputParser</span></code> — Esquema con <code class="docutils literal notranslate"><span class="pre">ResponseSchema</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#xmloutputparser-formato-xml">4.4.5. <code class="docutils literal notranslate"><span class="pre">XMLOutputParser</span></code> — Formato XML</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#yamloutputparser-formato-yaml">4.4.6. <code class="docutils literal notranslate"><span class="pre">YamlOutputParser</span></code> — Formato YAML</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parte-4-parsers-de-tipos-primitivos">4.5. Parte 4: Parsers de tipos primitivos</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#booleanoutputparser-si-no-true-false">4.5.1. <code class="docutils literal notranslate"><span class="pre">BooleanOutputParser</span></code> — Sí / No → <code class="docutils literal notranslate"><span class="pre">True</span></code> / <code class="docutils literal notranslate"><span class="pre">False</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#datetimeoutputparser-texto-datetime">4.5.2. <code class="docutils literal notranslate"><span class="pre">DatetimeOutputParser</span></code> — Texto → <code class="docutils literal notranslate"><span class="pre">datetime</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#enumoutputparser-texto-valor-de-un-enum">4.5.3. <code class="docutils literal notranslate"><span class="pre">EnumOutputParser</span></code> — Texto → valor de un Enum</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parte-5-parsers-avanzados-y-de-datos">4.6. Parte 5: Parsers avanzados y de datos</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pandasdataframeoutputparser-texto-dataframe">4.6.1. <code class="docutils literal notranslate"><span class="pre">PandasDataFrameOutputParser</span></code> — Texto → DataFrame</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#regexparser-extraccion-con-expresiones-regulares">4.6.2. <code class="docutils literal notranslate"><span class="pre">RegexParser</span></code> — Extracción con expresiones regulares</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#regexdictparser-multiples-patrones-regex">4.6.3. <code class="docutils literal notranslate"><span class="pre">RegexDictParser</span></code> — Múltiples patrones regex</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parte-6-parsers-de-recuperacion-de-errores">4.7. Parte 6: Parsers de recuperación de errores</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#outputfixingparser-correccion-automatica-con-otro-llm">4.7.1. <code class="docutils literal notranslate"><span class="pre">OutputFixingParser</span></code> — Corrección automática con otro LLM</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#retryoutputparser-reintento-con-el-prompt-original">4.7.2. <code class="docutils literal notranslate"><span class="pre">RetryOutputParser</span></code> — Reintento con el prompt original</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#retrywitherroroutputparser-reintento-con-contexto-del-error">4.7.3. <code class="docutils literal notranslate"><span class="pre">RetryWithErrorOutputParser</span></code> — Reintento con contexto del error</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parte-7-parsers-de-composicion">4.8. Parte 7: Parsers de composición</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#combiningoutputparser-combina-multiples-parsers">4.8.1. <code class="docutils literal notranslate"><span class="pre">CombiningOutputParser</span></code> — Combina múltiples parsers</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parte-8-with-structured-output-metodo-moderno">4.9. Parte 8: <code class="docutils literal notranslate"><span class="pre">with_structured_output</span></code> (Método moderno)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ventajas-sobre-los-output-parsers">4.9.1. Ventajas sobre los Output Parsers</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#uso-basico-con-pydantic">4.9.2. Uso básico con Pydantic</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#con-esquemas-anidados">4.9.3. Con esquemas anidados</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#con-typeddict-sin-pydantic">4.9.4. Con <code class="docutils literal notranslate"><span class="pre">TypedDict</span></code> (sin Pydantic)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#en-cadenas-lcel-con-literal-para-valores-fijos">4.9.5. En cadenas LCEL con <code class="docutils literal notranslate"><span class="pre">Literal</span></code> para valores fijos</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parte-9-comparativa-completa-de-todos-los-parsers">4.10. Parte 9: Comparativa completa de todos los parsers</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tabla-de-referencia-rapida">4.10.1. Tabla de referencia rápida</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#arbol-de-decision-para-elegir-parser">4.10.2. Árbol de decisión para elegir parser</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parte-10-ejemplo-integrador-completo">4.11. Parte 10: Ejemplo integrador completo</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resumen-y-buenas-practicas">4.12. Resumen y buenas prácticas</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="salidas-estructuradas-en-langchain">
+<h1><span class="section-number">4. </span>Salidas Estructuradas en LangChain<a class="headerlink" href="#salidas-estructuradas-en-langchain" title="Link to this heading">#</a></h1>
+<p>Cuando interactuamos con un LLM (modelo de lenguaje grande), la respuesta por defecto es <strong>texto libre</strong>: un párrafo, una frase, una lista en lenguaje natural. Esto es útil para conversaciones, pero resulta un problema cuando necesitamos que la aplicación <strong>procese esa respuesta de forma programática</strong>.</p>
+<p>Imagina que le pides al modelo que extraiga el nombre, edad y ciudad de un texto. Si responde con:</p>
+<blockquote>
+<div><p>“El nombre es Juan, tiene 30 años y vive en Madrid.”</p>
+</div></blockquote>
+<p>…tu código tendrá que parsear esa cadena con expresiones regulares o lógica frágil. Aquí es donde entran las <strong>salidas estructuradas</strong>: forzar al modelo a devolver datos en un formato predecible (JSON, objetos Pydantic, etc.).</p>
+<p>LangChain ofrece <strong>dos enfoques principales</strong> para lograr esto:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Enfoque</p></th>
+<th class="head"><p>Cuándo usarlo</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Output Parsers</strong></p></td>
+<td><p>Mayor control manual, compatibilidad amplia</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">with_structured_output</span></code></strong></p></td>
+<td><p>Forma moderna, integrada y recomendada</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr class="docutils" />
+<section id="mapa-completo-de-parsers-disponibles">
+<h2><span class="section-number">4.1. </span>Mapa completo de parsers disponibles<a class="headerlink" href="#mapa-completo-de-parsers-disponibles" title="Link to this heading">#</a></h2>
+<p id="index-0">LangChain organiza sus parsers en dos paquetes principales:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Paquete</p></th>
+<th class="head"><p>Parsers disponibles</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">langchain_core</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">StrOutputParser</span></code>, <code class="docutils literal notranslate"><span class="pre">JsonOutputParser</span></code>, <code class="docutils literal notranslate"><span class="pre">PydanticOutputParser</span></code>, <code class="docutils literal notranslate"><span class="pre">XMLOutputParser</span></code>, <code class="docutils literal notranslate"><span class="pre">CommaSeparatedListOutputParser</span></code>, <code class="docutils literal notranslate"><span class="pre">NumberedListOutputParser</span></code>, <code class="docutils literal notranslate"><span class="pre">MarkdownListOutputParser</span></code>, <code class="docutils literal notranslate"><span class="pre">SimpleJsonOutputParser</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">langchain</span></code> (community)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">BooleanOutputParser</span></code>, <code class="docutils literal notranslate"><span class="pre">DatetimeOutputParser</span></code>, <code class="docutils literal notranslate"><span class="pre">EnumOutputParser</span></code>, <code class="docutils literal notranslate"><span class="pre">StructuredOutputParser</span></code>, <code class="docutils literal notranslate"><span class="pre">YamlOutputParser</span></code>, <code class="docutils literal notranslate"><span class="pre">PandasDataFrameOutputParser</span></code>, <code class="docutils literal notranslate"><span class="pre">RegexParser</span></code>, <code class="docutils literal notranslate"><span class="pre">RegexDictParser</span></code>, <code class="docutils literal notranslate"><span class="pre">OutputFixingParser</span></code>, <code class="docutils literal notranslate"><span class="pre">RetryOutputParser</span></code>, <code class="docutils literal notranslate"><span class="pre">RetryWithErrorOutputParser</span></code>, <code class="docutils literal notranslate"><span class="pre">CombiningOutputParser</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="parte-1-parsers-de-texto-basico">
+<h2><span class="section-number">4.2. </span>Parte 1: Parsers de texto básico<a class="headerlink" href="#parte-1-parsers-de-texto-basico" title="Link to this heading">#</a></h2>
+<section id="stroutputparser-el-mas-simple-de-todos">
+<h3><span class="section-number">4.2.1. </span><code class="docutils literal notranslate"><span class="pre">StrOutputParser</span></code> — El más simple de todos<a class="headerlink" href="#stroutputparser-el-mas-simple-de-todos" title="Link to this heading">#</a></h3>
+<p id="index-1">Devuelve la respuesta del modelo como una cadena de texto limpia. Es el parser de referencia cuando no necesitas estructura, solo texto.</p>
+<p><strong>¿Cuándo usarlo?</strong> Chatbots, generación de texto libre, resúmenes, traducciones.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">StrOutputParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">([</span>
+    <span class="p">(</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;Eres un poeta en español.&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;Escribe un haiku sobre </span><span class="si">{tema}</span><span class="s2">.&quot;</span><span class="p">)</span>
+<span class="p">])</span>
+
+<span class="n">modelo</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+
+<span class="c1"># StrOutputParser convierte el AIMessage en una cadena de texto simple</span>
+<span class="n">cadena</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">modelo</span> <span class="o">|</span> <span class="n">StrOutputParser</span><span class="p">()</span>
+
+<span class="n">resultado</span> <span class="o">=</span> <span class="n">cadena</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;tema&quot;</span><span class="p">:</span> <span class="s2">&quot;el amanecer&quot;</span><span class="p">})</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">resultado</span><span class="p">))</span>   <span class="c1"># &lt;class &#39;str&#39;&gt;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resultado</span><span class="p">)</span>
+<span class="c1"># &quot;Luz que rompe el velo oscuro,</span>
+<span class="c1">#  el mundo despierta en calma,</span>
+<span class="c1">#  nace un nuevo sol.&quot;</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p><strong>Nota:</strong> Sin <code class="docutils literal notranslate"><span class="pre">StrOutputParser</span></code>, la cadena devuelve un objeto <code class="docutils literal notranslate"><span class="pre">AIMessage</span></code>. El parser extrae únicamente el texto del campo <code class="docutils literal notranslate"><span class="pre">.content</span></code>.</p>
+</div></blockquote>
+</section>
+</section>
+<hr class="docutils" />
+<section id="parte-2-parsers-de-listas">
+<h2><span class="section-number">4.3. </span>Parte 2: Parsers de listas<a class="headerlink" href="#parte-2-parsers-de-listas" title="Link to this heading">#</a></h2>
+<section id="commaseparatedlistoutputparser-lista-separada-por-comas">
+<h3><span class="section-number">4.3.1. </span><code class="docutils literal notranslate"><span class="pre">CommaSeparatedListOutputParser</span></code> — Lista separada por comas<a class="headerlink" href="#commaseparatedlistoutputparser-lista-separada-por-comas" title="Link to this heading">#</a></h3>
+<p id="index-2">Instruye al modelo para responder con elementos separados por comas y los convierte en una lista Python.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">CommaSeparatedListOutputParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+
+<span class="n">parser</span> <span class="o">=</span> <span class="n">CommaSeparatedListOutputParser</span><span class="p">()</span>
+
+<span class="c1"># Ver qué instrucciones genera para el prompt:</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">get_format_instructions</span><span class="p">())</span>
+<span class="c1"># → &quot;Your response should be a list of comma separated values,</span>
+<span class="c1">#    eg: `foo, bar, baz`&quot;</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">([</span>
+    <span class="p">(</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{format_instructions}</span><span class="s2">&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;Dame 5 </span><span class="si">{categoria}</span><span class="s2"> famosos.&quot;</span><span class="p">)</span>
+<span class="p">])</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">prompt</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">format_instructions</span><span class="o">=</span><span class="n">parser</span><span class="o">.</span><span class="n">get_format_instructions</span><span class="p">())</span>
+<span class="n">modelo</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">cadena</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">modelo</span> <span class="o">|</span> <span class="n">parser</span>
+
+<span class="n">resultado</span> <span class="o">=</span> <span class="n">cadena</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;categoria&quot;</span><span class="p">:</span> <span class="s2">&quot;compositores clásicos&quot;</span><span class="p">})</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">resultado</span><span class="p">)</span>
+<span class="c1"># [&#39;Bach&#39;, &#39;Mozart&#39;, &#39;Beethoven&#39;, &#39;Chopin&#39;, &#39;Vivaldi&#39;]</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">resultado</span><span class="p">))</span>  <span class="c1"># &lt;class &#39;list&#39;&gt;</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="numberedlistoutputparser-lista-numerada">
+<h3><span class="section-number">4.3.2. </span><code class="docutils literal notranslate"><span class="pre">NumberedListOutputParser</span></code> — Lista numerada<a class="headerlink" href="#numberedlistoutputparser-lista-numerada" title="Link to this heading">#</a></h3>
+<p id="index-3">Parsea respuestas formateadas como listas numeradas (1. item, 2. item…) y las convierte en una lista Python.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">NumberedListOutputParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+
+<span class="n">parser</span> <span class="o">=</span> <span class="n">NumberedListOutputParser</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">get_format_instructions</span><span class="p">())</span>
+<span class="c1"># → &quot;Your response should be a numbered list with each item on a new line.</span>
+<span class="c1">#    For example: `\n1. foo\n2. bar\n3. baz`&quot;</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">([</span>
+    <span class="p">(</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{format_instructions}</span><span class="s2">&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;¿Cuáles son los pasos para hacer una tortilla española?&quot;</span><span class="p">)</span>
+<span class="p">])</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">prompt</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">format_instructions</span><span class="o">=</span><span class="n">parser</span><span class="o">.</span><span class="n">get_format_instructions</span><span class="p">())</span>
+<span class="n">modelo</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">cadena</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">modelo</span> <span class="o">|</span> <span class="n">parser</span>
+
+<span class="n">pasos</span> <span class="o">=</span> <span class="n">cadena</span><span class="o">.</span><span class="n">invoke</span><span class="p">({})</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">paso</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pasos</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Paso </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">paso</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Paso 1: Pelar y cortar las patatas en láminas finas.</span>
+<span class="c1"># Paso 2: Pochar las patatas en aceite de oliva a fuego medio.</span>
+<span class="c1"># Paso 3: Batir los huevos y mezclar con las patatas pochadas.</span>
+<span class="c1"># ...</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="markdownlistoutputparser-lista-markdown-con-asteriscos">
+<h3><span class="section-number">4.3.3. </span><code class="docutils literal notranslate"><span class="pre">MarkdownListOutputParser</span></code> — Lista Markdown con asteriscos<a class="headerlink" href="#markdownlistoutputparser-lista-markdown-con-asteriscos" title="Link to this heading">#</a></h3>
+<p id="index-4">Parsea listas en formato Markdown (<code class="docutils literal notranslate"><span class="pre">*</span> <span class="pre">item</span></code> o <code class="docutils literal notranslate"><span class="pre">-</span> <span class="pre">item</span></code>) y las convierte en lista Python.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">MarkdownListOutputParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+
+<span class="n">parser</span> <span class="o">=</span> <span class="n">MarkdownListOutputParser</span><span class="p">()</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">([</span>
+    <span class="p">(</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Dame 5 nombres creativos para una startup de tecnología.</span>
+<span class="s2">Usa formato de lista Markdown con asterisco (* nombre), un nombre por línea.</span>
+<span class="s2">No uses comillas ni backlashes.&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="p">])</span>
+
+<span class="n">modelo</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+<span class="n">cadena</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">modelo</span> <span class="o">|</span> <span class="n">parser</span>
+
+<span class="n">nombres</span> <span class="o">=</span> <span class="n">cadena</span><span class="o">.</span><span class="n">invoke</span><span class="p">({})</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">nombres</span><span class="p">)</span>
+<span class="c1"># [&#39;NexaFlow&#39;, &#39;ByteForge&#39;, &#39;QuantumLeap Labs&#39;, &#39;SynergyOS&#39;, &#39;DataPulse&#39;]</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">nombres</span><span class="p">))</span>  <span class="c1"># &lt;class &#39;list&#39;&gt;</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p><strong>Diferencia clave:</strong> <code class="docutils literal notranslate"><span class="pre">CommaSeparatedList</span></code> → elementos en una línea separados por comas. <code class="docutils literal notranslate"><span class="pre">NumberedList</span></code> → elementos numerados. <code class="docutils literal notranslate"><span class="pre">MarkdownList</span></code> → elementos con <code class="docutils literal notranslate"><span class="pre">*</span></code> o <code class="docutils literal notranslate"><span class="pre">-</span></code> al inicio.</p>
+</div></blockquote>
+</section>
+</section>
+<hr class="docutils" />
+<section id="parte-3-parsers-json-y-estructurados">
+<h2><span class="section-number">4.4. </span>Parte 3: Parsers JSON y estructurados<a class="headerlink" href="#parte-3-parsers-json-y-estructurados" title="Link to this heading">#</a></h2>
+<section id="jsonoutputparser-diccionario-python">
+<h3><span class="section-number">4.4.1. </span><code class="docutils literal notranslate"><span class="pre">JsonOutputParser</span></code> — Diccionario Python<a class="headerlink" href="#jsonoutputparser-diccionario-python" title="Link to this heading">#</a></h3>
+<p id="index-5">Devuelve la respuesta del modelo como un diccionario Python. Versión ligera sin validación de tipos.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">JsonOutputParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+
+<span class="n">parser</span> <span class="o">=</span> <span class="n">JsonOutputParser</span><span class="p">()</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">([</span>
+    <span class="p">(</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;Responde siempre en JSON válido. </span><span class="si">{format_instructions}</span><span class="s2">&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{pregunta}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="p">])</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">prompt</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">format_instructions</span><span class="o">=</span><span class="n">parser</span><span class="o">.</span><span class="n">get_format_instructions</span><span class="p">())</span>
+<span class="n">modelo</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">cadena</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">modelo</span> <span class="o">|</span> <span class="n">parser</span>
+
+<span class="n">resultado</span> <span class="o">=</span> <span class="n">cadena</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span>
+    <span class="s2">&quot;pregunta&quot;</span><span class="p">:</span> <span class="s2">&quot;Dame los 3 planetas más grandes del sistema solar con su diámetro en km.&quot;</span>
+<span class="p">})</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">resultado</span><span class="p">))</span>  <span class="c1"># &lt;class &#39;dict&#39;&gt;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resultado</span><span class="p">)</span>
+<span class="c1"># {</span>
+<span class="c1">#   &quot;planetas&quot;: [</span>
+<span class="c1">#     {&quot;nombre&quot;: &quot;Júpiter&quot;, &quot;diametro_km&quot;: 139820},</span>
+<span class="c1">#     {&quot;nombre&quot;: &quot;Saturno&quot;, &quot;diametro_km&quot;: 116460},</span>
+<span class="c1">#     {&quot;nombre&quot;: &quot;Urano&quot;,   &quot;diametro_km&quot;: 50724}</span>
+<span class="c1">#   ]</span>
+<span class="c1"># }</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="simplejsonoutputparser-alias-simplificado">
+<h3><span class="section-number">4.4.2. </span><code class="docutils literal notranslate"><span class="pre">SimpleJsonOutputParser</span></code> — Alias simplificado<a class="headerlink" href="#simplejsonoutputparser-alias-simplificado" title="Link to this heading">#</a></h3>
+<p id="index-6">Es funcionalmente equivalente a <code class="docutils literal notranslate"><span class="pre">JsonOutputParser</span></code> pero con un nombre más descriptivo. Internamente ambos heredan de la misma clase base.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.output_parsers.json</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleJsonOutputParser</span>
+
+<span class="n">parser</span> <span class="o">=</span> <span class="n">SimpleJsonOutputParser</span><span class="p">()</span>
+<span class="c1"># Uso idéntico a JsonOutputParser</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="pydanticoutputparser-el-mas-potente-con-validacion">
+<h3><span class="section-number">4.4.3. </span><code class="docutils literal notranslate"><span class="pre">PydanticOutputParser</span></code> — El más potente con validación<a class="headerlink" href="#pydanticoutputparser-el-mas-potente-con-validacion" title="Link to this heading">#</a></h3>
+<p id="index-7">Define la estructura con Pydantic. Ofrece validación de tipos, campos obligatorios/opcionales y descripciones que guían al modelo.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">PydanticOutputParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Persona</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">nombre</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Nombre completo de la persona&quot;</span><span class="p">)</span>
+    <span class="n">edad</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Edad en años&quot;</span><span class="p">)</span>
+    <span class="n">ciudad</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Ciudad donde vive&quot;</span><span class="p">)</span>
+    <span class="n">profesion</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Profesión o trabajo de la persona&quot;</span>
+    <span class="p">)</span>
+
+<span class="n">parser</span> <span class="o">=</span> <span class="n">PydanticOutputParser</span><span class="p">(</span><span class="n">pydantic_object</span><span class="o">=</span><span class="n">Persona</span><span class="p">)</span>
+
+<span class="c1"># Las instrucciones de formato incluyen el JSON Schema completo del modelo</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">get_format_instructions</span><span class="p">()[:</span><span class="mi">200</span><span class="p">])</span>
+<span class="c1"># → &quot;The output should be formatted as a JSON instance that conforms</span>
+<span class="c1">#    to the JSON schema below...&quot;</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">([</span>
+    <span class="p">(</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;Extrae información de textos.</span><span class="se">\n</span><span class="si">{format_instructions}</span><span class="s2">&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;Extrae la información:</span><span class="se">\n\n</span><span class="si">{texto}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="p">])</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">prompt</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">format_instructions</span><span class="o">=</span><span class="n">parser</span><span class="o">.</span><span class="n">get_format_instructions</span><span class="p">())</span>
+<span class="n">modelo</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">cadena</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">modelo</span> <span class="o">|</span> <span class="n">parser</span>
+
+<span class="n">resultado</span> <span class="o">=</span> <span class="n">cadena</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span>
+    <span class="s2">&quot;texto&quot;</span><span class="p">:</span> <span class="s2">&quot;María García tiene 28 años, es ingeniera de software y vive en Barcelona.&quot;</span>
+<span class="p">})</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">resultado</span><span class="p">))</span>      <span class="c1"># &lt;class &#39;__main__.Persona&#39;&gt;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resultado</span><span class="o">.</span><span class="n">nombre</span><span class="p">)</span>     <span class="c1"># María García</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resultado</span><span class="o">.</span><span class="n">edad</span><span class="p">)</span>       <span class="c1"># 28</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resultado</span><span class="o">.</span><span class="n">model_dump</span><span class="p">())</span>
+<span class="c1"># {&#39;nombre&#39;: &#39;María García&#39;, &#39;edad&#39;: 28, &#39;ciudad&#39;: &#39;Barcelona&#39;, &#39;profesion&#39;: &#39;ingeniera de software&#39;}</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="structuredoutputparser-esquema-con-responseschema">
+<h3><span class="section-number">4.4.4. </span><code class="docutils literal notranslate"><span class="pre">StructuredOutputParser</span></code> — Esquema con <code class="docutils literal notranslate"><span class="pre">ResponseSchema</span></code><a class="headerlink" href="#structuredoutputparser-esquema-con-responseschema" title="Link to this heading">#</a></h3>
+<p id="index-8">Alternativa a Pydantic que usa objetos <code class="docutils literal notranslate"><span class="pre">ResponseSchema</span></code> para definir el esquema. Más sencillo pero sin validación de tipos. Útil para modelos que no soportan JSON Schema completo.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">StructuredOutputParser</span><span class="p">,</span> <span class="n">ResponseSchema</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+
+<span class="c1"># Definimos el esquema con ResponseSchema (nombre + descripción de cada campo)</span>
+<span class="n">response_schemas</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">ResponseSchema</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;respuesta&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Respuesta a la pregunta del usuario&quot;</span>
+    <span class="p">),</span>
+    <span class="n">ResponseSchema</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;fuente&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Tipo de fuente donde encontrarías esta información (libro, web, enciclopedia...)&quot;</span>
+    <span class="p">),</span>
+    <span class="n">ResponseSchema</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;confianza&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Nivel de confianza en la respuesta: alta, media o baja&quot;</span>
+    <span class="p">)</span>
+<span class="p">]</span>
+
+<span class="n">parser</span> <span class="o">=</span> <span class="n">StructuredOutputParser</span><span class="o">.</span><span class="n">from_response_schemas</span><span class="p">(</span><span class="n">response_schemas</span><span class="p">)</span>
+
+<span class="c1"># Veamos las instrucciones generadas:</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">get_format_instructions</span><span class="p">())</span>
+<span class="c1"># → Genera instrucciones con un bloque ```json con el esquema esperado</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">([</span>
+    <span class="p">(</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;Responde preguntas con detalle.</span><span class="se">\n</span><span class="si">{format_instructions}</span><span class="s2">&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{pregunta}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="p">])</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">prompt</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">format_instructions</span><span class="o">=</span><span class="n">parser</span><span class="o">.</span><span class="n">get_format_instructions</span><span class="p">())</span>
+<span class="n">modelo</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">cadena</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">modelo</span> <span class="o">|</span> <span class="n">parser</span>
+
+<span class="n">resultado</span> <span class="o">=</span> <span class="n">cadena</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span>
+    <span class="s2">&quot;pregunta&quot;</span><span class="p">:</span> <span class="s2">&quot;¿Cuántos huesos tiene el cuerpo humano adulto?&quot;</span>
+<span class="p">})</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">resultado</span><span class="p">))</span>  <span class="c1"># &lt;class &#39;dict&#39;&gt;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resultado</span><span class="p">)</span>
+<span class="c1"># {</span>
+<span class="c1">#   &#39;respuesta&#39;: &#39;El cuerpo humano adulto tiene 206 huesos.&#39;,</span>
+<span class="c1">#   &#39;fuente&#39;: &#39;Libro de anatomía o enciclopedia médica&#39;,</span>
+<span class="c1">#   &#39;confianza&#39;: &#39;alta&#39;</span>
+<span class="c1"># }</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p><strong>Diferencia con Pydantic:</strong> <code class="docutils literal notranslate"><span class="pre">StructuredOutputParser</span></code> no valida tipos de datos. Si esperas un número pero el modelo devuelve texto, no lanzará error. Pydantic sí lo haría con un mensaje claro.</p>
+</div></blockquote>
+</section>
+<hr class="docutils" />
+<section id="xmloutputparser-formato-xml">
+<h3><span class="section-number">4.4.5. </span><code class="docutils literal notranslate"><span class="pre">XMLOutputParser</span></code> — Formato XML<a class="headerlink" href="#xmloutputparser-formato-xml" title="Link to this heading">#</a></h3>
+<p id="index-9">Parsea respuestas en formato XML y las convierte en un diccionario Python con la estructura del árbol XML.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">XMLOutputParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+
+<span class="n">parser</span> <span class="o">=</span> <span class="n">XMLOutputParser</span><span class="p">(</span><span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;libro&quot;</span><span class="p">,</span> <span class="s2">&quot;titulo&quot;</span><span class="p">,</span> <span class="s2">&quot;autor&quot;</span><span class="p">,</span> <span class="s2">&quot;año&quot;</span><span class="p">,</span> <span class="s2">&quot;genero&quot;</span><span class="p">])</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">([</span>
+    <span class="p">(</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Responde en formato XML válido con esta estructura exacta:</span>
+<span class="s2">&lt;libro&gt;</span>
+<span class="s2">  &lt;titulo&gt;...&lt;/titulo&gt;</span>
+<span class="s2">  &lt;autor&gt;...&lt;/autor&gt;</span>
+<span class="s2">  &lt;año&gt;...&lt;/año&gt;</span>
+<span class="s2">  &lt;genero&gt;...&lt;/genero&gt;</span>
+<span class="s2">&lt;/libro&gt;&quot;&quot;&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;Dame información sobre el libro: </span><span class="si">{libro}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="p">])</span>
+
+<span class="n">modelo</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">cadena</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">modelo</span> <span class="o">|</span> <span class="n">parser</span>
+
+<span class="n">resultado</span> <span class="o">=</span> <span class="n">cadena</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;libro&quot;</span><span class="p">:</span> <span class="s2">&quot;Don Quijote de la Mancha&quot;</span><span class="p">})</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">resultado</span><span class="p">))</span>   <span class="c1"># &lt;class &#39;dict&#39;&gt;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resultado</span><span class="p">)</span>
+<span class="c1"># {</span>
+<span class="c1">#   &#39;libro&#39;: [</span>
+<span class="c1">#     {&#39;titulo&#39;: [&#39;Don Quijote de la Mancha&#39;]},</span>
+<span class="c1">#     {&#39;autor&#39;: [&#39;Miguel de Cervantes&#39;]},</span>
+<span class="c1">#     {&#39;año&#39;: [&#39;1605&#39;]},</span>
+<span class="c1">#     {&#39;genero&#39;: [&#39;Novela de caballerías / Sátira&#39;]}</span>
+<span class="c1">#   ]</span>
+<span class="c1"># }</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resultado</span><span class="p">[</span><span class="s1">&#39;libro&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;titulo&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>  <span class="c1"># Don Quijote de la Mancha</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p><strong>¿Cuándo usar XML en lugar de JSON?</strong> Cuando trabajas con sistemas legacy que consumen XML, o con el modelo Claude de Anthropic que tiende a producir XML de forma natural.</p>
+</div></blockquote>
+</section>
+<hr class="docutils" />
+<section id="yamloutputparser-formato-yaml">
+<h3><span class="section-number">4.4.6. </span><code class="docutils literal notranslate"><span class="pre">YamlOutputParser</span></code> — Formato YAML<a class="headerlink" href="#yamloutputparser-formato-yaml" title="Link to this heading">#</a></h3>
+<p id="index-10">Similar a <code class="docutils literal notranslate"><span class="pre">PydanticOutputParser</span></code> pero el modelo responde en YAML en lugar de JSON. Requiere un modelo Pydantic como esquema.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">YamlOutputParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ConfiguracionServidor</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">nombre</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Nombre del servidor&quot;</span><span class="p">)</span>
+    <span class="n">host</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Dirección IP o hostname&quot;</span><span class="p">)</span>
+    <span class="n">puerto</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Número de puerto&quot;</span><span class="p">)</span>
+    <span class="n">protocolo</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Protocolo: http o https&quot;</span><span class="p">)</span>
+    <span class="n">servicios</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Lista de servicios activos&quot;</span><span class="p">)</span>
+
+<span class="n">parser</span> <span class="o">=</span> <span class="n">YamlOutputParser</span><span class="p">(</span><span class="n">pydantic_object</span><span class="o">=</span><span class="n">ConfiguracionServidor</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">get_format_instructions</span><span class="p">()[:</span><span class="mi">150</span><span class="p">])</span>
+<span class="c1"># → &quot;Return a YAML object that matches the following JSON schema...&quot;</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">([</span>
+    <span class="p">(</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;Genera configuraciones de servidor.</span><span class="se">\n</span><span class="si">{format_instructions}</span><span class="s2">&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;Crea una configuración para un servidor web de producción llamado &#39;</span><span class="si">{nombre}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+<span class="p">])</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">prompt</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">format_instructions</span><span class="o">=</span><span class="n">parser</span><span class="o">.</span><span class="n">get_format_instructions</span><span class="p">())</span>
+<span class="n">modelo</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">cadena</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">modelo</span> <span class="o">|</span> <span class="n">parser</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">cadena</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;nombre&quot;</span><span class="p">:</span> <span class="s2">&quot;web-prod-01&quot;</span><span class="p">})</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">config</span><span class="p">))</span>           <span class="c1"># &lt;class &#39;__main__.ConfiguracionServidor&#39;&gt;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">nombre</span><span class="p">)</span>          <span class="c1"># web-prod-01</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">puerto</span><span class="p">)</span>          <span class="c1"># 443</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">protocolo</span><span class="p">)</span>       <span class="c1"># https</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">servicios</span><span class="p">)</span>       <span class="c1"># [&#39;nginx&#39;, &#39;ssl&#39;, &#39;load-balancer&#39;]</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="parte-4-parsers-de-tipos-primitivos">
+<h2><span class="section-number">4.5. </span>Parte 4: Parsers de tipos primitivos<a class="headerlink" href="#parte-4-parsers-de-tipos-primitivos" title="Link to this heading">#</a></h2>
+<section id="booleanoutputparser-si-no-true-false">
+<h3><span class="section-number">4.5.1. </span><code class="docutils literal notranslate"><span class="pre">BooleanOutputParser</span></code> — Sí / No → <code class="docutils literal notranslate"><span class="pre">True</span></code> / <code class="docutils literal notranslate"><span class="pre">False</span></code><a class="headerlink" href="#booleanoutputparser-si-no-true-false" title="Link to this heading">#</a></h3>
+<p id="index-11">Parsea respuestas binarias del modelo (YES/NO, SÍ/NO) y las convierte en un booleano Python. Muy útil para clasificaciones binarias, validaciones o decisiones.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">BooleanOutputParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+
+<span class="n">parser</span> <span class="o">=</span> <span class="n">BooleanOutputParser</span><span class="p">()</span>
+
+<span class="c1"># Por defecto espera &quot;YES&quot; o &quot;NO&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">true_val</span><span class="p">)</span>   <span class="c1"># YES</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">false_val</span><span class="p">)</span>  <span class="c1"># NO</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">([</span>
+    <span class="p">(</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Eres un clasificador de contenido.</span>
+<span class="s2">Responde ÚNICAMENTE con YES si el texto es spam, o NO si no lo es.</span>
+<span class="s2">No añadas ninguna explicación.&quot;&quot;&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;Clasifica este mensaje: </span><span class="si">{mensaje}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="p">])</span>
+
+<span class="n">modelo</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">cadena</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">modelo</span> <span class="o">|</span> <span class="n">parser</span>
+
+<span class="n">mensajes</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;¡GANA 1000€ AHORA! Haz clic aquí, oferta por tiempo limitado!!!&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Hola, ¿quedamos el martes para tomar un café?&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Hereda millones de un príncipe nigeriano, ¡envía tus datos!&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;¿Has visto el partido de ayer? Fue increíble el gol en el minuto 90.&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="k">for</span> <span class="n">msg</span> <span class="ow">in</span> <span class="n">mensajes</span><span class="p">:</span>
+    <span class="n">es_spam</span> <span class="o">=</span> <span class="n">cadena</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;mensaje&quot;</span><span class="p">:</span> <span class="n">msg</span><span class="p">})</span>
+    <span class="n">estado</span> <span class="o">=</span> <span class="s2">&quot;🚨 SPAM&quot;</span> <span class="k">if</span> <span class="n">es_spam</span> <span class="k">else</span> <span class="s2">&quot;✅ OK  &quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">estado</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">msg</span><span class="p">[:</span><span class="mi">55</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+
+<span class="c1"># 🚨 SPAM → ¡GANA 1000€ AHORA! Haz clic aquí, oferta por...</span>
+<span class="c1"># ✅ OK   → Hola, ¿quedamos el martes para tomar un café?...</span>
+<span class="c1"># 🚨 SPAM → Hereda millones de un príncipe nigeriano, ¡enví...</span>
+<span class="c1"># ✅ OK   → ¿Has visto el partido de ayer? Fue increíble el...</span>
+</pre></div>
+</div>
+<p><strong>Personalizar los valores verdadero/falso:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Puedes configurar los valores que el parser reconoce como True/False</span>
+<span class="n">parser_personalizado</span> <span class="o">=</span> <span class="n">BooleanOutputParser</span><span class="p">(</span>
+    <span class="n">true_val</span><span class="o">=</span><span class="s2">&quot;POSITIVO&quot;</span><span class="p">,</span>
+    <span class="n">false_val</span><span class="o">=</span><span class="s2">&quot;NEGATIVO&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># En ese caso el prompt debe indicar al modelo responder &quot;POSITIVO&quot; o &quot;NEGATIVO&quot;</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="datetimeoutputparser-texto-datetime">
+<h3><span class="section-number">4.5.2. </span><code class="docutils literal notranslate"><span class="pre">DatetimeOutputParser</span></code> — Texto → <code class="docutils literal notranslate"><span class="pre">datetime</span></code><a class="headerlink" href="#datetimeoutputparser-texto-datetime" title="Link to this heading">#</a></h3>
+<p id="index-12">Parsea cualquier respuesta del modelo que contenga una fecha/hora y la convierte en un objeto <code class="docutils literal notranslate"><span class="pre">datetime</span></code> de Python.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">DatetimeOutputParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+
+<span class="n">parser</span> <span class="o">=</span> <span class="n">DatetimeOutputParser</span><span class="p">()</span>
+
+<span class="c1"># Ver el formato que el parser espera por defecto:</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">get_format_instructions</span><span class="p">())</span>
+<span class="c1"># → &#39;Write a datetime string that matches the following pattern:</span>
+<span class="c1">#    &quot;%Y-%m-%dT%H:%M:%S.%fZ&quot;.</span>
+<span class="c1">#    Examples: 1132-06-09T00:45:21.019257Z, 1187-12-04T11:36:39.086472Z&#39;</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">([</span>
+    <span class="p">(</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{pregunta}</span><span class="se">\n</span><span class="si">{format_instructions}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="p">])</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">prompt</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">format_instructions</span><span class="o">=</span><span class="n">parser</span><span class="o">.</span><span class="n">get_format_instructions</span><span class="p">())</span>
+<span class="n">modelo</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">cadena</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">modelo</span> <span class="o">|</span> <span class="n">parser</span>
+
+<span class="c1"># Ejemplo 1: Fecha histórica</span>
+<span class="n">estreno</span> <span class="o">=</span> <span class="n">cadena</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;pregunta&quot;</span><span class="p">:</span> <span class="s2">&quot;¿Cuándo se estrenó la película Titanic?&quot;</span><span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">estreno</span><span class="p">))</span>   <span class="c1"># &lt;class &#39;datetime.datetime&#39;&gt;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">estreno</span><span class="p">)</span>         <span class="c1"># 1997-12-19 00:00:00</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">estreno</span><span class="o">.</span><span class="n">year</span><span class="p">)</span>    <span class="c1"># 1997</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">estreno</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2"> de %B de %Y&quot;</span><span class="p">))</span>  <span class="c1"># 19 de December de 1997</span>
+
+<span class="c1"># Ejemplo 2: Usar el resultado en cálculos reales</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+
+<span class="n">independencia</span> <span class="o">=</span> <span class="n">cadena</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span>
+    <span class="s2">&quot;pregunta&quot;</span><span class="p">:</span> <span class="s2">&quot;¿Cuándo se produjo el Dos de Mayo de 1808 en Madrid?&quot;</span>
+<span class="p">})</span>
+<span class="n">años_transcurridos</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">year</span> <span class="o">-</span> <span class="n">independencia</span><span class="o">.</span><span class="n">year</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Han pasado </span><span class="si">{</span><span class="n">años_transcurridos</span><span class="si">}</span><span class="s2"> años desde entonces.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Formato personalizado:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Puedes cambiar el formato de entrada esperado</span>
+<span class="n">parser_eu</span> <span class="o">=</span> <span class="n">DatetimeOutputParser</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">/%m/%Y&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">parser_eu</span><span class="o">.</span><span class="n">get_format_instructions</span><span class="p">())</span>
+<span class="c1"># → &#39;Write a datetime string that matches the following pattern: &quot;%d/%m/%Y&quot;.&#39;</span>
+<span class="c1"># → &#39;Examples: 30/08/1991, 07/05/2001&#39;</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="enumoutputparser-texto-valor-de-un-enum">
+<h3><span class="section-number">4.5.3. </span><code class="docutils literal notranslate"><span class="pre">EnumOutputParser</span></code> — Texto → valor de un Enum<a class="headerlink" href="#enumoutputparser-texto-valor-de-un-enum" title="Link to this heading">#</a></h3>
+<p id="index-13">Parsea la respuesta del modelo y la convierte en un miembro de un <code class="docutils literal notranslate"><span class="pre">Enum</span></code> de Python. Perfecto para clasificaciones con categorías fijas.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnumOutputParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+
+<span class="c1"># 1. Definimos el Enum con las categorías posibles</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Prioridad</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">CRITICA</span> <span class="o">=</span> <span class="s2">&quot;critica&quot;</span>
+    <span class="n">ALTA</span>    <span class="o">=</span> <span class="s2">&quot;alta&quot;</span>
+    <span class="n">MEDIA</span>   <span class="o">=</span> <span class="s2">&quot;media&quot;</span>
+    <span class="n">BAJA</span>    <span class="o">=</span> <span class="s2">&quot;baja&quot;</span>
+
+<span class="c1"># 2. Creamos el parser con el Enum</span>
+<span class="n">parser</span> <span class="o">=</span> <span class="n">EnumOutputParser</span><span class="p">(</span><span class="n">enum</span><span class="o">=</span><span class="n">Prioridad</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">get_format_instructions</span><span class="p">())</span>
+<span class="c1"># → &quot;Select one of the following options: critica, alta, media, baja&quot;</span>
+
+<span class="c1"># 3. Prompt y cadena</span>
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">([</span>
+    <span class="p">(</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Eres un sistema de ticketing.</span>
+<span class="s2">Clasifica la prioridad de incidencias de soporte técnico.</span>
+<span class="si">{format_instructions}</span><span class="s2">&quot;&quot;&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;Incidencia: </span><span class="si">{incidencia}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="p">])</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">prompt</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">format_instructions</span><span class="o">=</span><span class="n">parser</span><span class="o">.</span><span class="n">get_format_instructions</span><span class="p">())</span>
+<span class="n">modelo</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">cadena</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">modelo</span> <span class="o">|</span> <span class="n">parser</span>
+
+<span class="c1"># 4. Probamos con distintas incidencias</span>
+<span class="n">incidencias</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;El servidor de producción está caído, no podemos operar.&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Un usuario no recuerda su contraseña.&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;La fuente del logo en la web tiene un pixel de diferencia.&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;El sistema de facturación devuelve errores en el 30</span><span class="si">% d</span><span class="s2">e los casos.&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="k">for</span> <span class="n">inc</span> <span class="ow">in</span> <span class="n">incidencias</span><span class="p">:</span>
+    <span class="n">prioridad</span> <span class="o">=</span> <span class="n">cadena</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;incidencia&quot;</span><span class="p">:</span> <span class="n">inc</span><span class="p">})</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">prioridad</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">:</span><span class="s2">8</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">inc</span><span class="p">[:</span><span class="mi">55</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+
+<span class="c1"># [CRITICA ] El servidor de producción está caído, no podemos ...</span>
+<span class="c1"># [BAJA    ] Un usuario no recuerda su contraseña....</span>
+<span class="c1"># [BAJA    ] La fuente del logo en la web tiene un pixel de di...</span>
+<span class="c1"># [ALTA    ] El sistema de facturación devuelve errores en el ...</span>
+</pre></div>
+</div>
+<p><strong>Uso en lógica de negocio:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Al ser un Enum real, podemos usarlo en comparaciones y lógica</span>
+<span class="k">if</span> <span class="n">prioridad</span> <span class="o">==</span> <span class="n">Prioridad</span><span class="o">.</span><span class="n">CRITICA</span><span class="p">:</span>
+    <span class="n">enviar_alerta_oncall</span><span class="p">()</span>
+<span class="k">elif</span> <span class="n">prioridad</span> <span class="o">==</span> <span class="n">Prioridad</span><span class="o">.</span><span class="n">ALTA</span><span class="p">:</span>
+    <span class="n">notificar_equipo_slack</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="parte-5-parsers-avanzados-y-de-datos">
+<h2><span class="section-number">4.6. </span>Parte 5: Parsers avanzados y de datos<a class="headerlink" href="#parte-5-parsers-avanzados-y-de-datos" title="Link to this heading">#</a></h2>
+<section id="pandasdataframeoutputparser-texto-dataframe">
+<h3><span class="section-number">4.6.1. </span><code class="docutils literal notranslate"><span class="pre">PandasDataFrameOutputParser</span></code> — Texto → DataFrame<a class="headerlink" href="#pandasdataframeoutputparser-texto-dataframe" title="Link to this heading">#</a></h3>
+<p id="index-14">Parsea la respuesta del modelo y la convierte en un <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> de Pandas. Ideal para análisis de datos o cuando necesitas que el modelo genere datos tabulares.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">PandasDataFrameOutputParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Proporcionamos un DataFrame de referencia para que el modelo</span>
+<span class="c1"># sepa exactamente qué columnas y tipos se esperan</span>
+<span class="n">df_referencia</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s2">&quot;pais&quot;</span><span class="p">:</span>       <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;str&quot;</span><span class="p">),</span>
+    <span class="s2">&quot;capital&quot;</span><span class="p">:</span>    <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;str&quot;</span><span class="p">),</span>
+    <span class="s2">&quot;poblacion&quot;</span><span class="p">:</span>  <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;int&quot;</span><span class="p">),</span>
+    <span class="s2">&quot;continente&quot;</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;str&quot;</span><span class="p">),</span>
+<span class="p">})</span>
+
+<span class="n">parser</span> <span class="o">=</span> <span class="n">PandasDataFrameOutputParser</span><span class="p">(</span><span class="n">dataframe</span><span class="o">=</span><span class="n">df_referencia</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">get_format_instructions</span><span class="p">()[:</span><span class="mi">200</span><span class="p">])</span>
+<span class="c1"># → Instrucciones con el formato JSON esperado para reconstruir el DataFrame</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">([</span>
+    <span class="p">(</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;Genera datos tabulares precisos.</span><span class="se">\n</span><span class="si">{format_instructions}</span><span class="s2">&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;Dame datos de 5 países de </span><span class="si">{continente}</span><span class="s2"> con su capital y población aproximada.&quot;</span><span class="p">)</span>
+<span class="p">])</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">prompt</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">format_instructions</span><span class="o">=</span><span class="n">parser</span><span class="o">.</span><span class="n">get_format_instructions</span><span class="p">())</span>
+<span class="n">modelo</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">cadena</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">modelo</span> <span class="o">|</span> <span class="n">parser</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">cadena</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;continente&quot;</span><span class="p">:</span> <span class="s2">&quot;América del Sur&quot;</span><span class="p">})</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">df</span><span class="p">))</span>  <span class="c1"># &lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="c1">#          pais      capital  poblacion    continente</span>
+<span class="c1"># 0      Brasil     Brasilia  215000000  América del Sur</span>
+<span class="c1"># 1   Argentina  Buenos Aires  45000000  América del Sur</span>
+<span class="c1"># 2    Colombia      Bogotá    51000000  América del Sur</span>
+<span class="c1"># 3        Peru        Lima    33000000  América del Sur</span>
+<span class="c1"># 4       Chile     Santiago   19000000  América del Sur</span>
+
+<span class="c1"># Operar con el DataFrame directamente</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Total de población: </span><span class="si">{</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;poblacion&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;País más poblado: </span><span class="si">{</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;poblacion&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">idxmax</span><span class="p">(),</span><span class="w"> </span><span class="s1">&#39;pais&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="regexparser-extraccion-con-expresiones-regulares">
+<h3><span class="section-number">4.6.2. </span><code class="docutils literal notranslate"><span class="pre">RegexParser</span></code> — Extracción con expresiones regulares<a class="headerlink" href="#regexparser-extraccion-con-expresiones-regulares" title="Link to this heading">#</a></h3>
+<p id="index-15">Extrae grupos de una expresión regular aplicada a la respuesta del modelo. Útil cuando el formato de salida es predecible pero informal.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">RegexParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+
+<span class="c1"># Definimos el patrón regex y los nombres de los grupos de captura</span>
+<span class="n">parser</span> <span class="o">=</span> <span class="n">RegexParser</span><span class="p">(</span>
+    <span class="n">regex</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;Acción:\s*(.+)\nMotivo:\s*(.+)\nConfianza:\s*(\d+)%&quot;</span><span class="p">,</span>
+    <span class="n">output_keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;accion&quot;</span><span class="p">,</span> <span class="s2">&quot;motivo&quot;</span><span class="p">,</span> <span class="s2">&quot;confianza&quot;</span><span class="p">],</span>
+    <span class="n">default_output_key</span><span class="o">=</span><span class="s2">&quot;accion&quot;</span>  <span class="c1"># campo por defecto si el regex falla parcialmente</span>
+<span class="p">)</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">([</span>
+    <span class="p">(</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Analiza situaciones y responde SIEMPRE con este formato exacto:</span>
+<span class="s2">Acción: [acción recomendada]</span>
+<span class="s2">Motivo: [explicación breve]</span>
+<span class="s2">Confianza: [número del 0 al 100]%&quot;&quot;&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;Situación: </span><span class="si">{situacion}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="p">])</span>
+
+<span class="n">modelo</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">cadena</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">modelo</span> <span class="o">|</span> <span class="n">parser</span>
+
+<span class="n">resultado</span> <span class="o">=</span> <span class="n">cadena</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span>
+    <span class="s2">&quot;situacion&quot;</span><span class="p">:</span> <span class="s2">&quot;Un cliente lleva 3 meses sin pagar y no responde a emails ni llamadas.&quot;</span>
+<span class="p">})</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">resultado</span><span class="p">))</span>   <span class="c1"># &lt;class &#39;dict&#39;&gt;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resultado</span><span class="p">)</span>
+<span class="c1"># {</span>
+<span class="c1">#   &#39;accion&#39;: &#39;Iniciar proceso de reclamación formal por vía legal&#39;,</span>
+<span class="c1">#   &#39;motivo&#39;: &#39;Agotadas las vías de comunicación amistosas durante 3 meses&#39;,</span>
+<span class="c1">#   &#39;confianza&#39;: &#39;85&#39;</span>
+<span class="c1"># }</span>
+
+<span class="c1"># Los valores son strings; conversión manual si se necesita</span>
+<span class="n">confianza</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">resultado</span><span class="p">[</span><span class="s1">&#39;confianza&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Confianza: </span><span class="si">{</span><span class="n">confianza</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="regexdictparser-multiples-patrones-regex">
+<h3><span class="section-number">4.6.3. </span><code class="docutils literal notranslate"><span class="pre">RegexDictParser</span></code> — Múltiples patrones regex<a class="headerlink" href="#regexdictparser-multiples-patrones-regex" title="Link to this heading">#</a></h3>
+<p id="index-16">Permite definir múltiples patrones regex, uno por cada campo de salida. Más flexible que <code class="docutils literal notranslate"><span class="pre">RegexParser</span></code> cuando cada campo tiene un patrón distinto.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">RegexDictParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+
+<span class="c1"># Cada campo tiene su propio patrón regex independiente</span>
+<span class="n">parser</span> <span class="o">=</span> <span class="n">RegexDictParser</span><span class="p">(</span>
+    <span class="n">output_key_to_format</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;temperatura&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;Temperatura:\s*([\d.]+)°C&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;humedad&quot;</span><span class="p">:</span>     <span class="sa">r</span><span class="s2">&quot;Humedad:\s*(\d+)%&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;condicion&quot;</span><span class="p">:</span>   <span class="sa">r</span><span class="s2">&quot;Condición:\s*(.+?)(?:\n|$)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;viento&quot;</span><span class="p">:</span>      <span class="sa">r</span><span class="s2">&quot;Viento:\s*([\d.]+)\s*km/h&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">([</span>
+    <span class="p">(</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Proporciona datos meteorológicos con este formato:</span>
+<span class="s2">Temperatura: X.X°C</span>
+<span class="s2">Humedad: XX%</span>
+<span class="s2">Condición: [descripción]</span>
+<span class="s2">Viento: XX km/h&quot;&quot;&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;Dame el clima típico de </span><span class="si">{ciudad}</span><span class="s2"> en verano.&quot;</span><span class="p">)</span>
+<span class="p">])</span>
+
+<span class="n">modelo</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">cadena</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">modelo</span> <span class="o">|</span> <span class="n">parser</span>
+
+<span class="n">clima</span> <span class="o">=</span> <span class="n">cadena</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;ciudad&quot;</span><span class="p">:</span> <span class="s2">&quot;Sevilla&quot;</span><span class="p">})</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">clima</span><span class="p">)</span>
+<span class="c1"># {</span>
+<span class="c1">#   &#39;temperatura&#39;: &#39;38.5&#39;,</span>
+<span class="c1">#   &#39;humedad&#39;: &#39;25&#39;,</span>
+<span class="c1">#   &#39;condicion&#39;: &#39;Soleado y muy caluroso&#39;,</span>
+<span class="c1">#   &#39;viento&#39;: &#39;15&#39;</span>
+<span class="c1"># }</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="parte-6-parsers-de-recuperacion-de-errores">
+<h2><span class="section-number">4.7. </span>Parte 6: Parsers de recuperación de errores<a class="headerlink" href="#parte-6-parsers-de-recuperacion-de-errores" title="Link to this heading">#</a></h2>
+<p>Estos parsers actúan como <strong>red de seguridad</strong>: cuando el modelo produce una salida que no puede parsearse, intentan corregirla automáticamente.</p>
+<section id="outputfixingparser-correccion-automatica-con-otro-llm">
+<h3><span class="section-number">4.7.1. </span><code class="docutils literal notranslate"><span class="pre">OutputFixingParser</span></code> — Corrección automática con otro LLM<a class="headerlink" href="#outputfixingparser-correccion-automatica-con-otro-llm" title="Link to this heading">#</a></h3>
+<p id="index-17">Cuando el parser base falla, llama al modelo de nuevo con el error y la salida original para que la corrija.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">OutputFixingParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">PydanticOutputParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Producto</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">nombre</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">precio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Precio en euros como número decimal&quot;</span><span class="p">)</span>
+    <span class="n">disponible</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;True si hay stock, False si no&quot;</span><span class="p">)</span>
+    <span class="n">valoracion</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Valoración del 1 al 5&quot;</span><span class="p">,</span> <span class="n">ge</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">le</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="c1"># Parser base</span>
+<span class="n">parser_base</span> <span class="o">=</span> <span class="n">PydanticOutputParser</span><span class="p">(</span><span class="n">pydantic_object</span><span class="o">=</span><span class="n">Producto</span><span class="p">)</span>
+
+<span class="c1"># Parser con autocorrección: si falla, le pide al LLM que corrija</span>
+<span class="n">parser_robusto</span> <span class="o">=</span> <span class="n">OutputFixingParser</span><span class="o">.</span><span class="n">from_llm</span><span class="p">(</span>
+    <span class="n">parser</span><span class="o">=</span><span class="n">parser_base</span><span class="p">,</span>
+    <span class="n">llm</span><span class="o">=</span><span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># Simulamos una salida malformada del modelo (tipos incorrectos)</span>
+<span class="n">salida_rota</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">{</span>
+<span class="s1">  &quot;nombre&quot;: &quot;Laptop ProMax&quot;,</span>
+<span class="s1">  &quot;precio&quot;: &quot;mil doscientos euros&quot;,</span>
+<span class="s1">  &quot;disponible&quot;: &quot;sí claro&quot;,</span>
+<span class="s1">  &quot;valoracion&quot;: &quot;cuatro estrellas&quot;</span>
+<span class="s1">}</span>
+<span class="s1">&#39;&#39;&#39;</span>
+
+<span class="c1"># OutputFixingParser detecta el error de validación Pydantic</span>
+<span class="c1"># y llama al modelo para corregirlo automáticamente</span>
+<span class="n">resultado</span> <span class="o">=</span> <span class="n">parser_robusto</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">salida_rota</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">resultado</span><span class="p">))</span>          <span class="c1"># &lt;class &#39;__main__.Producto&#39;&gt;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resultado</span><span class="o">.</span><span class="n">nombre</span><span class="p">)</span>         <span class="c1"># Laptop ProMax</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resultado</span><span class="o">.</span><span class="n">precio</span><span class="p">)</span>         <span class="c1"># 1200.0   ← corregido de &quot;mil doscientos euros&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resultado</span><span class="o">.</span><span class="n">disponible</span><span class="p">)</span>     <span class="c1"># True     ← corregido de &quot;sí claro&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resultado</span><span class="o">.</span><span class="n">valoracion</span><span class="p">)</span>     <span class="c1"># 4        ← corregido de &quot;cuatro estrellas&quot;</span>
+</pre></div>
+</div>
+<p><strong>Flujo interno del <code class="docutils literal notranslate"><span class="pre">OutputFixingParser</span></code>:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Modelo genera: {&quot;precio&quot;: &quot;mil doscientos euros&quot;}
+         ↓
+Parser base falla (ValidationError: precio debe ser float)
+         ↓
+OutputFixingParser llama al LLM:
+  &quot;Esta salida: {...} falló con este error: {...}. Corrígela.&quot;
+         ↓
+LLM corrige: {&quot;precio&quot;: 1200.0}
+         ↓
+Parser base → objeto Pydantic ✅
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="retryoutputparser-reintento-con-el-prompt-original">
+<h3><span class="section-number">4.7.2. </span><code class="docutils literal notranslate"><span class="pre">RetryOutputParser</span></code> — Reintento con el prompt original<a class="headerlink" href="#retryoutputparser-reintento-con-el-prompt-original" title="Link to this heading">#</a></h3>
+<p id="index-18">A diferencia de <code class="docutils literal notranslate"><span class="pre">OutputFixingParser</span></code>, este parser reinvoca el modelo con el <strong>prompt original completo</strong> más una indicación del error. Útil cuando la corrección requiere regenerar la respuesta desde cero.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">RetryOutputParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">PydanticOutputParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Analisis</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">puntuacion</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Puntuación del 1 al 10&quot;</span><span class="p">,</span> <span class="n">ge</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">le</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">categoria</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Exactamente una de: positivo, negativo, neutro&quot;</span><span class="p">)</span>
+    <span class="n">resumen</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="n">parser_base</span> <span class="o">=</span> <span class="n">PydanticOutputParser</span><span class="p">(</span><span class="n">pydantic_object</span><span class="o">=</span><span class="n">Analisis</span><span class="p">)</span>
+
+<span class="c1"># RetryOutputParser necesita el LLM para reintentar</span>
+<span class="n">parser_retry</span> <span class="o">=</span> <span class="n">RetryOutputParser</span><span class="o">.</span><span class="n">from_llm</span><span class="p">(</span>
+    <span class="n">parser</span><span class="o">=</span><span class="n">parser_base</span><span class="p">,</span>
+    <span class="n">llm</span><span class="o">=</span><span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+    <span class="n">max_retries</span><span class="o">=</span><span class="mi">3</span>  <span class="c1"># máximo de reintentos antes de lanzar excepción</span>
+<span class="p">)</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">([</span>
+    <span class="p">(</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;Analiza reseñas.</span><span class="se">\n</span><span class="si">{format_instructions}</span><span class="s2">&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{resena}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="p">])</span>
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">prompt</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span>
+    <span class="n">format_instructions</span><span class="o">=</span><span class="n">parser_base</span><span class="o">.</span><span class="n">get_format_instructions</span><span class="p">()</span>
+<span class="p">)</span>
+
+<span class="n">modelo</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Para usar RetryOutputParser necesitamos el prompt_value</span>
+<span class="n">prompt_value</span> <span class="o">=</span> <span class="n">prompt</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span>
+    <span class="s2">&quot;resena&quot;</span><span class="p">:</span> <span class="s2">&quot;El producto llegó roto y el servicio al cliente no respondió.&quot;</span>
+<span class="p">})</span>
+
+<span class="n">respuesta_raw</span> <span class="o">=</span> <span class="n">modelo</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">prompt_value</span><span class="p">)</span>
+
+<span class="c1"># Parseamos con reintento automático en caso de fallo</span>
+<span class="n">resultado</span> <span class="o">=</span> <span class="n">parser_retry</span><span class="o">.</span><span class="n">parse_with_prompt</span><span class="p">(</span>
+    <span class="n">respuesta_raw</span><span class="o">.</span><span class="n">content</span><span class="p">,</span>
+    <span class="n">prompt_value</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">resultado</span><span class="o">.</span><span class="n">puntuacion</span><span class="p">)</span>  <span class="c1"># 2</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resultado</span><span class="o">.</span><span class="n">categoria</span><span class="p">)</span>   <span class="c1"># negativo</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resultado</span><span class="o">.</span><span class="n">resumen</span><span class="p">)</span>     <span class="c1"># &quot;El cliente tuvo una experiencia muy negativa...&quot;</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="retrywitherroroutputparser-reintento-con-contexto-del-error">
+<h3><span class="section-number">4.7.3. </span><code class="docutils literal notranslate"><span class="pre">RetryWithErrorOutputParser</span></code> — Reintento con contexto del error<a class="headerlink" href="#retrywitherroroutputparser-reintento-con-contexto-del-error" title="Link to this heading">#</a></h3>
+<p id="index-19">Similar a <code class="docutils literal notranslate"><span class="pre">RetryOutputParser</span></code> pero incluye explícitamente el mensaje de error en el prompt de reintento, dando más contexto al modelo para que corrija la respuesta.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">RetryWithErrorOutputParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">PydanticOutputParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Resumen</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">titulo</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">puntos_clave</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">conclusion</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="n">parser_base</span> <span class="o">=</span> <span class="n">PydanticOutputParser</span><span class="p">(</span><span class="n">pydantic_object</span><span class="o">=</span><span class="n">Resumen</span><span class="p">)</span>
+
+<span class="c1"># Incluye el error en el prompt de reintento para mayor contexto</span>
+<span class="n">parser_retry_err</span> <span class="o">=</span> <span class="n">RetryWithErrorOutputParser</span><span class="o">.</span><span class="n">from_llm</span><span class="p">(</span>
+    <span class="n">parser</span><span class="o">=</span><span class="n">parser_base</span><span class="p">,</span>
+    <span class="n">llm</span><span class="o">=</span><span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># Uso igual que RetryOutputParser: parser_retry_err.parse_with_prompt(salida, prompt_value)</span>
+</pre></div>
+</div>
+<p><strong>Cuándo usar cada parser de recuperación:</strong></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parser</p></th>
+<th class="head"><p>Estrategia</p></th>
+<th class="head"><p>Mejor para</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">OutputFixingParser</span></code></p></td>
+<td><p>Corrige la salida incorrecta</p></td>
+<td><p>Errores de formato o tipos</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">RetryOutputParser</span></code></p></td>
+<td><p>Regenera desde el prompt original</p></td>
+<td><p>Respuestas completamente incorrectas</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">RetryWithErrorOutputParser</span></code></p></td>
+<td><p>Regenera incluyendo el error</p></td>
+<td><p>Errores complejos que requieren contexto</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="parte-7-parsers-de-composicion">
+<h2><span class="section-number">4.8. </span>Parte 7: Parsers de composición<a class="headerlink" href="#parte-7-parsers-de-composicion" title="Link to this heading">#</a></h2>
+<section id="combiningoutputparser-combina-multiples-parsers">
+<h3><span class="section-number">4.8.1. </span><code class="docutils literal notranslate"><span class="pre">CombiningOutputParser</span></code> — Combina múltiples parsers<a class="headerlink" href="#combiningoutputparser-combina-multiples-parsers" title="Link to this heading">#</a></h3>
+<p id="index-20">Permite usar varios parsers a la vez y combinar sus resultados en un único diccionario. Cada parser procesa una parte de la respuesta del modelo.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">CombiningOutputParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">CommaSeparatedListOutputParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">DatetimeOutputParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">PromptTemplate</span>
+
+<span class="c1"># Combinamos un parser de lista y uno de fecha</span>
+<span class="n">parser_lista</span> <span class="o">=</span> <span class="n">CommaSeparatedListOutputParser</span><span class="p">()</span>
+<span class="n">parser_fecha</span>  <span class="o">=</span> <span class="n">DatetimeOutputParser</span><span class="p">()</span>
+
+<span class="n">parser_combinado</span> <span class="o">=</span> <span class="n">CombiningOutputParser</span><span class="p">(</span><span class="n">parsers</span><span class="o">=</span><span class="p">[</span><span class="n">parser_lista</span><span class="p">,</span> <span class="n">parser_fecha</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">parser_combinado</span><span class="o">.</span><span class="n">get_format_instructions</span><span class="p">())</span>
+<span class="c1"># → Instrucciones combinadas: primero la lista separada por comas, luego la fecha</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">PromptTemplate</span><span class="p">(</span>
+    <span class="n">template</span><span class="o">=</span><span class="s2">&quot;Responde a ambas preguntas:</span><span class="se">\n</span><span class="si">{format_instructions}</span><span class="se">\n</span><span class="s2">&quot;</span>
+             <span class="s2">&quot;1. Lista 3 guitarristas de jazz famosos.</span><span class="se">\n</span><span class="s2">&quot;</span>
+             <span class="s2">&quot;2. ¿Cuándo nació Miles Davis?&quot;</span><span class="p">,</span>
+    <span class="n">input_variables</span><span class="o">=</span><span class="p">[],</span>
+    <span class="n">partial_variables</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;format_instructions&quot;</span><span class="p">:</span> <span class="n">parser_combinado</span><span class="o">.</span><span class="n">get_format_instructions</span><span class="p">()}</span>
+<span class="p">)</span>
+
+<span class="n">modelo</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">cadena</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">modelo</span> <span class="o">|</span> <span class="n">parser_combinado</span>
+
+<span class="n">resultado</span> <span class="o">=</span> <span class="n">cadena</span><span class="o">.</span><span class="n">invoke</span><span class="p">({})</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resultado</span><span class="p">)</span>
+<span class="c1"># {&#39;output1&#39;: [&#39;Wes Montgomery&#39;, &#39;Joe Pass&#39;, &#39;Pat Metheny&#39;],</span>
+<span class="c1">#  &#39;output2&#39;: datetime.datetime(1926, 5, 26, 0, 0)}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="parte-8-with-structured-output-metodo-moderno">
+<h2><span class="section-number">4.9. </span>Parte 8: <code class="docutils literal notranslate"><span class="pre">with_structured_output</span></code> (Método moderno)<a class="headerlink" href="#parte-8-with-structured-output-metodo-moderno" title="Link to this heading">#</a></h2>
+<p id="index-21">Este es el <strong>enfoque recomendado actualmente</strong>. En lugar de instrucciones en el prompt, aprovecha las capacidades nativas del modelo (function calling, tool use) para garantizar la estructura.</p>
+<section id="ventajas-sobre-los-output-parsers">
+<h3><span class="section-number">4.9.1. </span>Ventajas sobre los Output Parsers<a class="headerlink" href="#ventajas-sobre-los-output-parsers" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Más fiable</strong>: el modelo está entrenado para respetar el esquema, no solo instruido.</p></li>
+<li><p><strong>Sin prompt engineering</strong>: no necesitas insertar <code class="docutils literal notranslate"><span class="pre">format_instructions</span></code>.</p></li>
+<li><p><strong>Validación automática</strong>: devuelve directamente un objeto Pydantic validado.</p></li>
+<li><p><strong>Código más limpio y conciso</strong>.</p></li>
+</ul>
+</section>
+<section id="uso-basico-con-pydantic">
+<h3><span class="section-number">4.9.2. </span>Uso básico con Pydantic<a class="headerlink" href="#uso-basico-con-pydantic" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Pelicula</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">titulo</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Título original de la película&quot;</span><span class="p">)</span>
+    <span class="n">año</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Año de estreno&quot;</span><span class="p">)</span>
+    <span class="n">director</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Nombre del director&quot;</span><span class="p">)</span>
+    <span class="n">generos</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Lista de géneros cinematográficos&quot;</span><span class="p">)</span>
+    <span class="n">sinopsis</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Breve sinopsis de no más de 2 frases&quot;</span><span class="p">)</span>
+    <span class="n">puntuacion</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Puntuación del 0 al 10&quot;</span><span class="p">)</span>
+
+<span class="c1"># Vinculamos el modelo al esquema: sin parsers ni format_instructions</span>
+<span class="n">modelo</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">modelo_estructurado</span> <span class="o">=</span> <span class="n">modelo</span><span class="o">.</span><span class="n">with_structured_output</span><span class="p">(</span><span class="n">Pelicula</span><span class="p">)</span>
+
+<span class="n">resultado</span> <span class="o">=</span> <span class="n">modelo_estructurado</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
+    <span class="s2">&quot;Cuéntame sobre la película Inception de Christopher Nolan.&quot;</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">resultado</span><span class="p">))</span>       <span class="c1"># &lt;class &#39;__main__.Pelicula&#39;&gt;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resultado</span><span class="o">.</span><span class="n">titulo</span><span class="p">)</span>      <span class="c1"># Inception</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resultado</span><span class="o">.</span><span class="n">año</span><span class="p">)</span>         <span class="c1"># 2010</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resultado</span><span class="o">.</span><span class="n">director</span><span class="p">)</span>    <span class="c1"># Christopher Nolan</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resultado</span><span class="o">.</span><span class="n">generos</span><span class="p">)</span>     <span class="c1"># [&#39;Ciencia ficción&#39;, &#39;Thriller&#39;, &#39;Acción&#39;]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resultado</span><span class="o">.</span><span class="n">puntuacion</span><span class="p">)</span>  <span class="c1"># 8.8</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="con-esquemas-anidados">
+<h3><span class="section-number">4.9.3. </span>Con esquemas anidados<a class="headerlink" href="#con-esquemas-anidados" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Ingrediente</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">nombre</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">cantidad</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">unidad</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Receta</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">nombre</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Nombre del plato&quot;</span><span class="p">)</span>
+    <span class="n">tiempo_preparacion_min</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">dificultad</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Fácil, Media o Difícil&quot;</span><span class="p">)</span>
+    <span class="n">ingredientes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Ingrediente</span><span class="p">]</span>
+    <span class="n">pasos</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+
+<span class="n">modelo</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">extractor</span> <span class="o">=</span> <span class="n">modelo</span><span class="o">.</span><span class="n">with_structured_output</span><span class="p">(</span><span class="n">Receta</span><span class="p">)</span>
+
+<span class="n">receta</span> <span class="o">=</span> <span class="n">extractor</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;Dame una receta de tortilla española para 4 personas.&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🍳 </span><span class="si">{</span><span class="n">receta</span><span class="o">.</span><span class="n">nombre</span><span class="si">}</span><span class="s2"> — </span><span class="si">{</span><span class="n">receta</span><span class="o">.</span><span class="n">dificultad</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">receta</span><span class="o">.</span><span class="n">tiempo_preparacion_min</span><span class="si">}</span><span class="s2"> min)&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">ing</span> <span class="ow">in</span> <span class="n">receta</span><span class="o">.</span><span class="n">ingredientes</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  • </span><span class="si">{</span><span class="n">ing</span><span class="o">.</span><span class="n">cantidad</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">ing</span><span class="o">.</span><span class="n">unidad</span><span class="si">}</span><span class="s2"> de </span><span class="si">{</span><span class="n">ing</span><span class="o">.</span><span class="n">nombre</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="con-typeddict-sin-pydantic">
+<h3><span class="section-number">4.9.4. </span>Con <code class="docutils literal notranslate"><span class="pre">TypedDict</span></code> (sin Pydantic)<a class="headerlink" href="#con-typeddict-sin-pydantic" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypedDict</span><span class="p">,</span> <span class="n">List</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ResumenNoticia</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="n">titular</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">tema_principal</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">palabras_clave</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">sentimiento</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># positivo, negativo, neutro</span>
+
+<span class="n">modelo</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">analizador</span> <span class="o">=</span> <span class="n">modelo</span><span class="o">.</span><span class="n">with_structured_output</span><span class="p">(</span><span class="n">ResumenNoticia</span><span class="p">)</span>
+
+<span class="n">resultado</span> <span class="o">=</span> <span class="n">analizador</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">La economía española creció un 2,5</span><span class="si">% e</span><span class="s2">n el último trimestre, superando las</span>
+<span class="s2">previsiones de los analistas. El turismo y las exportaciones fueron los</span>
+<span class="s2">principales motores del crecimiento, según el INE.</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">resultado</span><span class="p">)</span>
+<span class="c1"># {&#39;titular&#39;: &#39;Economía española crece 2,5% en el trimestre&#39;,</span>
+<span class="c1">#  &#39;tema_principal&#39;: &#39;Crecimiento económico&#39;,</span>
+<span class="c1">#  &#39;palabras_clave&#39;: [&#39;economía&#39;, &#39;crecimiento&#39;, &#39;turismo&#39;, &#39;exportaciones&#39;],</span>
+<span class="c1">#  &#39;sentimiento&#39;: &#39;positivo&#39;}</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="en-cadenas-lcel-con-literal-para-valores-fijos">
+<h3><span class="section-number">4.9.5. </span>En cadenas LCEL con <code class="docutils literal notranslate"><span class="pre">Literal</span></code> para valores fijos<a class="headerlink" href="#en-cadenas-lcel-con-literal-para-valores-fijos" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Literal</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">AnalisisSentimiento</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="c1"># Literal restringe los valores posibles: el modelo solo puede elegir uno</span>
+    <span class="n">sentimiento</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;positivo&quot;</span><span class="p">,</span> <span class="s2">&quot;negativo&quot;</span><span class="p">,</span> <span class="s2">&quot;neutro&quot;</span><span class="p">,</span> <span class="s2">&quot;mixto&quot;</span><span class="p">]</span>
+    <span class="n">confianza</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Confianza del 0.0 al 1.0&quot;</span><span class="p">,</span> <span class="n">ge</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">le</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">emociones_detectadas</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">resumen</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Explicación breve de máximo 20 palabras&quot;</span><span class="p">)</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">([</span>
+    <span class="p">(</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;Eres experto en análisis de sentimientos en español.&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;Analiza: </span><span class="si">{texto}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="p">])</span>
+
+<span class="n">modelo</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">cadena</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">modelo</span><span class="o">.</span><span class="n">with_structured_output</span><span class="p">(</span><span class="n">AnalisisSentimiento</span><span class="p">)</span>
+
+<span class="n">textos</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;¡Este producto es increíble! Ha superado todas mis expectativas.&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;El servicio fue pésimo. Una decepción total.&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;El paquete llegó en el tiempo estimado.&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="k">for</span> <span class="n">texto</span> <span class="ow">in</span> <span class="n">textos</span><span class="p">:</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">cadena</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;texto&quot;</span><span class="p">:</span> <span class="n">texto</span><span class="p">})</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">sentimiento</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">:</span><span class="s2">8</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">confianza</span><span class="si">:</span><span class="s2">.0%</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">resumen</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># [POSITIVO] 95% → Experiencia muy satisfactoria y sorprendente</span>
+<span class="c1"># [NEGATIVO] 92% → Cliente decepcionado con el servicio recibido</span>
+<span class="c1"># [NEUTRO  ] 88% → Entrega sin incidencias en el plazo previsto</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="parte-9-comparativa-completa-de-todos-los-parsers">
+<h2><span class="section-number">4.10. </span>Parte 9: Comparativa completa de todos los parsers<a class="headerlink" href="#parte-9-comparativa-completa-de-todos-los-parsers" title="Link to this heading">#</a></h2>
+<section id="tabla-de-referencia-rapida">
+<h3><span class="section-number">4.10.1. </span>Tabla de referencia rápida<a class="headerlink" href="#tabla-de-referencia-rapida" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parser</p></th>
+<th class="head"><p>Tipo de salida</p></th>
+<th class="head"><p>Paquete</p></th>
+<th class="head"><p>Validación</p></th>
+<th class="head"><p>Caso de uso principal</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">StrOutputParser</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">langchain_core</span></code></p></td>
+<td><p>❌</p></td>
+<td><p>Texto libre, chatbots</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">CommaSeparatedListOutputParser</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">list[str]</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">langchain_core</span></code></p></td>
+<td><p>❌</p></td>
+<td><p>Listas simples en una línea</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">NumberedListOutputParser</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">list[str]</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">langchain_core</span></code></p></td>
+<td><p>❌</p></td>
+<td><p>Listas numeradas</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">MarkdownListOutputParser</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">list[str]</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">langchain_core</span></code></p></td>
+<td><p>❌</p></td>
+<td><p>Listas con <code class="docutils literal notranslate"><span class="pre">*</span></code> o <code class="docutils literal notranslate"><span class="pre">-</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">JsonOutputParser</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">dict</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">langchain_core</span></code></p></td>
+<td><p>❌</p></td>
+<td><p>JSON sin esquema fijo</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SimpleJsonOutputParser</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">dict</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">langchain_core</span></code></p></td>
+<td><p>❌</p></td>
+<td><p>Alias de JsonOutputParser</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">PydanticOutputParser</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">BaseModel</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">langchain_core</span></code></p></td>
+<td><p>✅</p></td>
+<td><p>Esquemas validados con tipos</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">XMLOutputParser</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">dict</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">langchain_core</span></code></p></td>
+<td><p>❌</p></td>
+<td><p>Respuestas en formato XML</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">BooleanOutputParser</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">langchain</span></code></p></td>
+<td><p>✅</p></td>
+<td><p>Clasificación binaria Sí/No</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">DatetimeOutputParser</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">datetime</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">langchain</span></code></p></td>
+<td><p>✅</p></td>
+<td><p>Extracción de fechas/horas</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">EnumOutputParser</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Enum</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">langchain</span></code></p></td>
+<td><p>✅</p></td>
+<td><p>Categorías fijas predefinidas</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">StructuredOutputParser</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">dict</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">langchain</span></code></p></td>
+<td><p>❌</p></td>
+<td><p>Esquemas simples sin Pydantic</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">YamlOutputParser</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">BaseModel</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">langchain</span></code></p></td>
+<td><p>✅</p></td>
+<td><p>Respuestas en formato YAML</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">PandasDataFrameOutputParser</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DataFrame</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">langchain</span></code></p></td>
+<td><p>✅</p></td>
+<td><p>Datos tabulares para análisis</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">RegexParser</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">dict</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">langchain</span></code></p></td>
+<td><p>❌</p></td>
+<td><p>Extracción con un patrón regex</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">RegexDictParser</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">dict</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">langchain</span></code></p></td>
+<td><p>❌</p></td>
+<td><p>Múltiples patrones regex</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">OutputFixingParser</span></code></p></td>
+<td><p>variable</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">langchain</span></code></p></td>
+<td><p>según base</p></td>
+<td><p>Corrección automática de errores</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">RetryOutputParser</span></code></p></td>
+<td><p>variable</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">langchain</span></code></p></td>
+<td><p>según base</p></td>
+<td><p>Reintento desde el prompt</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">RetryWithErrorOutputParser</span></code></p></td>
+<td><p>variable</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">langchain</span></code></p></td>
+<td><p>según base</p></td>
+<td><p>Reintento con contexto del error</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">CombiningOutputParser</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">dict</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">langchain</span></code></p></td>
+<td><p>según base</p></td>
+<td><p>Combinar múltiples parsers</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">with_structured_output</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">BaseModel</span></code>/<code class="docutils literal notranslate"><span class="pre">dict</span></code></p></td>
+<td><p>nativo</p></td>
+<td><p>✅</p></td>
+<td><p>Enfoque moderno recomendado</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="arbol-de-decision-para-elegir-parser">
+<h3><span class="section-number">4.10.2. </span>Árbol de decisión para elegir parser<a class="headerlink" href="#arbol-de-decision-para-elegir-parser" title="Link to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>¿El modelo soporta function calling/tool use? (GPT-4, Claude, Gemini…)
+    │
+    ├── SÍ ──→ with_structured_output ✅ (la mejor opción)
+    │
+    └── NO ──→ Output Parsers
+                    │
+                    ├── ¿Qué tipo de dato necesitas?
+                    │       │
+                    │       ├── bool        → BooleanOutputParser
+                    │       ├── datetime    → DatetimeOutputParser
+                    │       ├── Enum        → EnumOutputParser
+                    │       ├── DataFrame   → PandasDataFrameOutputParser
+                    │       ├── XML         → XMLOutputParser
+                    │       ├── YAML        → YamlOutputParser
+                    │       ├── str simple  → StrOutputParser
+                    │       │
+                    │       └── dict / objeto estructurado
+                    │               │
+                    │               ├── ¿Necesitas validación de tipos?
+                    │               │       ├── SÍ → PydanticOutputParser
+                    │               │       └── NO → StructuredOutputParser / JsonOutputParser
+                    │               │
+                    │               └── ¿Solo lista de items?
+                    │                       ├── separados por coma → CommaSeparatedListOutputParser
+                    │                       ├── numerada           → NumberedListOutputParser
+                    │                       └── markdown (*)       → MarkdownListOutputParser
+                    │
+                    └── ¿El modelo falla frecuentemente?
+                            ├── Corregir salida        → OutputFixingParser
+                            ├── Regenerar respuesta    → RetryOutputParser
+                            └── Regenerar con error    → RetryWithErrorOutputParser
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="parte-10-ejemplo-integrador-completo">
+<h2><span class="section-number">4.11. </span>Parte 10: Ejemplo integrador completo<a class="headerlink" href="#parte-10-ejemplo-integrador-completo" title="Link to this heading">#</a></h2>
+<p>Este ejemplo combina varios parsers y <code class="docutils literal notranslate"><span class="pre">with_structured_output</span></code> en un pipeline realista de análisis de CVs.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Literal</span>
+
+<span class="c1"># ── Esquema completo del CV ─────────────────────────────────────────────────────</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ExperienciaLaboral</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">empresa</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">puesto</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">años</span><span class="p">:</span> <span class="nb">int</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CurriculumVitae</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">nombre</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">email</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">habilidades</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">experiencia</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ExperienciaLaboral</span><span class="p">]</span>
+    <span class="n">nivel_ingles</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">años_experiencia_total</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Suma total de años trabajados&quot;</span><span class="p">)</span>
+    <span class="n">apto_para_entrevista</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;True si tiene más de 3 años de experiencia total&quot;</span>
+    <span class="p">)</span>
+    <span class="n">perfil</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;junior&quot;</span><span class="p">,</span> <span class="s2">&quot;mid&quot;</span><span class="p">,</span> <span class="s2">&quot;senior&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;junior: &lt;2 años, mid: 2-5 años, senior: &gt;5 años&quot;</span>
+    <span class="p">)</span>
+
+<span class="c1"># ── Pipeline con with_structured_output ────────────────────────────────────────</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">([</span>
+    <span class="p">(</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;Eres un reclutador experto. Extrae y analiza CVs con precisión.&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;Analiza este CV:</span><span class="se">\n\n</span><span class="si">{cv_texto}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="p">])</span>
+
+<span class="n">modelo</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">extractor_cv</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">modelo</span><span class="o">.</span><span class="n">with_structured_output</span><span class="p">(</span><span class="n">CurriculumVitae</span><span class="p">)</span>
+
+<span class="c1"># ── CV de prueba ────────────────────────────────────────────────────────────────</span>
+
+<span class="n">cv_texto</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Carlos Martínez López — carlos.martinez@email.com</span>
+
+<span class="s2">EXPERIENCIA</span>
+<span class="s2">- Desarrollador Senior en TechCorp (4 años): Python, FastAPI, arquitectura cloud</span>
+<span class="s2">- Junior Developer en StartupXYZ (2 años): React, Node.js</span>
+
+<span class="s2">HABILIDADES: Python, FastAPI, React, PostgreSQL, Docker, Git, comunicación efectiva</span>
+
+<span class="s2">IDIOMAS: Inglés avanzado (C1)</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="c1"># ── Ejecución ───────────────────────────────────────────────────────────────────</span>
+
+<span class="n">cv</span> <span class="o">=</span> <span class="n">extractor_cv</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;cv_texto&quot;</span><span class="p">:</span> <span class="n">cv_texto</span><span class="p">})</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">52</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;          INFORME DE CANDIDATO&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">52</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;👤 Nombre:       </span><span class="si">{</span><span class="n">cv</span><span class="o">.</span><span class="n">nombre</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;📧 Email:        </span><span class="si">{</span><span class="n">cv</span><span class="o">.</span><span class="n">email</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🌍 Inglés:       </span><span class="si">{</span><span class="n">cv</span><span class="o">.</span><span class="n">nivel_ingles</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;📊 Perfil:       </span><span class="si">{</span><span class="n">cv</span><span class="o">.</span><span class="n">perfil</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;⏱️  Experiencia:  </span><span class="si">{</span><span class="n">cv</span><span class="o">.</span><span class="n">años_experiencia_total</span><span class="si">}</span><span class="s2"> años&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">💼 Trayectoria:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">exp</span> <span class="ow">in</span> <span class="n">cv</span><span class="o">.</span><span class="n">experiencia</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   • </span><span class="si">{</span><span class="n">exp</span><span class="o">.</span><span class="n">puesto</span><span class="si">}</span><span class="s2"> en </span><span class="si">{</span><span class="n">exp</span><span class="o">.</span><span class="n">empresa</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">exp</span><span class="o">.</span><span class="n">años</span><span class="si">}</span><span class="s2"> años)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🛠️  Habilidades:  </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cv</span><span class="o">.</span><span class="n">habilidades</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="s1">&#39;✅ APTO&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">cv</span><span class="o">.</span><span class="n">apto_para_entrevista</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;❌ NO APTO&#39;</span><span class="si">}</span><span class="s2"> para entrevista&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">52</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Salida esperada:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>====================================================
+          INFORME DE CANDIDATO
+====================================================
+👤 Nombre:       Carlos Martínez López
+📧 Email:        carlos.martinez@email.com
+🌍 Inglés:       avanzado
+📊 Perfil:       SENIOR
+⏱️  Experiencia:  6 años
+
+💼 Trayectoria:
+   • Desarrollador Senior en TechCorp (4 años)
+   • Junior Developer en StartupXYZ (2 años)
+
+🛠️  Habilidades:  Python, FastAPI, React, PostgreSQL, Docker, Git, comunicación efectiva
+
+✅ APTO para entrevista
+====================================================
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="resumen-y-buenas-practicas">
+<h2><span class="section-number">4.12. </span>Resumen y buenas prácticas<a class="headerlink" href="#resumen-y-buenas-practicas" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p><strong>Prefiere <code class="docutils literal notranslate"><span class="pre">with_structured_output</span></code></strong> cuando el modelo lo soporte (GPT-4, Claude, Gemini). Es más limpio, fiable y requiere menos código.</p></li>
+<li><p><strong>Usa Pydantic</strong> para definir esquemas. Los <code class="docutils literal notranslate"><span class="pre">Field(description=...)</span></code> son fundamentales: le dan contexto al modelo sobre qué esperar en cada campo.</p></li>
+<li><p><strong>Usa <code class="docutils literal notranslate"><span class="pre">Optional</span></code> con valores por defecto</strong> para campos que el modelo podría no encontrar, evitando errores de validación inesperados.</p></li>
+<li><p><strong>Usa <code class="docutils literal notranslate"><span class="pre">Literal</span></code> y <code class="docutils literal notranslate"><span class="pre">Enum</span></code></strong> para campos con valores fijos. Restringen la salida del modelo de forma muy efectiva y hacen el código más robusto.</p></li>
+<li><p><strong>Para recuperación de errores</strong>, usa <code class="docutils literal notranslate"><span class="pre">OutputFixingParser</span></code> como primera línea y <code class="docutils literal notranslate"><span class="pre">RetryOutputParser</span></code>/<code class="docutils literal notranslate"><span class="pre">RetryWithErrorOutputParser</span></code> cuando el fallo sea estructural.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">BooleanOutputParser</span></code></strong> es ideal para moderación de contenido, clasificación binaria y sistemas de decisión simple.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">DatetimeOutputParser</span></code></strong> convierte directamente en <code class="docutils literal notranslate"><span class="pre">datetime</span></code> de Python, permitiéndote hacer cálculos de fechas sin conversión manual.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">EnumOutputParser</span></code></strong> garantiza que el modelo solo elige entre tus categorías, lo que hace el código más robusto que comparar</p></li>
+</ol>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./jupyters"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="prompts.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">3. </span>GESTION DE PROMPTS EN LANGCHAIN - PYTHON</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="messages.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">5. </span>Introducción: De “Prompts” a la Orquestación de Mensajes Orientada a Objetos</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mapa-completo-de-parsers-disponibles">4.1. Mapa completo de parsers disponibles</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parte-1-parsers-de-texto-basico">4.2. Parte 1: Parsers de texto básico</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stroutputparser-el-mas-simple-de-todos">4.2.1. <code class="docutils literal notranslate"><span class="pre">StrOutputParser</span></code> — El más simple de todos</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parte-2-parsers-de-listas">4.3. Parte 2: Parsers de listas</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#commaseparatedlistoutputparser-lista-separada-por-comas">4.3.1. <code class="docutils literal notranslate"><span class="pre">CommaSeparatedListOutputParser</span></code> — Lista separada por comas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#numberedlistoutputparser-lista-numerada">4.3.2. <code class="docutils literal notranslate"><span class="pre">NumberedListOutputParser</span></code> — Lista numerada</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#markdownlistoutputparser-lista-markdown-con-asteriscos">4.3.3. <code class="docutils literal notranslate"><span class="pre">MarkdownListOutputParser</span></code> — Lista Markdown con asteriscos</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parte-3-parsers-json-y-estructurados">4.4. Parte 3: Parsers JSON y estructurados</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jsonoutputparser-diccionario-python">4.4.1. <code class="docutils literal notranslate"><span class="pre">JsonOutputParser</span></code> — Diccionario Python</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simplejsonoutputparser-alias-simplificado">4.4.2. <code class="docutils literal notranslate"><span class="pre">SimpleJsonOutputParser</span></code> — Alias simplificado</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydanticoutputparser-el-mas-potente-con-validacion">4.4.3. <code class="docutils literal notranslate"><span class="pre">PydanticOutputParser</span></code> — El más potente con validación</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#structuredoutputparser-esquema-con-responseschema">4.4.4. <code class="docutils literal notranslate"><span class="pre">StructuredOutputParser</span></code> — Esquema con <code class="docutils literal notranslate"><span class="pre">ResponseSchema</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#xmloutputparser-formato-xml">4.4.5. <code class="docutils literal notranslate"><span class="pre">XMLOutputParser</span></code> — Formato XML</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#yamloutputparser-formato-yaml">4.4.6. <code class="docutils literal notranslate"><span class="pre">YamlOutputParser</span></code> — Formato YAML</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parte-4-parsers-de-tipos-primitivos">4.5. Parte 4: Parsers de tipos primitivos</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#booleanoutputparser-si-no-true-false">4.5.1. <code class="docutils literal notranslate"><span class="pre">BooleanOutputParser</span></code> — Sí / No → <code class="docutils literal notranslate"><span class="pre">True</span></code> / <code class="docutils literal notranslate"><span class="pre">False</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#datetimeoutputparser-texto-datetime">4.5.2. <code class="docutils literal notranslate"><span class="pre">DatetimeOutputParser</span></code> — Texto → <code class="docutils literal notranslate"><span class="pre">datetime</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#enumoutputparser-texto-valor-de-un-enum">4.5.3. <code class="docutils literal notranslate"><span class="pre">EnumOutputParser</span></code> — Texto → valor de un Enum</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parte-5-parsers-avanzados-y-de-datos">4.6. Parte 5: Parsers avanzados y de datos</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pandasdataframeoutputparser-texto-dataframe">4.6.1. <code class="docutils literal notranslate"><span class="pre">PandasDataFrameOutputParser</span></code> — Texto → DataFrame</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#regexparser-extraccion-con-expresiones-regulares">4.6.2. <code class="docutils literal notranslate"><span class="pre">RegexParser</span></code> — Extracción con expresiones regulares</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#regexdictparser-multiples-patrones-regex">4.6.3. <code class="docutils literal notranslate"><span class="pre">RegexDictParser</span></code> — Múltiples patrones regex</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parte-6-parsers-de-recuperacion-de-errores">4.7. Parte 6: Parsers de recuperación de errores</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#outputfixingparser-correccion-automatica-con-otro-llm">4.7.1. <code class="docutils literal notranslate"><span class="pre">OutputFixingParser</span></code> — Corrección automática con otro LLM</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#retryoutputparser-reintento-con-el-prompt-original">4.7.2. <code class="docutils literal notranslate"><span class="pre">RetryOutputParser</span></code> — Reintento con el prompt original</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#retrywitherroroutputparser-reintento-con-contexto-del-error">4.7.3. <code class="docutils literal notranslate"><span class="pre">RetryWithErrorOutputParser</span></code> — Reintento con contexto del error</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parte-7-parsers-de-composicion">4.8. Parte 7: Parsers de composición</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#combiningoutputparser-combina-multiples-parsers">4.8.1. <code class="docutils literal notranslate"><span class="pre">CombiningOutputParser</span></code> — Combina múltiples parsers</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parte-8-with-structured-output-metodo-moderno">4.9. Parte 8: <code class="docutils literal notranslate"><span class="pre">with_structured_output</span></code> (Método moderno)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ventajas-sobre-los-output-parsers">4.9.1. Ventajas sobre los Output Parsers</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#uso-basico-con-pydantic">4.9.2. Uso básico con Pydantic</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#con-esquemas-anidados">4.9.3. Con esquemas anidados</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#con-typeddict-sin-pydantic">4.9.4. Con <code class="docutils literal notranslate"><span class="pre">TypedDict</span></code> (sin Pydantic)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#en-cadenas-lcel-con-literal-para-valores-fijos">4.9.5. En cadenas LCEL con <code class="docutils literal notranslate"><span class="pre">Literal</span></code> para valores fijos</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parte-9-comparativa-completa-de-todos-los-parsers">4.10. Parte 9: Comparativa completa de todos los parsers</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tabla-de-referencia-rapida">4.10.1. Tabla de referencia rápida</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#arbol-de-decision-para-elegir-parser">4.10.2. Árbol de decisión para elegir parser</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parte-10-ejemplo-integrador-completo">4.11. Parte 10: Ejemplo integrador completo</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resumen-y-buenas-practicas">4.12. Resumen y buenas prácticas</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Francisco Rodríguez
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
