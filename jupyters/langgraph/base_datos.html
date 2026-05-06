@@ -1,0 +1,1293 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>11. Introducción &#8212; LangChain &amp; LangGraph</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'jupyters/langgraph/base_datos';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="12. Programación asíncrona con asyncio en Python: una guía práctica" href="../asyncio.html" />
+    <link rel="prev" title="10. Los agentes en LangGraph" href="inicioAgentes.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../introduccion.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">LangChain & LangGraph</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Langchain.</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../modelosLangChain.html">1. Modelos de IA con LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../runnables.html">2. Los runnables de LangChain</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../prompts.html">3. Prompts template en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../salidas_estructuradas.html">4. Salidas estructuradas en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../messages.html">5. Messages en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../agentes.html">6. Agentes en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tools.html">7. Tools (herramientas) en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../langchain_async_concurrencia.html">8. Ejecución asíncrona en LangChain</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">LangGraph.</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="init_langGraph.html">9. Primer acercamiento a LangGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inicioAgentes.html">10. Construir agentes en LangGraph</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">11. Base de datos con LangGraph</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Apéndices.</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../asyncio.html">12. Asincronia con asyncio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ollama.html">13. Ollama</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sitiosweb.html">14. Sitios web</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Índice de términos</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../genindex.html">Índice de términos</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Introducción</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comprension-de-las-bases-de-datos">11.1. Comprensión de las bases de datos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#text2sql-traduciendo-el-lenguaje-a-consultas">11.2. text2SQL: Traduciendo el lenguaje a consultas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sqlite">11.3. sqlite</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#llm-con-groq">11.4. LLM con Groq</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#utilizacion-de-sqlalchemy">11.5. Utilización de SQLAlchemy</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="introduccion">
+<h1><span class="section-number">11. </span>Introducción<a class="headerlink" href="#introduccion" title="Link to this heading">#</a></h1>
+<p id="index-0">En este apartado vamos a ver como iteractuamos con bases de datos ## Enseñar a los agentes a recuperar y actualizar datos estructurados.</p>
+<p>Los agentes obtienen un nivel de utilidad completamente nuevo al poder acceder y modificar datos privados y estructurados, como registros internos, sistemas de tickets o bases de datos de clientes.</p>
+<p>A diferencia de los datos web públicos o las API, este tipo de información reside dentro de una organización y suele almacenarse en formatos estructurados que requieren una interacción precisa.</p>
+<p>Si se le pregunta a un agente “¿Cuál es el estado del ticket n.° 9265?”, no puede buscarlo en la web, o al menos ahí será muy difícil encuentre la información solicitada. La respuesta probablemente se encuentre en una base de datos relacional o un CRM. De
+igual manera, si el agente completa una tarea, debería actualizar el sistema correspondiente; no solo confirmar el éxito en el chat, sino escribir una nueva entrada en la base de datos. Los agentes que interactúan con datos estructurados pueden realizar trabajo real, no solo generar texto.</p>
+<section id="comprension-de-las-bases-de-datos">
+<h2><span class="section-number">11.1. </span>Comprensión de las bases de datos<a class="headerlink" href="#comprension-de-las-bases-de-datos" title="Link to this heading">#</a></h2>
+<p>Existen muchos tipos de bases de datos que según la estructura de esos datos, y a grandes rasgos se pueden casificar como:</p>
+<ul class="simple">
+<li><p><strong>Las bases de datos relacionales</strong> (por ejemplo, PostgreSQL, MySQL) almacenan datos en tablas con esquemas definidos, lo que resulta perfecto para interacciones de agentes que requieren consultas estructuradas.</p></li>
+<li><p><strong>Las bases de datos NoSQL</strong> (por ejemplo, MongoDB) ofrecen flexibilidad, pero se utilizan con menos frecuencia para la integración directa de agentes.</p></li>
+<li><p><strong>Las bases de datos vectoriales</strong> (por ejemplo, Chroma, Pinecone) almacenan incrustaciones para la búsqueda semántica, lo que permite la recuperación basada en similitud, una parte clave de muchos flujos de trabajo RAG (Recuperación-Generación Aumentada).</p></li>
+</ul>
+<p>Pero en este apartado vamos a poner el enfoque en las bases de datos relacional, en las que se accede a la información mediante el lenguaje SQL</p>
+</section>
+<section id="text2sql-traduciendo-el-lenguaje-a-consultas">
+<h2><span class="section-number">11.2. </span>text2SQL: Traduciendo el lenguaje a consultas<a class="headerlink" href="#text2sql-traduciendo-el-lenguaje-a-consultas" title="Link to this heading">#</a></h2>
+<p id="index-1">Los agentes pueden traducir lenguaje natural a SQL, una práctica conocida como <code class="docutils literal notranslate"><span class="pre">text2SQL</span></code>. Por ejemplo:</p>
+<p><em>Entrada</em>: “¿Cuántos usuarios se registraron esta semana?”</p>
+<p>*<em>Producción</em>: SELECT COUNT(*) FROM users WHERE signup_date &gt;= ‘2025-07-01’</p>
+<p>Esto requiere que el agente:</p>
+<ul class="simple">
+<li><p>Comprender los esquemas de bases de datos</p></li>
+<li><p>Manejar filtros y rangos de fechas</p></li>
+<li><p>Evite consultas peligrosas (por ejemplo, accidentales DELETE)</p></li>
+</ul>
+<p>Para evitar errores críticos, los agentes del mundo real deben estar protegidos con medidas de seguridad, incluida la validación de consultas y las aprobaciones humanas.</p>
+<p>Como resumen de esta introducción, podemos decir que:</p>
+<ul class="simple">
+<li><p>La recuperación de datos estructurados permite a los agentes realizar tareas significativas dentro de sistemas privados.</p></li>
+<li><p>Los agentes pueden leer y escribir datos utilizando SQL con medidas de seguridad implementadas.</p></li>
+<li><p>Las bases de datos vectoriales permiten la búsqueda semántica, pero no son la única forma de realizar RAG.</p></li>
+<li><p>La combinación de fuentes de datos relacionales y vectoriales proporciona a los agentes capacidades de razonamiento más profundas y flexibles.</p></li>
+</ul>
+<p>Los agentes más eficaces son aquellos que pueden integrarse con sistemas estructurados, tomar decisiones informadas y producir resultados que importan en contextos del mundo real.</p>
+<p>Comenzamos este apartado viendo determinados aspectos de la base de datos sqlite para posteriormente ir avanzando en nivel de conocimientos hasta llegar a usar <code class="docutils literal notranslate"><span class="pre">sqlalchemy</span></code> que supone un nivel avanzado en el tratamiento de las bases de datos con python.</p>
+</section>
+<section id="sqlite">
+<h2><span class="section-number">11.3. </span>sqlite<a class="headerlink" href="#sqlite" title="Link to this heading">#</a></h2>
+<p id="index-2"><code class="docutils literal notranslate"><span class="pre">SQLite</span></code> es un sistema de gestión de bases de datos relacional muy ligero y ampliamente utilizado. A diferencia de otros sistemas como MySQL o PostgreSQL, SQLite no funciona como un servidor independiente, sino que está integrado directamente dentro de la aplicación que lo usa.</p>
+<p>Esto significa que no requiere instalación ni configuración compleja: toda la base de datos se guarda en un único archivo en el sistema, lo que lo hace ideal para aplicaciones móviles, programas de escritorio o proyectos pequeños.</p>
+<p>SQLite utiliza el lenguaje estándar SQL para realizar operaciones como crear tablas, insertar datos, consultarlos o modificarlos. A pesar de su simplicidad, es muy potente y cumple con gran parte del estándar SQL, incluyendo transacciones seguras.</p>
+<p>En resumen, SQLite es una opción práctica cuando necesitas una base de datos rápida, sencilla y sin complicaciones de administración.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Importamos sqlite (antes se debetener instalado db-sqlite3)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sqlite3</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Con esta esta herramienta podemos crear una base de datos en local, que por ejemplo se llame <code class="docutils literal notranslate"><span class="pre">employe.db</span></code>, de la siguiente manera:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">connection</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;employee.db&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Al ejecutar la instrucción anterior, podemos abservar que se ha creado un fichero denominado <code class="docutils literal notranslate"><span class="pre">employe.db</span></code> en la misma carpeta que donde está este fichero jupyter. Veamos a continuación la información que obtenemos con este objeto:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">connection</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;sqlite3.Connection at 0x23d0f6a96c0&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>Hasta esto momento lo que tenemos es una base de datos, pero sin tablas, a continuación creamos tres tablas que serán la base de futuros trabajos expositivos sobre esta materia.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">table_creation_query</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">CREATE TABLE IF NOT EXISTS employees (</span>
+<span class="s2">    emp_id INTEGER PRIMARY KEY,</span>
+<span class="s2">    first_name TEXT NOT NULL,</span>
+<span class="s2">    last_name TEXT NOT NULL,</span>
+<span class="s2">    email TEXT UNIQUE NOT NULL,</span>
+<span class="s2">    hire_date TEXT NOT NULL,</span>
+<span class="s2">    salary REAL NOT NULL</span>
+<span class="s2">);</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">table_creation_query2</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">CREATE TABLE IF NOT EXISTS customers (</span>
+<span class="s2">    customer_id INTEGER PRIMARY KEY AUTOINCREMENT,</span>
+<span class="s2">    first_name TEXT NOT NULL,</span>
+<span class="s2">    last_name TEXT NOT NULL,</span>
+<span class="s2">    email TEXT UNIQUE NOT NULL,</span>
+<span class="s2">    phone TEXT</span>
+<span class="s2">);</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">table_creation_query3</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">CREATE TABLE IF NOT EXISTS orders (</span>
+<span class="s2">    order_id INTEGER PRIMARY KEY AUTOINCREMENT,</span>
+<span class="s2">    customer_id INTEGER NOT NULL,</span>
+<span class="s2">    order_date TEXT NOT NULL,</span>
+<span class="s2">    amount REAL NOT NULL,</span>
+<span class="s2">    FOREIGN KEY (customer_id) REFERENCES customers (customer_id)</span>
+<span class="s2">);</span>
+
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="c1"># Creamos un objeto cursor</span>
+<span class="n">cursor</span><span class="o">=</span><span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+<span class="c1"># generamos realmente la primera tabla</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">table_creation_query</span><span class="p">)</span>
+
+<span class="c1"># generamos realmente la segunda tabla</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">table_creation_query2</span><span class="p">)</span>
+
+<span class="c1"># generamos realmente la tercera tabla</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">table_creation_query3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;sqlite3.Cursor at 0x23d0f8886c0&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>Los esquemas UML generado con estas instrucciones son los siguientes:</p>
+<p><img alt="" src="../../_images/esquemaUML.jpg" /></p>
+<p>A continuación procedemos a llenar las tablas con valores, para ello, lo primero que hacemos es crear las plantillas correspondientes:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#plantilla para employes</span>
+<span class="n">insert_query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">INSERT INTO employees (emp_id, first_name, last_name, email, hire_date, salary)</span>
+<span class="s2">VALUES (?, ?, ?, ?, ?, ?);</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="c1"># plantilla para customers</span>
+<span class="n">insert_query_customers</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">INSERT INTO customers (customer_id, first_name, last_name, email, phone)</span>
+<span class="s2">VALUES (?, ?, ?, ?, ?);</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="c1"># plantilla para orders</span>
+<span class="n">insert_query_orders</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">INSERT INTO orders (order_id, customer_id, order_date, amount)</span>
+<span class="s2">VALUES (?, ?, ?, ?);</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Ahora definimos realmente los datos que vamos a incluir</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">employee_data</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Sunny&quot;</span><span class="p">,</span> <span class="s2">&quot;Savita&quot;</span><span class="p">,</span> <span class="s2">&quot;sunny.sv@abc.com&quot;</span><span class="p">,</span> <span class="s2">&quot;2023-06-01&quot;</span><span class="p">,</span> <span class="mf">50000.00</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;Arhun&quot;</span><span class="p">,</span> <span class="s2">&quot;Meheta&quot;</span><span class="p">,</span> <span class="s2">&quot;arhun.m@gmail.com&quot;</span><span class="p">,</span> <span class="s2">&quot;2022-04-15&quot;</span><span class="p">,</span> <span class="mf">60000.00</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Alice&quot;</span><span class="p">,</span> <span class="s2">&quot;Johnson&quot;</span><span class="p">,</span> <span class="s2">&quot;alice.johnson@jpg.com&quot;</span><span class="p">,</span> <span class="s2">&quot;2021-09-30&quot;</span><span class="p">,</span> <span class="mf">55000.00</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;Bob&quot;</span><span class="p">,</span> <span class="s2">&quot;Brown&quot;</span><span class="p">,</span> <span class="s2">&quot;bob.brown@uio.com&quot;</span><span class="p">,</span> <span class="s2">&quot;2020-01-20&quot;</span><span class="p">,</span> <span class="mf">45000.00</span><span class="p">),</span>
+    <span class="p">]</span>
+
+<span class="n">customers_data</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;John&quot;</span><span class="p">,</span> <span class="s2">&quot;Doe&quot;</span><span class="p">,</span> <span class="s2">&quot;john.doe@example.com&quot;</span><span class="p">,</span> <span class="s2">&quot;1234567890&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;Jane&quot;</span><span class="p">,</span> <span class="s2">&quot;Smith&quot;</span><span class="p">,</span> <span class="s2">&quot;jane.smith@example.com&quot;</span><span class="p">,</span> <span class="s2">&quot;9876543210&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Emily&quot;</span><span class="p">,</span> <span class="s2">&quot;Davis&quot;</span><span class="p">,</span> <span class="s2">&quot;emily.davis@example.com&quot;</span><span class="p">,</span> <span class="s2">&quot;4567891230&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;Michael&quot;</span><span class="p">,</span> <span class="s2">&quot;Brown&quot;</span><span class="p">,</span> <span class="s2">&quot;michael.brown@example.com&quot;</span><span class="p">,</span> <span class="s2">&quot;7894561230&quot;</span><span class="p">),</span>
+<span class="p">]</span>
+
+<span class="n">orders_data</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;2023-12-01&quot;</span><span class="p">,</span> <span class="mf">250.75</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;2023-11-20&quot;</span><span class="p">,</span> <span class="mf">150.50</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;2023-11-25&quot;</span><span class="p">,</span> <span class="mf">300.00</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;2023-12-02&quot;</span><span class="p">,</span> <span class="mf">450.00</span><span class="p">),</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Ahora incorporamos realmente los datos:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cursor</span><span class="o">.</span><span class="n">executemany</span><span class="p">(</span><span class="n">insert_query</span><span class="p">,</span><span class="n">employee_data</span><span class="p">)</span>
+<span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cursor</span><span class="o">.</span><span class="n">executemany</span><span class="p">(</span><span class="n">insert_query_customers</span><span class="p">,</span><span class="n">customers_data</span><span class="p">)</span>
+
+<span class="n">cursor</span><span class="o">.</span><span class="n">executemany</span><span class="p">(</span><span class="n">insert_query_orders</span><span class="p">,</span><span class="n">orders_data</span><span class="p">)</span>
+
+<span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Veamos el contenido de los registros</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;select * from employees;&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1, &#39;Sunny&#39;, &#39;Savita&#39;, &#39;sunny.sv@abc.com&#39;, &#39;2023-06-01&#39;, 50000.0)
+(2, &#39;Arhun&#39;, &#39;Meheta&#39;, &#39;arhun.m@gmail.com&#39;, &#39;2022-04-15&#39;, 60000.0)
+(3, &#39;Alice&#39;, &#39;Johnson&#39;, &#39;alice.johnson@jpg.com&#39;, &#39;2021-09-30&#39;, 55000.0)
+(4, &#39;Bob&#39;, &#39;Brown&#39;, &#39;bob.brown@uio.com&#39;, &#39;2020-01-20&#39;, 45000.0)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;select first_name from employees where salary &gt; 50000.0;&quot;</span><span class="p">)</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[(&#39;Arhun&#39;,), (&#39;Alice&#39;,)]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT name FROM sqlite_master WHERE type = &#39;table&#39;;&quot;</span><span class="p">)</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[(&#39;employees&#39;,), (&#39;customers&#39;,), (&#39;sqlite_sequence&#39;,), (&#39;orders&#39;,)]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="llm-con-groq">
+<h2><span class="section-number">11.4. </span>LLM con Groq<a class="headerlink" href="#llm-con-groq" title="Link to this heading">#</a></h2>
+<p id="index-3">Hasta estos momentos, se ha utilizado una gestión de base de datos de modo tradicional. En lo que sigue, introducimos el modelo LLM con Groq, pues ademá de ser generoso con la parte gratuita, nos va a permitir desarrollar los conceptos fundamentales perseguidoes en este apartado.</p>
+<p>Comenzamos leyendo la api key que nos proporciona esta LLM (se puede obtener, previa identificación en <a class="reference external" href="https://console.groq.com/keys">https://console.groq.com/keys</a>)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+<span class="n">load_dotenv</span><span class="p">()</span>
+<span class="n">GROQ_API_KEY</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;GROQ_API_KEY&quot;</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;GROQ_API_KEY&quot;</span><span class="p">]</span><span class="o">=</span> <span class="n">GROQ_API_KEY</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_groq</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatGroq</span>
+<span class="n">llm</span><span class="o">=</span><span class="n">ChatGroq</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;meta-llama/llama-4-scout-17b-16e-instruct&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Probamos el modelo anterior</span>
+<span class="n">llm</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;Buenos días, como estás?&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">content</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;**Buenos días**\n\nMe alegra que hayas empezado el día con un saludo tan amable. Estoy aquí para ayudarte en lo que necesites, ya sea responder a tus preguntas, proporcionar información o simplemente charlar un rato.\n\n**¿Cómo puedo ayudarte hoy?**\n\n¿Tienes alguna pregunta o tema en particular que te gustaría discutir? Estoy aquí para escucharte y ayudarte en lo que pueda.&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p id="index-4">Preparamos a continuación todo lo necesario para utilizar modelos y herramientas que nos proporciona LangChain. Comenzamos con el usos de una herramienta que nos proporciona la comunidad de LangChain, como es SQLDatabase.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_community.utilities</span><span class="w"> </span><span class="kn">import</span> <span class="n">SQLDatabase</span>
+<span class="n">db</span> <span class="o">=</span> <span class="n">SQLDatabase</span><span class="o">.</span><span class="n">from_uri</span><span class="p">(</span><span class="s2">&quot;sqlite:///employee.db&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dialect:&quot;</span><span class="p">,</span> <span class="n">db</span><span class="o">.</span><span class="n">dialect</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Tablas en la base de datos:&quot;</span><span class="p">,</span> <span class="n">db</span><span class="o">.</span><span class="n">get_usable_table_names</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dialect: sqlite
+Tablas en la base de datos: [&#39;customers&#39;, &#39;employees&#39;, &#39;orders&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">query_result</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM employees ;&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Registros que hay en la BD employees: </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">query_result</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Registros que hay en la BD employees: 
+ [(1, &#39;Sunny&#39;, &#39;Savita&#39;, &#39;sunny.sv@abc.com&#39;, &#39;2023-06-01&#39;, 50000.0), (2, &#39;Arhun&#39;, &#39;Meheta&#39;, &#39;arhun.m@gmail.com&#39;, &#39;2022-04-15&#39;, 60000.0), (3, &#39;Alice&#39;, &#39;Johnson&#39;, &#39;alice.johnson@jpg.com&#39;, &#39;2021-09-30&#39;, 55000.0), (4, &#39;Bob&#39;, &#39;Brown&#39;, &#39;bob.brown@uio.com&#39;, &#39;2020-01-20&#39;, 45000.0)]
+</pre></div>
+</div>
+</div>
+</div>
+<p id="index-5">Utilizar este tipo de herramientas nos proporciona la ventaja de que facilitan una serie de herramientas (Tools) que nos facilitan mucho el trabajo. En este caso concreto vamos a ver las herramientas que la comunidad de LangChain nos ofrece para el trabajo con bases de datos (Ver el siguiente enlace: <a class="reference external" href="https://reference.langchain.com/python/langchain-community/agent_toolkits/sql/toolkit/SQLDatabaseToolkit">https://reference.langchain.com/python/langchain-community/agent_toolkits/sql/toolkit/SQLDatabaseToolkit</a>).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_community.agent_toolkits</span><span class="w"> </span><span class="kn">import</span> <span class="n">SQLDatabaseToolkit</span>
+
+<span class="n">toolkit</span><span class="o">=</span><span class="n">SQLDatabaseToolkit</span><span class="p">(</span><span class="n">db</span><span class="o">=</span><span class="n">db</span><span class="p">,</span><span class="n">llm</span><span class="o">=</span><span class="n">llm</span><span class="p">)</span>
+<span class="n">tools</span><span class="o">=</span><span class="n">toolkit</span><span class="o">.</span><span class="n">get_tools</span><span class="p">()</span>
+<span class="n">tools</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[QuerySQLDatabaseTool(description=&quot;Input to this tool is a detailed and correct SQL query, output is a result from the database. If the query is not correct, an error message will be returned. If an error is returned, rewrite the query, check the query, and try again. If you encounter an issue with Unknown column &#39;xxxx&#39; in &#39;field list&#39;, use sql_db_schema to query the correct table fields.&quot;, db=&lt;langchain_community.utilities.sql_database.SQLDatabase object at 0x0000023D10BB45C0&gt;),
+ InfoSQLDatabaseTool(description=&#39;Input to this tool is a comma-separated list of tables, output is the schema and sample rows for those tables. Be sure that the tables actually exist by calling sql_db_list_tables first! Example Input: table1, table2, table3&#39;, db=&lt;langchain_community.utilities.sql_database.SQLDatabase object at 0x0000023D10BB45C0&gt;),
+ ListSQLDatabaseTool(db=&lt;langchain_community.utilities.sql_database.SQLDatabase object at 0x0000023D10BB45C0&gt;),
+ QuerySQLCheckerTool(description=&#39;Use this tool to double check if your query is correct before executing it. Always use this tool before executing a query with sql_db_query!&#39;, db=&lt;langchain_community.utilities.sql_database.SQLDatabase object at 0x0000023D10BB45C0&gt;, llm=ChatGroq(output_version=None, profile={&#39;max_input_tokens&#39;: 131072, &#39;max_output_tokens&#39;: 8192, &#39;image_inputs&#39;: True, &#39;audio_inputs&#39;: False, &#39;video_inputs&#39;: False, &#39;image_outputs&#39;: False, &#39;audio_outputs&#39;: False, &#39;video_outputs&#39;: False, &#39;reasoning_output&#39;: False, &#39;tool_calling&#39;: True}, client=&lt;groq.resources.chat.completions.Completions object at 0x0000023D10BB65D0&gt;, async_client=&lt;groq.resources.chat.completions.AsyncCompletions object at 0x0000023D10BEBE60&gt;, model_name=&#39;meta-llama/llama-4-scout-17b-16e-instruct&#39;, model_kwargs={}, groq_api_key=SecretStr(&#39;**********&#39;), groq_api_base=None, groq_proxy=None), llm_chain=LLMChain(verbose=False, prompt=PromptTemplate(input_variables=[&#39;dialect&#39;, &#39;query&#39;], input_types={}, partial_variables={}, template=&#39;\n{query}\nDouble check the {dialect} query above for common mistakes, including:\n- Using NOT IN with NULL values\n- Using UNION when UNION ALL should have been used\n- Using BETWEEN for exclusive ranges\n- Data type mismatch in predicates\n- Properly quoting identifiers\n- Using the correct number of arguments for functions\n- Casting to the correct data type\n- Using the proper columns for joins\n\nIf there are any of the above mistakes, rewrite the query. If there are no mistakes, just reproduce the original query.\n\nOutput the final SQL query only.\n\nSQL Query: &#39;), llm=ChatGroq(output_version=None, profile={&#39;max_input_tokens&#39;: 131072, &#39;max_output_tokens&#39;: 8192, &#39;image_inputs&#39;: True, &#39;audio_inputs&#39;: False, &#39;video_inputs&#39;: False, &#39;image_outputs&#39;: False, &#39;audio_outputs&#39;: False, &#39;video_outputs&#39;: False, &#39;reasoning_output&#39;: False, &#39;tool_calling&#39;: True}, client=&lt;groq.resources.chat.completions.Completions object at 0x0000023D10BB65D0&gt;, async_client=&lt;groq.resources.chat.completions.AsyncCompletions object at 0x0000023D10BEBE60&gt;, model_name=&#39;meta-llama/llama-4-scout-17b-16e-instruct&#39;, model_kwargs={}, groq_api_key=SecretStr(&#39;**********&#39;), groq_api_base=None, groq_proxy=None), output_parser=StrOutputParser(), llm_kwargs={}))]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">tool</span> <span class="ow">in</span> <span class="n">tools</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">tool</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>sql_db_query
+sql_db_schema
+sql_db_list_tables
+sql_db_query_checker
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">list_tables_tool</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">tool</span> <span class="k">for</span> <span class="n">tool</span> <span class="ow">in</span> <span class="n">tools</span> <span class="k">if</span> <span class="n">tool</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;sql_db_list_tables&quot;</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+<span class="n">list_tables_tool</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ListSQLDatabaseTool(db=&lt;langchain_community.utilities.sql_database.SQLDatabase object at 0x0000023D10BB45C0&gt;)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">get_schema_tool</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">tool</span> <span class="k">for</span> <span class="n">tool</span> <span class="ow">in</span> <span class="n">tools</span> <span class="k">if</span> <span class="n">tool</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;sql_db_schema&quot;</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+<span class="n">get_schema_tool</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>InfoSQLDatabaseTool(description=&#39;Input to this tool is a comma-separated list of tables, output is the schema and sample rows for those tables. Be sure that the tables actually exist by calling sql_db_list_tables first! Example Input: table1, table2, table3&#39;, db=&lt;langchain_community.utilities.sql_database.SQLDatabase object at 0x0000023D10BB45C0&gt;)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Con los objetos creados de esta manera, podemos obtener, por ejemplo,  una lista de tablas existentes en la base de datos o el esquema de una determinada tabla de la base de datos</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">list_tables_tool</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>customers, employees, orders
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">get_schema_tool</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;employees&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CREATE TABLE employees (
+	emp_id INTEGER, 
+	first_name TEXT NOT NULL, 
+	last_name TEXT NOT NULL, 
+	email TEXT NOT NULL, 
+	hire_date TEXT NOT NULL, 
+	salary REAL NOT NULL, 
+	PRIMARY KEY (emp_id), 
+	UNIQUE (email)
+)
+
+/*
+3 rows from employees table:
+emp_id	first_name	last_name	email	hire_date	salary
+1	Sunny	Savita	sunny.sv@abc.com	2023-06-01	50000.0
+2	Arhun	Meheta	arhun.m@gmail.com	2022-04-15	60000.0
+3	Alice	Johnson	alice.johnson@jpg.com	2021-09-30	55000.0
+*/
+</pre></div>
+</div>
+</div>
+</div>
+<p>El esquema que seguiremos en esta exposición es el siguiente:</p>
+<p><img alt="" src="../../_images/esquemaTool.png" /></p>
+<p>Con todo este potencial que nos ofrecen las Tools mostradas anteriormente, procedemos a crear una Tool personalizada que nos puede servir bien para desarrollos posteriores</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">db_query_tool</span><span class="p">(</span><span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Execute a SQL query against the database and return the result.</span>
+<span class="sd">    If the query is invalid or returns no result, an error message will be returned.</span>
+<span class="sd">    In case of an error, the user is advised to rewrite the query and try again.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">run_no_throw</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;Error: Query fallado. Escribe la query de nuevo e inténtalo de nuevo.&quot;</span>
+    <span class="k">return</span> <span class="n">result</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Probemos la Tool o herramienta anterior para ver como funciona</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">db_query_tool</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM Employees LIMIT 5;&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[(1, &#39;Sunny&#39;, &#39;Savita&#39;, &#39;sunny.sv@abc.com&#39;, &#39;2023-06-01&#39;, 50000.0), (2, &#39;Arhun&#39;, &#39;Meheta&#39;, &#39;arhun.m@gmail.com&#39;, &#39;2022-04-15&#39;, 60000.0), (3, &#39;Alice&#39;, &#39;Johnson&#39;, &#39;alice.johnson@jpg.com&#39;, &#39;2021-09-30&#39;, 55000.0), (4, &#39;Bob&#39;, &#39;Brown&#39;, &#39;bob.brown@uio.com&#39;, &#39;2020-01-20&#39;, 45000.0)]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Creamos a continuación una clase que nos va a servir para obtener una respuesta estructurada, es decir una respuesta con un formato que es el que nosotros queremos (<a class="reference internal" href="../salidas_estructuradas.html#templates"><span class="std std-ref">ver este apartado</span></a>). Con esto vamos a asegurar que el resultado final del LLM es una cadena de tipo string.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">SubmitFinalAnswer</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Submit the final answer to the user based on the query results.&quot;&quot;&quot;</span>
+    <span class="n">final_answer</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The final answer to the user&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>También hay que definir el <a class="reference internal" href="inicioAgentes.html#estado"><span class="std std-ref">estado del agente</span></a> que lo que hace es mantener los mensajes que fluyen a lo largo de todo el trabajo del agente. Lo hacemos a continuación</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypedDict</span><span class="p">,</span> <span class="n">Annotated</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnyMessage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.graph.message</span><span class="w"> </span><span class="kn">import</span> <span class="n">add_messages</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">State</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="n">messages</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">AnyMessage</span><span class="p">],</span> <span class="n">add_messages</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>A continuación voy a definir el denominado systemMessage</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">rich</span>
+
+<span class="n">query_check_system</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;You are a SQL expert with a strong attention to detail.</span>
+<span class="s2">Double check the SQLite query for common mistakes, including:</span>
+<span class="s2">- Using NOT IN with NULL values</span>
+<span class="s2">- Using UNION when UNION ALL should have been used</span>
+<span class="s2">- Using BETWEEN for exclusive ranges</span>
+<span class="s2">- Data type mismatch in predicates</span>
+<span class="s2">- Properly quoting identifiers</span>
+<span class="s2">- Using the correct number of arguments for functions</span>
+<span class="s2">- Casting to the correct data type</span>
+<span class="s2">- Using the proper columns for joins</span>
+
+<span class="s2">If there are any of the above mistakes, rewrite the query. If there are no mistakes, just reproduce the original query.</span>
+
+<span class="s2">You will call the appropriate tool to execute the query after running this check.&quot;&quot;&quot;</span>
+
+<span class="n">query_check_prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">([(</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="n">query_check_system</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;placeholder&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{messages}</span><span class="s2">&quot;</span><span class="p">)])</span>
+
+<span class="n">query_check</span> <span class="o">=</span> <span class="n">query_check_prompt</span> <span class="o">|</span> <span class="n">llm</span><span class="o">.</span><span class="n">bind_tools</span><span class="p">([</span><span class="n">db_query_tool</span><span class="p">])</span>
+
+<span class="n">rich</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">query_check</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;SELECT * FROM Employees LIMIT 5;&quot;</span><span class="p">)]}))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #800080; text-decoration-color: #800080; font-weight: bold">AIMessage</span><span style="font-weight: bold">(</span>
+    <span style="color: #808000; text-decoration-color: #808000">content</span>=<span style="color: #008000; text-decoration-color: #008000">''</span>,
+    <span style="color: #808000; text-decoration-color: #808000">additional_kwargs</span>=<span style="font-weight: bold">{</span>
+        <span style="color: #008000; text-decoration-color: #008000">'tool_calls'</span>: <span style="font-weight: bold">[</span>
+            <span style="font-weight: bold">{</span>
+                <span style="color: #008000; text-decoration-color: #008000">'id'</span>: <span style="color: #008000; text-decoration-color: #008000">'6t6cpk8hy'</span>,
+                <span style="color: #008000; text-decoration-color: #008000">'function'</span>: <span style="font-weight: bold">{</span>
+                    <span style="color: #008000; text-decoration-color: #008000">'arguments'</span>: <span style="color: #008000; text-decoration-color: #008000">'{"query":"SELECT * FROM Employees LIMIT 5;"}'</span>,
+                    <span style="color: #008000; text-decoration-color: #008000">'name'</span>: <span style="color: #008000; text-decoration-color: #008000">'db_query_tool'</span>
+                <span style="font-weight: bold">}</span>,
+                <span style="color: #008000; text-decoration-color: #008000">'type'</span>: <span style="color: #008000; text-decoration-color: #008000">'function'</span>
+            <span style="font-weight: bold">}</span>
+        <span style="font-weight: bold">]</span>
+    <span style="font-weight: bold">}</span>,
+    <span style="color: #808000; text-decoration-color: #808000">response_metadata</span>=<span style="font-weight: bold">{</span>
+        <span style="color: #008000; text-decoration-color: #008000">'token_usage'</span>: <span style="font-weight: bold">{</span>
+            <span style="color: #008000; text-decoration-color: #008000">'completion_tokens'</span>: <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">36</span>,
+            <span style="color: #008000; text-decoration-color: #008000">'prompt_tokens'</span>: <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">884</span>,
+            <span style="color: #008000; text-decoration-color: #008000">'total_tokens'</span>: <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">920</span>,
+            <span style="color: #008000; text-decoration-color: #008000">'completion_time'</span>: <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">0.081354721</span>,
+            <span style="color: #008000; text-decoration-color: #008000">'completion_tokens_details'</span>: <span style="color: #800080; text-decoration-color: #800080; font-style: italic">None</span>,
+            <span style="color: #008000; text-decoration-color: #008000">'prompt_time'</span>: <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">0.039182011</span>,
+            <span style="color: #008000; text-decoration-color: #008000">'prompt_tokens_details'</span>: <span style="color: #800080; text-decoration-color: #800080; font-style: italic">None</span>,
+            <span style="color: #008000; text-decoration-color: #008000">'queue_time'</span>: <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">0.593818716</span>,
+            <span style="color: #008000; text-decoration-color: #008000">'total_time'</span>: <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">0.120536732</span>
+        <span style="font-weight: bold">}</span>,
+        <span style="color: #008000; text-decoration-color: #008000">'model_name'</span>: <span style="color: #008000; text-decoration-color: #008000">'meta-llama/llama-4-scout-17b-16e-instruct'</span>,
+        <span style="color: #008000; text-decoration-color: #008000">'system_fingerprint'</span>: <span style="color: #008000; text-decoration-color: #008000">'fp_37da608fc1'</span>,
+        <span style="color: #008000; text-decoration-color: #008000">'service_tier'</span>: <span style="color: #008000; text-decoration-color: #008000">'on_demand'</span>,
+        <span style="color: #008000; text-decoration-color: #008000">'finish_reason'</span>: <span style="color: #008000; text-decoration-color: #008000">'tool_calls'</span>,
+        <span style="color: #008000; text-decoration-color: #008000">'logprobs'</span>: <span style="color: #800080; text-decoration-color: #800080; font-style: italic">None</span>,
+        <span style="color: #008000; text-decoration-color: #008000">'model_provider'</span>: <span style="color: #008000; text-decoration-color: #008000">'groq'</span>
+    <span style="font-weight: bold">}</span>,
+    <span style="color: #808000; text-decoration-color: #808000">id</span>=<span style="color: #008000; text-decoration-color: #008000">'lc_run--019dfe21-66be-7bb3-a674-fb46064f5a00-0'</span>,
+    <span style="color: #808000; text-decoration-color: #808000">tool_calls</span>=<span style="font-weight: bold">[</span>
+        <span style="font-weight: bold">{</span>
+            <span style="color: #008000; text-decoration-color: #008000">'name'</span>: <span style="color: #008000; text-decoration-color: #008000">'db_query_tool'</span>,
+            <span style="color: #008000; text-decoration-color: #008000">'args'</span>: <span style="font-weight: bold">{</span><span style="color: #008000; text-decoration-color: #008000">'query'</span>: <span style="color: #008000; text-decoration-color: #008000">'SELECT * FROM Employees LIMIT 5;'</span><span style="font-weight: bold">}</span>,
+            <span style="color: #008000; text-decoration-color: #008000">'id'</span>: <span style="color: #008000; text-decoration-color: #008000">'6t6cpk8hy'</span>,
+            <span style="color: #008000; text-decoration-color: #008000">'type'</span>: <span style="color: #008000; text-decoration-color: #008000">'tool_call'</span>
+        <span style="font-weight: bold">}</span>
+    <span style="font-weight: bold">]</span>,
+    <span style="color: #808000; text-decoration-color: #808000">invalid_tool_calls</span>=<span style="font-weight: bold">[]</span>,
+    <span style="color: #808000; text-decoration-color: #808000">usage_metadata</span>=<span style="font-weight: bold">{</span><span style="color: #008000; text-decoration-color: #008000">'input_tokens'</span>: <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">884</span>, <span style="color: #008000; text-decoration-color: #008000">'output_tokens'</span>: <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">36</span>, <span style="color: #008000; text-decoration-color: #008000">'total_tokens'</span>: <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">920</span><span style="font-weight: bold">}</span>
+<span style="font-weight: bold">)</span>
+</pre>
+</div></div>
+</div>
+<p>Como puede verse en la salida anterior, realmente se está llamando a la Tool creada previamente.</p>
+<p>Veamos otro ejemplo muy parecido al anterior, pero en lugar de poner * en la consulta pongo +. Observar en la salida que el parámetro que se pasa a la Tool de consulta a la base de datos es correcto y ha cambiado el signo + por el signo *.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rich</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">query_check</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;SELECT + FROM Employees LIMIT 5;&quot;</span><span class="p">)]}))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #800080; text-decoration-color: #800080; font-weight: bold">AIMessage</span><span style="font-weight: bold">(</span>
+    <span style="color: #808000; text-decoration-color: #808000">content</span>=<span style="color: #008000; text-decoration-color: #008000">"The provided SQL query seems to have a syntax error. The SELECT statement is missing a column or * to </span>
+<span style="color: #008000; text-decoration-color: #008000">specify what columns to select.\n\nHere's a rewritten query:\n\n```sql\nSELECT * FROM Employees LIMIT </span>
+<span style="color: #008000; text-decoration-color: #008000">5;\n```\n\nLet's execute the corrected query:\n\n"</span>,
+    <span style="color: #808000; text-decoration-color: #808000">additional_kwargs</span>=<span style="font-weight: bold">{</span>
+        <span style="color: #008000; text-decoration-color: #008000">'tool_calls'</span>: <span style="font-weight: bold">[</span>
+            <span style="font-weight: bold">{</span>
+                <span style="color: #008000; text-decoration-color: #008000">'id'</span>: <span style="color: #008000; text-decoration-color: #008000">'cwhvhj1sr'</span>,
+                <span style="color: #008000; text-decoration-color: #008000">'function'</span>: <span style="font-weight: bold">{</span>
+                    <span style="color: #008000; text-decoration-color: #008000">'arguments'</span>: <span style="color: #008000; text-decoration-color: #008000">'{"query":"SELECT * FROM Employees LIMIT 5;"}'</span>,
+                    <span style="color: #008000; text-decoration-color: #008000">'name'</span>: <span style="color: #008000; text-decoration-color: #008000">'db_query_tool'</span>
+                <span style="font-weight: bold">}</span>,
+                <span style="color: #008000; text-decoration-color: #008000">'type'</span>: <span style="color: #008000; text-decoration-color: #008000">'function'</span>
+            <span style="font-weight: bold">}</span>
+        <span style="font-weight: bold">]</span>
+    <span style="font-weight: bold">}</span>,
+    <span style="color: #808000; text-decoration-color: #808000">response_metadata</span>=<span style="font-weight: bold">{</span>
+        <span style="color: #008000; text-decoration-color: #008000">'token_usage'</span>: <span style="font-weight: bold">{</span>
+            <span style="color: #008000; text-decoration-color: #008000">'completion_tokens'</span>: <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">86</span>,
+            <span style="color: #008000; text-decoration-color: #008000">'prompt_tokens'</span>: <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">884</span>,
+            <span style="color: #008000; text-decoration-color: #008000">'total_tokens'</span>: <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">970</span>,
+            <span style="color: #008000; text-decoration-color: #008000">'completion_time'</span>: <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">0.194753462</span>,
+            <span style="color: #008000; text-decoration-color: #008000">'completion_tokens_details'</span>: <span style="color: #800080; text-decoration-color: #800080; font-style: italic">None</span>,
+            <span style="color: #008000; text-decoration-color: #008000">'prompt_time'</span>: <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">0.044126381</span>,
+            <span style="color: #008000; text-decoration-color: #008000">'prompt_tokens_details'</span>: <span style="color: #800080; text-decoration-color: #800080; font-style: italic">None</span>,
+            <span style="color: #008000; text-decoration-color: #008000">'queue_time'</span>: <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">0.500836991</span>,
+            <span style="color: #008000; text-decoration-color: #008000">'total_time'</span>: <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">0.238879843</span>
+        <span style="font-weight: bold">}</span>,
+        <span style="color: #008000; text-decoration-color: #008000">'model_name'</span>: <span style="color: #008000; text-decoration-color: #008000">'meta-llama/llama-4-scout-17b-16e-instruct'</span>,
+        <span style="color: #008000; text-decoration-color: #008000">'system_fingerprint'</span>: <span style="color: #008000; text-decoration-color: #008000">'fp_2f97044c6d'</span>,
+        <span style="color: #008000; text-decoration-color: #008000">'service_tier'</span>: <span style="color: #008000; text-decoration-color: #008000">'on_demand'</span>,
+        <span style="color: #008000; text-decoration-color: #008000">'finish_reason'</span>: <span style="color: #008000; text-decoration-color: #008000">'tool_calls'</span>,
+        <span style="color: #008000; text-decoration-color: #008000">'logprobs'</span>: <span style="color: #800080; text-decoration-color: #800080; font-style: italic">None</span>,
+        <span style="color: #008000; text-decoration-color: #008000">'model_provider'</span>: <span style="color: #008000; text-decoration-color: #008000">'groq'</span>
+    <span style="font-weight: bold">}</span>,
+    <span style="color: #808000; text-decoration-color: #808000">id</span>=<span style="color: #008000; text-decoration-color: #008000">'lc_run--019dfe4b-c014-7990-b130-e9e75971bbf4-0'</span>,
+    <span style="color: #808000; text-decoration-color: #808000">tool_calls</span>=<span style="font-weight: bold">[</span>
+        <span style="font-weight: bold">{</span>
+            <span style="color: #008000; text-decoration-color: #008000">'name'</span>: <span style="color: #008000; text-decoration-color: #008000">'db_query_tool'</span>,
+            <span style="color: #008000; text-decoration-color: #008000">'args'</span>: <span style="font-weight: bold">{</span><span style="color: #008000; text-decoration-color: #008000">'query'</span>: <span style="color: #008000; text-decoration-color: #008000">'SELECT * FROM Employees LIMIT 5;'</span><span style="font-weight: bold">}</span>,
+            <span style="color: #008000; text-decoration-color: #008000">'id'</span>: <span style="color: #008000; text-decoration-color: #008000">'cwhvhj1sr'</span>,
+            <span style="color: #008000; text-decoration-color: #008000">'type'</span>: <span style="color: #008000; text-decoration-color: #008000">'tool_call'</span>
+        <span style="font-weight: bold">}</span>
+    <span style="font-weight: bold">]</span>,
+    <span style="color: #808000; text-decoration-color: #808000">invalid_tool_calls</span>=<span style="font-weight: bold">[]</span>,
+    <span style="color: #808000; text-decoration-color: #808000">usage_metadata</span>=<span style="font-weight: bold">{</span><span style="color: #008000; text-decoration-color: #008000">'input_tokens'</span>: <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">884</span>, <span style="color: #008000; text-decoration-color: #008000">'output_tokens'</span>: <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">86</span>, <span style="color: #008000; text-decoration-color: #008000">'total_tokens'</span>: <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">970</span><span style="font-weight: bold">}</span>
+<span style="font-weight: bold">)</span>
+</pre>
+</div></div>
+</div>
+<p>Vamos ahora a generar otro prompt system, de la siguiente manera</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">query_gen_system</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;You are a SQL expert with a strong attention to detail.</span>
+
+<span class="s2">Given an input question, output a syntactically correct SQLite query to run, then look at the results of the query and return the answer.</span>
+
+<span class="s2">DO NOT call any tool besides SubmitFinalAnswer to submit the final answer.</span>
+
+<span class="s2">When generating the query:</span>
+
+<span class="s2">Output the SQL query that answers the input question without a tool call.</span>
+
+<span class="s2">Unless the user specifies a specific number of examples they wish to obtain, always limit your query to at most 5 results.</span>
+<span class="s2">You can order the results by a relevant column to return the most interesting examples in the database.</span>
+<span class="s2">Never query for all the columns from a specific table, only ask for the relevant columns given the question.</span>
+
+<span class="s2">If you get an error while executing a query, rewrite the query and try again.</span>
+
+<span class="s2">If you get an empty result set, you should try to rewrite the query to get a non-empty result set.</span>
+<span class="s2">NEVER make stuff up if you don&#39;t have enough information to answer the query... just say you don&#39;t have enough information.</span>
+
+<span class="s2">If you have enough information to answer the input question, simply invoke the appropriate tool to submit the final answer to the user.</span>
+
+<span class="s2">DO NOT make any DML statements (INSERT, UPDATE, DELETE, DROP etc.) to the database. Do not return any sql query except answer.&quot;&quot;&quot;</span>
+
+
+<span class="n">query_gen_prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">([(</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="n">query_gen_system</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;placeholder&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{messages}</span><span class="s2">&quot;</span><span class="p">)])</span>
+
+<span class="n">query_gen</span> <span class="o">=</span> <span class="n">query_gen_prompt</span> <span class="o">|</span> <span class="n">llm</span><span class="o">.</span><span class="n">bind_tools</span><span class="p">([</span><span class="n">SubmitFinalAnswer</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Y a continuación procedemos a definir la funciones que son la base de los nodos que posteriormente vamos a generar</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Annotated</span><span class="p">,</span> <span class="n">Literal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">AIMessage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing_extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypedDict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">END</span><span class="p">,</span> <span class="n">StateGraph</span><span class="p">,</span> <span class="n">START</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.graph.message</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnyMessage</span><span class="p">,</span> <span class="n">add_messages</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">ToolMessage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.runnables</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunnableLambda</span><span class="p">,</span> <span class="n">RunnableWithFallbacks</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.prebuilt</span><span class="w"> </span><span class="kn">import</span> <span class="n">ToolNode</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">first_tool_call</span><span class="p">(</span><span class="n">state</span><span class="p">:</span><span class="n">State</span><span class="p">)</span><span class="o">-&gt;</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="nb">list</span><span class="p">[</span><span class="n">AIMessage</span><span class="p">]]:</span>
+    <span class="k">return</span><span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">AIMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="n">tool_calls</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;sql_db_list_tables&quot;</span><span class="p">,</span><span class="s2">&quot;args&quot;</span><span class="p">:{},</span><span class="s2">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;tool_abcd123&quot;</span><span class="p">}])]}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">handle_tool_error</span><span class="p">(</span><span class="n">state</span><span class="p">:</span><span class="n">State</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">)</span> 
+    <span class="n">tool_calls</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tool_calls</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="n">ToolMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2"> please fix your mistakes.&quot;</span><span class="p">,</span><span class="n">tool_call_id</span><span class="o">=</span><span class="n">tc</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],)</span>
+        <span class="k">for</span> <span class="n">tc</span> <span class="ow">in</span> <span class="n">tool_calls</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_tool_node_with_fallback</span><span class="p">(</span><span class="n">tools</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunnableWithFallbacks</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="n">ToolNode</span><span class="p">(</span><span class="n">tools</span><span class="p">)</span><span class="o">.</span><span class="n">with_fallbacks</span><span class="p">([</span><span class="n">RunnableLambda</span><span class="p">(</span><span class="n">handle_tool_error</span><span class="p">)],</span> <span class="n">exception_key</span><span class="o">=</span><span class="s2">&quot;error&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">query_gen_node</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">State</span><span class="p">):</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">query_gen</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+
+    <span class="c1"># Sometimes, the LLM will hallucinate and call the wrong tool. We need to catch this and return an error message.</span>
+    <span class="n">tool_messages</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">message</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">tc</span> <span class="ow">in</span> <span class="n">message</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">tc</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;SubmitFinalAnswer&quot;</span><span class="p">:</span>
+                <span class="n">tool_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">ToolMessage</span><span class="p">(</span>
+                        <span class="n">content</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Error: The wrong tool was called: </span><span class="si">{</span><span class="n">tc</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">. Please fix your mistakes. Remember to only call SubmitFinalAnswer to submit the final answer. Generated queries should be outputted WITHOUT a tool call.&quot;</span><span class="p">,</span>
+                        <span class="n">tool_call_id</span><span class="o">=</span><span class="n">tc</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">tool_messages</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">message</span><span class="p">]</span> <span class="o">+</span> <span class="n">tool_messages</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">should_continue</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">State</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Literal</span><span class="p">[</span><span class="n">END</span><span class="p">,</span> <span class="s2">&quot;correct_query&quot;</span><span class="p">,</span> <span class="s2">&quot;query_gen&quot;</span><span class="p">]:</span>
+    <span class="n">messages</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">]</span>
+    <span class="n">last_message</span> <span class="o">=</span> <span class="n">messages</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">last_message</span><span class="p">,</span> <span class="s2">&quot;tool_calls&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">END</span>
+    <span class="k">if</span> <span class="n">last_message</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Error:&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;query_gen&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;correct_query&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">model_check_query</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">State</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">AIMessage</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Use this tool to double-check if your query is correct before executing it.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">query_check</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]]})]}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Ahora ya tenemos todas las funciones definidas para poder generar el grafo</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">workflow</span> <span class="o">=</span> <span class="n">StateGraph</span><span class="p">(</span><span class="n">State</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># creamos los nodos</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;first_tool_call&quot;</span><span class="p">,</span><span class="n">first_tool_call</span><span class="p">)</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;list_tables_tool&quot;</span><span class="p">,</span> <span class="n">create_tool_node_with_fallback</span><span class="p">([</span><span class="n">list_tables_tool</span><span class="p">]))</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;get_schema_tool&quot;</span><span class="p">,</span> <span class="n">create_tool_node_with_fallback</span><span class="p">([</span><span class="n">get_schema_tool</span><span class="p">]))</span>
+<span class="n">model_get_schema</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">bind_tools</span><span class="p">([</span><span class="n">get_schema_tool</span><span class="p">])</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;model_get_schema&quot;</span><span class="p">,</span><span class="k">lambda</span> <span class="n">state</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">model_get_schema</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">])],},)</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;query_gen&quot;</span><span class="p">,</span> <span class="n">query_gen_node</span><span class="p">)</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;correct_query&quot;</span><span class="p">,</span> <span class="n">model_check_query</span><span class="p">)</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;execute_query&quot;</span><span class="p">,</span> <span class="n">create_tool_node_with_fallback</span><span class="p">([</span><span class="n">db_query_tool</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;langgraph.graph.state.StateGraph at 0x23d108f9e80&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">workflow</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">START</span><span class="p">,</span> <span class="s2">&quot;first_tool_call&quot;</span><span class="p">)</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s2">&quot;first_tool_call&quot;</span><span class="p">,</span> <span class="s2">&quot;list_tables_tool&quot;</span><span class="p">)</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s2">&quot;list_tables_tool&quot;</span><span class="p">,</span> <span class="s2">&quot;model_get_schema&quot;</span><span class="p">)</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s2">&quot;model_get_schema&quot;</span><span class="p">,</span> <span class="s2">&quot;get_schema_tool&quot;</span><span class="p">)</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s2">&quot;get_schema_tool&quot;</span><span class="p">,</span> <span class="s2">&quot;query_gen&quot;</span><span class="p">)</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_conditional_edges</span><span class="p">(</span><span class="s2">&quot;query_gen&quot;</span><span class="p">,</span><span class="n">should_continue</span><span class="p">,)</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s2">&quot;correct_query&quot;</span><span class="p">,</span> <span class="s2">&quot;execute_query&quot;</span><span class="p">)</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s2">&quot;execute_query&quot;</span><span class="p">,</span> <span class="s2">&quot;query_gen&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;langgraph.graph.state.StateGraph at 0x23d108f9e80&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">app</span> <span class="o">=</span> <span class="n">workflow</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">display</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.runnables.graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">MermaidDrawMethod</span>
+
+<span class="n">display</span><span class="p">(</span>
+    <span class="n">Image</span><span class="p">(</span>
+        <span class="n">app</span><span class="o">.</span><span class="n">get_graph</span><span class="p">()</span><span class="o">.</span><span class="n">draw_mermaid_png</span><span class="p">(</span>
+            <span class="n">draw_method</span><span class="o">=</span><span class="n">MermaidDrawMethod</span><span class="o">.</span><span class="n">API</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/004dfa889e7cd3d7bd44e7d903c93580fa828a4ef67d88d2e3371e297cf90947.png" src="../../_images/004dfa889e7cd3d7bd44e7d903c93580fa828a4ef67d88d2e3371e297cf90947.png" />
+</div>
+</div>
+<p>Probamos a continuación el agente que acabamos de crear con LagGraph</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">query</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;Tell me name of the employee who&#39;s salary is more than 30000?&quot;</span><span class="p">)]}</span>
+<span class="n">response</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+<span class="n">response</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;args&quot;</span><span class="p">][</span><span class="s2">&quot;final_answer&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;Arhun Meheta, Alice Johnson, Sunny Savita&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">query</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;Tell me about all the orders&quot;</span><span class="p">)]}</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+
+<span class="n">response</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;args&quot;</span><span class="p">][</span><span class="s2">&quot;final_answer&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;The orders are as follows: \nOrder 1: Order ID - 1, Customer ID - 1, Order Date - 2023-12-01, Total - 250.75 \nOrder 2: Order ID - 2, Customer ID - 2, Order Date - 2023-11-20, Total - 150.5 \nOrder 3: Order ID - 3, Customer ID - 3, Order Date - 2023-11-25, Total - 300.0 \nOrder 4: Order ID - 4, Customer ID - 4, Order Date - 2023-12-02, Total - 450.0&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">query</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;Show the phone numbers of customers whose last name is &#39;Smith&#39;?&quot;</span><span class="p">)]}</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+<span class="n">response</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;args&quot;</span><span class="p">][</span><span class="s2">&quot;final_answer&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&quot;SELECT phone FROM customers WHERE last_name = &#39;Smith&#39; LIMIT 5;&quot;
+</pre></div>
+</div>
+</div>
+</div>
+<p><a class="reference external" href="https://www.youtube.com/watch?v=gcRSQblTwPw&amp;amp;t=724s">https://www.youtube.com/watch?v=gcRSQblTwPw&amp;t=724s</a></p>
+<p><a class="github reference external" href="https://github.com/sunnysavita10/langgraph-end-to-end/blob/main/agent_based_rag/sql_agent_with_langgraph.ipynb">sunnysavita10/langgraph-end-to-end</a></p>
+</section>
+<section id="utilizacion-de-sqlalchemy">
+<h2><span class="section-number">11.5. </span>Utilización de SQLAlchemy<a class="headerlink" href="#utilizacion-de-sqlalchemy" title="Link to this heading">#</a></h2>
+<p id="index-6">SQLAlchemy es una librería de Python que permite interactuar con bases de datos relacionales (como SQLite, PostgreSQL, MySQL o SQL Server) de forma segura y eficiente, tanto usando SQL “nativo” como a través de un ORM (Object‑Relational Mapper).</p>
+<p>Su idea central es que puedas trabajar con tablas y filas como clases y objetos de Python, en lugar de escribir solo cadenas de SQL, lo que hace el código más limpio, mantenible y portable entre motores de base de datos.</p>
+<p>Para entender este apartado, no es necesario que el lector conozca al detalle el uso de esta librería, pero para quien esté interesado en su uso, puede consultar los siguientes enlaces:</p>
+<ul class="simple">
+<li><p><a href="https://www.sqlalchemy.org/" target="_blank">Sitio oficial de SQLAchemy</a></p></li>
+<li><p><a href="https://4geeks.com/es/lesson/todo-lo-necesario-para-empezar-usar-sqlalchemy" target="_blank">Todo lo que necesitas saber de SQLAlchemy</a></p></li>
+<li><p><a href="https://j2logo.com/python/sqlalchemy-tutorial-de-python-sqlalchemy-guia-de-inicio/"> SQLAlchemy. Tutorial de Python SQLAlchemy </a></p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./jupyters\langgraph"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="inicioAgentes.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">10. </span>Los agentes en LangGraph</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../asyncio.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">12. </span>Programación asíncrona con asyncio en Python: una guía práctica</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comprension-de-las-bases-de-datos">11.1. Comprensión de las bases de datos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#text2sql-traduciendo-el-lenguaje-a-consultas">11.2. text2SQL: Traduciendo el lenguaje a consultas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sqlite">11.3. sqlite</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#llm-con-groq">11.4. LLM con Groq</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#utilizacion-de-sqlalchemy">11.5. Utilización de SQLAlchemy</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Francisco Rodríguez
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

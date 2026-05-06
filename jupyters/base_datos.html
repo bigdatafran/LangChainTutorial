@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>10. Introducción &#8212; LangChain &amp; LangGraph</title>
+    <title>11. Introducción &#8212; LangChain &amp; LangGraph</title>
   
   
   
@@ -63,8 +63,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'jupyters/base_datos';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="11. Programación asíncrona con asyncio en Python: una guía práctica" href="asyncio.html" />
-    <link rel="prev" title="9. Introducción" href="init_langGraph.html" />
+    <link rel="next" title="12. Programación asíncrona con asyncio en Python: una guía práctica" href="asyncio.html" />
+    <link rel="prev" title="10. Los agentes en LangGraph" href="inicioAgentes.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -174,13 +174,14 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">LangGraph.</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="init_langGraph.html">9. Primer acercamiento a LangGraph</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">10. Base de datos con LangGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inicioAgentes.html">10. Construir agentes en LangGraph</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">11. Base de datos con LangGraph</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Apendices.</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Apéndices.</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="asyncio.html">11. Asincronia con asyncio</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ollama.html">12. Ollama</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sitiosweb.html">13. Sitios web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="asyncio.html">12. Asincronia con asyncio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ollama.html">13. Ollama</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sitiosweb.html">14. Sitios web</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Índice de términos</span></p>
 <ul class="nav bd-sidenav">
@@ -259,7 +260,9 @@
 <button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
 </button>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -275,6 +278,17 @@
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comprension-de-las-bases-de-datos">11.1. Comprensión de las bases de datos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#text2sql-traduciendo-el-lenguaje-a-consultas">11.2. text2SQL: Traduciendo el lenguaje a consultas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sqlite">11.3. sqlite</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#llm-con-groq">11.4. LLM con Groq</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -285,9 +299,469 @@
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="introduccion">
-<h1><span class="section-number">10. </span>Introducción<a class="headerlink" href="#introduccion" title="Link to this heading">#</a></h1>
+<h1><span class="section-number">11. </span>Introducción<a class="headerlink" href="#introduccion" title="Link to this heading">#</a></h1>
+<p id="index-0">En este apartado vamos a ver como iteractuamos con bases de datos ## Enseñar a los agentes a recuperar y actualizar datos estructurados.</p>
+<p>Los agentes obtienen un nivel de utilidad completamente nuevo al poder acceder y modificar datos privados y estructurados, como registros internos, sistemas de tickets o bases de datos de clientes.</p>
+<p>A diferencia de los datos web públicos o las API, este tipo de información reside dentro de una organización y suele almacenarse en formatos estructurados que requieren una interacción precisa.</p>
+<p>Si se le pregunta a un agente “¿Cuál es el estado del ticket n.° 9265?”, no puede buscarlo en la web, o al menos ahí será muy difícil encuentre la información solicitada. La respuesta probablemente se encuentre en una base de datos relacional o un CRM. De
+igual manera, si el agente completa una tarea, debería actualizar el sistema correspondiente; no solo confirmar el éxito en el chat, sino escribir una nueva entrada en la base de datos. Los agentes que interactúan con datos estructurados pueden realizar trabajo real, no solo generar texto.</p>
+<section id="comprension-de-las-bases-de-datos">
+<h2><span class="section-number">11.1. </span>Comprensión de las bases de datos<a class="headerlink" href="#comprension-de-las-bases-de-datos" title="Link to this heading">#</a></h2>
+<p>Existen muchos tipos de bases de datos que según la estructura de esos datos, y a grandes rasgos se pueden casificar como:</p>
+<ul class="simple">
+<li><p><strong>Las bases de datos relacionales</strong> (por ejemplo, PostgreSQL, MySQL) almacenan datos en tablas con esquemas definidos, lo que resulta perfecto para interacciones de agentes que requieren consultas estructuradas.</p></li>
+<li><p><strong>Las bases de datos NoSQL</strong> (por ejemplo, MongoDB) ofrecen flexibilidad, pero se utilizan con menos frecuencia para la integración directa de agentes.</p></li>
+<li><p><strong>Las bases de datos vectoriales</strong> (por ejemplo, Chroma, Pinecone) almacenan incrustaciones para la búsqueda semántica, lo que permite la recuperación basada en similitud, una parte clave de muchos flujos de trabajo RAG (Recuperación-Generación Aumentada).</p></li>
+</ul>
+<p>Pero en este apartado vamos a poner el enfoque en las bases de datos relacional, en las que se accede a la información mediante el lenguaje SQL</p>
+</section>
+<section id="text2sql-traduciendo-el-lenguaje-a-consultas">
+<h2><span class="section-number">11.2. </span>text2SQL: Traduciendo el lenguaje a consultas<a class="headerlink" href="#text2sql-traduciendo-el-lenguaje-a-consultas" title="Link to this heading">#</a></h2>
+<p id="index-1">Los agentes pueden traducir lenguaje natural a SQL, una práctica conocida como <code class="docutils literal notranslate"><span class="pre">text2SQL</span></code>. Por ejemplo:</p>
+<p><em>Entrada</em>: “¿Cuántos usuarios se registraron esta semana?”</p>
+<p>*<em>Producción</em>: SELECT COUNT(*) FROM users WHERE signup_date &gt;= ‘2025-07-01’</p>
+<p>Esto requiere que el agente:</p>
+<ul class="simple">
+<li><p>Comprender los esquemas de bases de datos</p></li>
+<li><p>Manejar filtros y rangos de fechas</p></li>
+<li><p>Evite consultas peligrosas (por ejemplo, accidentales DELETE)</p></li>
+</ul>
+<p>Para evitar errores críticos, los agentes del mundo real deben estar protegidos con medidas de seguridad, incluida la validación de consultas y las aprobaciones humanas.</p>
+<p>Como resumen de esta introducción, podemos decir que:</p>
+<ul class="simple">
+<li><p>La recuperación de datos estructurados permite a los agentes realizar tareas significativas dentro de sistemas privados.</p></li>
+<li><p>Los agentes pueden leer y escribir datos utilizando SQL con medidas de seguridad implementadas.</p></li>
+<li><p>Las bases de datos vectoriales permiten la búsqueda semántica, pero no son la única forma de realizar RAG.</p></li>
+<li><p>La combinación de fuentes de datos relacionales y vectoriales proporciona a los agentes capacidades de razonamiento más profundas y flexibles.</p></li>
+</ul>
+<p>Los agentes más eficaces son aquellos que pueden integrarse con sistemas estructurados, tomar decisiones informadas y producir resultados que importan en contextos del mundo real.</p>
+<p>Comenzamos este apartado viendo determinados aspectos de la base de datos sqlite para posteriormente ir avanzando en nivel de conocimientos hasta llegar a usar <code class="docutils literal notranslate"><span class="pre">sqlalchemy</span></code> que supone un nivel avanzado en el tratamiento de las bases de datos con python.</p>
+</section>
+<section id="sqlite">
+<h2><span class="section-number">11.3. </span>sqlite<a class="headerlink" href="#sqlite" title="Link to this heading">#</a></h2>
+<p id="index-2"><code class="docutils literal notranslate"><span class="pre">SQLite</span></code> es un sistema de gestión de bases de datos relacional muy ligero y ampliamente utilizado. A diferencia de otros sistemas como MySQL o PostgreSQL, SQLite no funciona como un servidor independiente, sino que está integrado directamente dentro de la aplicación que lo usa.</p>
+<p>Esto significa que no requiere instalación ni configuración compleja: toda la base de datos se guarda en un único archivo en el sistema, lo que lo hace ideal para aplicaciones móviles, programas de escritorio o proyectos pequeños.</p>
+<p>SQLite utiliza el lenguaje estándar SQL para realizar operaciones como crear tablas, insertar datos, consultarlos o modificarlos. A pesar de su simplicidad, es muy potente y cumple con gran parte del estándar SQL, incluyendo transacciones seguras.</p>
+<p>En resumen, SQLite es una opción práctica cuando necesitas una base de datos rápida, sencilla y sin complicaciones de administración.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Importamos sqlite (antes se debetener instalado db-sqlite3)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sqlite3</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Con esta esta herramienta podemos crear una base de datos en local, que por ejemplo se llame <code class="docutils literal notranslate"><span class="pre">employe.db</span></code>, de la siguiente manera:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">connection</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;employee.db&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Al ejecutar la instrucción anterior, podemos abservar que se ha creado un fichero denominado <code class="docutils literal notranslate"><span class="pre">employe.db</span></code> en la misma carpeta que donde está este fichero jupyter. Veamos a continuación la información que obtenemos con este objeto:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">connection</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Hasta esto momento lo que tenemos es una base de datos, pero sin tablas, a continuación creamos tres tablas que serán la base de futuros trabajos expositivos sobre esta materia.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">table_creation_query</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">CREATE TABLE IF NOT EXISTS employees (</span>
+<span class="s2">    emp_id INTEGER PRIMARY KEY,</span>
+<span class="s2">    first_name TEXT NOT NULL,</span>
+<span class="s2">    last_name TEXT NOT NULL,</span>
+<span class="s2">    email TEXT UNIQUE NOT NULL,</span>
+<span class="s2">    hire_date TEXT NOT NULL,</span>
+<span class="s2">    salary REAL NOT NULL</span>
+<span class="s2">);</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">table_creation_query2</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">CREATE TABLE IF NOT EXISTS customers (</span>
+<span class="s2">    customer_id INTEGER PRIMARY KEY AUTOINCREMENT,</span>
+<span class="s2">    first_name TEXT NOT NULL,</span>
+<span class="s2">    last_name TEXT NOT NULL,</span>
+<span class="s2">    email TEXT UNIQUE NOT NULL,</span>
+<span class="s2">    phone TEXT</span>
+<span class="s2">);</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">table_creation_query3</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">CREATE TABLE IF NOT EXISTS orders (</span>
+<span class="s2">    order_id INTEGER PRIMARY KEY AUTOINCREMENT,</span>
+<span class="s2">    customer_id INTEGER NOT NULL,</span>
+<span class="s2">    order_date TEXT NOT NULL,</span>
+<span class="s2">    amount REAL NOT NULL,</span>
+<span class="s2">    FOREIGN KEY (customer_id) REFERENCES customers (customer_id)</span>
+<span class="s2">);</span>
+
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="c1"># Creamos un objeto cursor</span>
+<span class="n">cursor</span><span class="o">=</span><span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+<span class="c1"># generamos realmente la primera tabla</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">table_creation_query</span><span class="p">)</span>
+
+<span class="c1"># generamos realmente la segunda tabla</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">table_creation_query2</span><span class="p">)</span>
+
+<span class="c1"># generamos realmente la tercera tabla</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">table_creation_query3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Los esquemas UML generado con estas instrucciones son los siguientes:</p>
+<p><img alt="" src="../_images/esquemaUML.jpg" /></p>
+<p>A continuación procedemos a llenar las tablas con valores, para ello, lo primero que hacemos es crear las plantillas correspondientes:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#plantilla para employes</span>
+<span class="n">insert_query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">INSERT INTO employees (emp_id, first_name, last_name, email, hire_date, salary)</span>
+<span class="s2">VALUES (?, ?, ?, ?, ?, ?);</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="c1"># plantilla para customers</span>
+<span class="n">insert_query_customers</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">INSERT INTO customers (customer_id, first_name, last_name, email, phone)</span>
+<span class="s2">VALUES (?, ?, ?, ?, ?);</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="c1"># plantilla para orders</span>
+<span class="n">insert_query_orders</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">INSERT INTO orders (order_id, customer_id, order_date, amount)</span>
+<span class="s2">VALUES (?, ?, ?, ?);</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Ahora definimos realmente los datos que vamos a incluir</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">employee_data</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Sunny&quot;</span><span class="p">,</span> <span class="s2">&quot;Savita&quot;</span><span class="p">,</span> <span class="s2">&quot;sunny.sv@abc.com&quot;</span><span class="p">,</span> <span class="s2">&quot;2023-06-01&quot;</span><span class="p">,</span> <span class="mf">50000.00</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;Arhun&quot;</span><span class="p">,</span> <span class="s2">&quot;Meheta&quot;</span><span class="p">,</span> <span class="s2">&quot;arhun.m@gmail.com&quot;</span><span class="p">,</span> <span class="s2">&quot;2022-04-15&quot;</span><span class="p">,</span> <span class="mf">60000.00</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Alice&quot;</span><span class="p">,</span> <span class="s2">&quot;Johnson&quot;</span><span class="p">,</span> <span class="s2">&quot;alice.johnson@jpg.com&quot;</span><span class="p">,</span> <span class="s2">&quot;2021-09-30&quot;</span><span class="p">,</span> <span class="mf">55000.00</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;Bob&quot;</span><span class="p">,</span> <span class="s2">&quot;Brown&quot;</span><span class="p">,</span> <span class="s2">&quot;bob.brown@uio.com&quot;</span><span class="p">,</span> <span class="s2">&quot;2020-01-20&quot;</span><span class="p">,</span> <span class="mf">45000.00</span><span class="p">),</span>
+    <span class="p">]</span>
+
+<span class="n">customers_data</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;John&quot;</span><span class="p">,</span> <span class="s2">&quot;Doe&quot;</span><span class="p">,</span> <span class="s2">&quot;john.doe@example.com&quot;</span><span class="p">,</span> <span class="s2">&quot;1234567890&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;Jane&quot;</span><span class="p">,</span> <span class="s2">&quot;Smith&quot;</span><span class="p">,</span> <span class="s2">&quot;jane.smith@example.com&quot;</span><span class="p">,</span> <span class="s2">&quot;9876543210&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Emily&quot;</span><span class="p">,</span> <span class="s2">&quot;Davis&quot;</span><span class="p">,</span> <span class="s2">&quot;emily.davis@example.com&quot;</span><span class="p">,</span> <span class="s2">&quot;4567891230&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;Michael&quot;</span><span class="p">,</span> <span class="s2">&quot;Brown&quot;</span><span class="p">,</span> <span class="s2">&quot;michael.brown@example.com&quot;</span><span class="p">,</span> <span class="s2">&quot;7894561230&quot;</span><span class="p">),</span>
+<span class="p">]</span>
+
+<span class="n">orders_data</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;2023-12-01&quot;</span><span class="p">,</span> <span class="mf">250.75</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;2023-11-20&quot;</span><span class="p">,</span> <span class="mf">150.50</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;2023-11-25&quot;</span><span class="p">,</span> <span class="mf">300.00</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;2023-12-02&quot;</span><span class="p">,</span> <span class="mf">450.00</span><span class="p">),</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Ahora incorporamos realmente los datos:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cursor</span><span class="o">.</span><span class="n">executemany</span><span class="p">(</span><span class="n">insert_query</span><span class="p">,</span><span class="n">employee_data</span><span class="p">)</span>
+<span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cursor</span><span class="o">.</span><span class="n">executemany</span><span class="p">(</span><span class="n">insert_query_customers</span><span class="p">,</span><span class="n">customers_data</span><span class="p">)</span>
+
+<span class="n">cursor</span><span class="o">.</span><span class="n">executemany</span><span class="p">(</span><span class="n">insert_query_orders</span><span class="p">,</span><span class="n">orders_data</span><span class="p">)</span>
+
+<span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Veamos el contenido de los registros</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;select * from employees;&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1, &#39;Sunny&#39;, &#39;Savita&#39;, &#39;sunny.sv@abc.com&#39;, &#39;2023-06-01&#39;, 50000.0)
+(2, &#39;Arhun&#39;, &#39;Meheta&#39;, &#39;arhun.m@gmail.com&#39;, &#39;2022-04-15&#39;, 60000.0)
+(3, &#39;Alice&#39;, &#39;Johnson&#39;, &#39;alice.johnson@jpg.com&#39;, &#39;2021-09-30&#39;, 55000.0)
+(4, &#39;Bob&#39;, &#39;Brown&#39;, &#39;bob.brown@uio.com&#39;, &#39;2020-01-20&#39;, 45000.0)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;select first_name from employees where salary &gt; 50000.0;&quot;</span><span class="p">)</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[(&#39;Arhun&#39;,), (&#39;Alice&#39;,)]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT name FROM sqlite_master WHERE type = &#39;table&#39;;&quot;</span><span class="p">)</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[(&#39;employees&#39;,), (&#39;customers&#39;,), (&#39;sqlite_sequence&#39;,), (&#39;orders&#39;,)]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="llm-con-groq">
+<h2><span class="section-number">11.4. </span>LLM con Groq<a class="headerlink" href="#llm-con-groq" title="Link to this heading">#</a></h2>
+<p id="index-3">Hasta estos momentos, se ha utilizado una gestión de base de datos de modo tradicional. En lo que sigue, introducimos el modelo LLM con Groq, pues ademá de ser generoso con la parte gratuita, nos va a permitir desarrollar los conceptos fundamentales perseguidoes en este apartado.</p>
+<p>Comenzamos leyendo la api key que nos proporciona esta LLM (se puede obtener, previa identificación en <a class="reference external" href="https://console.groq.com/keys">https://console.groq.com/keys</a>)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+<span class="n">load_dotenv</span><span class="p">()</span>
+<span class="n">GROQ_API_KEY</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;GROQ_API_KEY&quot;</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;GROQ_API_KEY&quot;</span><span class="p">]</span><span class="o">=</span> <span class="n">GROQ_API_KEY</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_groq</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatGroq</span>
+<span class="n">llm</span><span class="o">=</span><span class="n">ChatGroq</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;meta-llama/llama-4-scout-17b-16e-instruct&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Probamos el modelo anterior</span>
+<span class="n">llm</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;Buenos días, como estás?&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">content</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;**Buenos días**\n\nEstoy muy bien, gracias por preguntar. Me alegra poder conversar contigo. ¿En qué puedo ayudarte hoy? ¿Tienes algún tema en particular que te gustaría discutir o alguna pregunta que te esté molestando? Estoy aquí para escucharte y ayudarte en lo que pueda. ¿Quieres hablar sobre algo en específico o simplemente charlar un rato?&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p id="index-4">Preparamos a continuación todo lo necesario para utilizar modelos y herramientas que nos proporciona LangChain. Comenzamos con el usos de una herramienta que nos proporciona la comunidad de LangChain, como es SQLDatabase.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_community.utilities</span><span class="w"> </span><span class="kn">import</span> <span class="n">SQLDatabase</span>
+<span class="n">db</span> <span class="o">=</span> <span class="n">SQLDatabase</span><span class="o">.</span><span class="n">from_uri</span><span class="p">(</span><span class="s2">&quot;sqlite:///employee.db&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dialect:&quot;</span><span class="p">,</span> <span class="n">db</span><span class="o">.</span><span class="n">dialect</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Tablas en la base de datos:&quot;</span><span class="p">,</span> <span class="n">db</span><span class="o">.</span><span class="n">get_usable_table_names</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dialect: sqlite
+Tablas utilizadas: [&#39;customers&#39;, &#39;employees&#39;, &#39;orders&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">query_result</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM employees ;&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Registros que hay en la BD employees: </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">query_result</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Registros que hay en la BD employees: 
+ [(1, &#39;Sunny&#39;, &#39;Savita&#39;, &#39;sunny.sv@abc.com&#39;, &#39;2023-06-01&#39;, 50000.0), (2, &#39;Arhun&#39;, &#39;Meheta&#39;, &#39;arhun.m@gmail.com&#39;, &#39;2022-04-15&#39;, 60000.0), (3, &#39;Alice&#39;, &#39;Johnson&#39;, &#39;alice.johnson@jpg.com&#39;, &#39;2021-09-30&#39;, 55000.0), (4, &#39;Bob&#39;, &#39;Brown&#39;, &#39;bob.brown@uio.com&#39;, &#39;2020-01-20&#39;, 45000.0)]
+</pre></div>
+</div>
+</div>
+</div>
+<p id="index-5">Utilizar este tipo de herramientas nos proporciona la ventaja de que facilitan una serie de herramientas (Tools) que nos facilitan mucho el trabajo. En este caso concreto vamos a ver las herramientas que la comunidad de LangChain nos ofrece para el trabajo con bases de datos (Ver el siguiente enlace: <a class="reference external" href="https://reference.langchain.com/python/langchain-community/agent_toolkits/sql/toolkit/SQLDatabaseToolkit">https://reference.langchain.com/python/langchain-community/agent_toolkits/sql/toolkit/SQLDatabaseToolkit</a>).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_community.agent_toolkits</span><span class="w"> </span><span class="kn">import</span> <span class="n">SQLDatabaseToolkit</span>
+
+<span class="n">toolkit</span><span class="o">=</span><span class="n">SQLDatabaseToolkit</span><span class="p">(</span><span class="n">db</span><span class="o">=</span><span class="n">db</span><span class="p">,</span><span class="n">llm</span><span class="o">=</span><span class="n">llm</span><span class="p">)</span>
+<span class="n">tools</span><span class="o">=</span><span class="n">toolkit</span><span class="o">.</span><span class="n">get_tools</span><span class="p">()</span>
+<span class="n">tools</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[QuerySQLDatabaseTool(description=&quot;Input to this tool is a detailed and correct SQL query, output is a result from the database. If the query is not correct, an error message will be returned. If an error is returned, rewrite the query, check the query, and try again. If you encounter an issue with Unknown column &#39;xxxx&#39; in &#39;field list&#39;, use sql_db_schema to query the correct table fields.&quot;, db=&lt;langchain_community.utilities.sql_database.SQLDatabase object at 0x00000265DE4BFFE0&gt;),
+ InfoSQLDatabaseTool(description=&#39;Input to this tool is a comma-separated list of tables, output is the schema and sample rows for those tables. Be sure that the tables actually exist by calling sql_db_list_tables first! Example Input: table1, table2, table3&#39;, db=&lt;langchain_community.utilities.sql_database.SQLDatabase object at 0x00000265DE4BFFE0&gt;),
+ ListSQLDatabaseTool(db=&lt;langchain_community.utilities.sql_database.SQLDatabase object at 0x00000265DE4BFFE0&gt;),
+ QuerySQLCheckerTool(description=&#39;Use this tool to double check if your query is correct before executing it. Always use this tool before executing a query with sql_db_query!&#39;, db=&lt;langchain_community.utilities.sql_database.SQLDatabase object at 0x00000265DE4BFFE0&gt;, llm=ChatGroq(output_version=None, profile={&#39;max_input_tokens&#39;: 131072, &#39;max_output_tokens&#39;: 8192, &#39;image_inputs&#39;: True, &#39;audio_inputs&#39;: False, &#39;video_inputs&#39;: False, &#39;image_outputs&#39;: False, &#39;audio_outputs&#39;: False, &#39;video_outputs&#39;: False, &#39;reasoning_output&#39;: False, &#39;tool_calling&#39;: True}, client=&lt;groq.resources.chat.completions.Completions object at 0x00000265DDF2E870&gt;, async_client=&lt;groq.resources.chat.completions.AsyncCompletions object at 0x00000265DDF2D490&gt;, model_name=&#39;meta-llama/llama-4-scout-17b-16e-instruct&#39;, model_kwargs={}, groq_api_key=SecretStr(&#39;**********&#39;), groq_api_base=None, groq_proxy=None), llm_chain=LLMChain(verbose=False, prompt=PromptTemplate(input_variables=[&#39;dialect&#39;, &#39;query&#39;], input_types={}, partial_variables={}, template=&#39;\n{query}\nDouble check the {dialect} query above for common mistakes, including:\n- Using NOT IN with NULL values\n- Using UNION when UNION ALL should have been used\n- Using BETWEEN for exclusive ranges\n- Data type mismatch in predicates\n- Properly quoting identifiers\n- Using the correct number of arguments for functions\n- Casting to the correct data type\n- Using the proper columns for joins\n\nIf there are any of the above mistakes, rewrite the query. If there are no mistakes, just reproduce the original query.\n\nOutput the final SQL query only.\n\nSQL Query: &#39;), llm=ChatGroq(output_version=None, profile={&#39;max_input_tokens&#39;: 131072, &#39;max_output_tokens&#39;: 8192, &#39;image_inputs&#39;: True, &#39;audio_inputs&#39;: False, &#39;video_inputs&#39;: False, &#39;image_outputs&#39;: False, &#39;audio_outputs&#39;: False, &#39;video_outputs&#39;: False, &#39;reasoning_output&#39;: False, &#39;tool_calling&#39;: True}, client=&lt;groq.resources.chat.completions.Completions object at 0x00000265DDF2E870&gt;, async_client=&lt;groq.resources.chat.completions.AsyncCompletions object at 0x00000265DDF2D490&gt;, model_name=&#39;meta-llama/llama-4-scout-17b-16e-instruct&#39;, model_kwargs={}, groq_api_key=SecretStr(&#39;**********&#39;), groq_api_base=None, groq_proxy=None), output_parser=StrOutputParser(), llm_kwargs={}))]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">tool</span> <span class="ow">in</span> <span class="n">tools</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">tool</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>sql_db_query
+sql_db_schema
+sql_db_list_tables
+sql_db_query_checker
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">list_tables_tool</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">tool</span> <span class="k">for</span> <span class="n">tool</span> <span class="ow">in</span> <span class="n">tools</span> <span class="k">if</span> <span class="n">tool</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;sql_db_list_tables&quot;</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+<span class="n">list_tables_tool</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ListSQLDatabaseTool(db=&lt;langchain_community.utilities.sql_database.SQLDatabase object at 0x00000265DE4BFFE0&gt;)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">get_schema_tool</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">tool</span> <span class="k">for</span> <span class="n">tool</span> <span class="ow">in</span> <span class="n">tools</span> <span class="k">if</span> <span class="n">tool</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;sql_db_schema&quot;</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+<span class="n">get_schema_tool</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>InfoSQLDatabaseTool(description=&#39;Input to this tool is a comma-separated list of tables, output is the schema and sample rows for those tables. Be sure that the tables actually exist by calling sql_db_list_tables first! Example Input: table1, table2, table3&#39;, db=&lt;langchain_community.utilities.sql_database.SQLDatabase object at 0x00000265DE4BFFE0&gt;)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Con los objetos creados de esta manera, podemos obtener, por ejemplo,  una lista de tablas existentes en la base de datos o el esquema de una determinada tabla de la base de datos</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">list_tables_tool</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>customers, employees, orders
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">get_schema_tool</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;employees&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CREATE TABLE employees (
+	emp_id INTEGER, 
+	first_name TEXT NOT NULL, 
+	last_name TEXT NOT NULL, 
+	email TEXT NOT NULL, 
+	hire_date TEXT NOT NULL, 
+	salary REAL NOT NULL, 
+	PRIMARY KEY (emp_id), 
+	UNIQUE (email)
+)
+
+/*
+3 rows from employees table:
+emp_id	first_name	last_name	email	hire_date	salary
+1	Sunny	Savita	sunny.sv@abc.com	2023-06-01	50000.0
+2	Arhun	Meheta	arhun.m@gmail.com	2022-04-15	60000.0
+3	Alice	Johnson	alice.johnson@jpg.com	2021-09-30	55000.0
+*/
+</pre></div>
+</div>
+</div>
+</div>
+<p>El esquema que seguiremos en esta exposición es el siguiente:</p>
+<p><img alt="" src="../_images/esquemaTool.png" /></p>
+<p>Con todo este potencial que nos ofrecen las Tools mostradas anteriormente, procedemos a crear una Tool personalizada que nos puede servir bien para desrrollos posteriores</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">db_query_tool</span><span class="p">(</span><span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Execute a SQL query against the database and return the result.</span>
+<span class="sd">    If the query is invalid or returns no result, an error message will be returned.</span>
+<span class="sd">    In case of an error, the user is advised to rewrite the query and try again.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">run_no_throw</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;Error: Query fallado. Escribe la query de nuevo e inténtalo de nuevo.&quot;</span>
+    <span class="k">return</span> <span class="n">result</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Probemos la Tool o herramienta anterior para ver como funciona</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">db_query_tool</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM Employees LIMIT 5;&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[(1, &#39;Sunny&#39;, &#39;Savita&#39;, &#39;sunny.sv@abc.com&#39;, &#39;2023-06-01&#39;, 50000.0), (2, &#39;Arhun&#39;, &#39;Meheta&#39;, &#39;arhun.m@gmail.com&#39;, &#39;2022-04-15&#39;, 60000.0), (3, &#39;Alice&#39;, &#39;Johnson&#39;, &#39;alice.johnson@jpg.com&#39;, &#39;2021-09-30&#39;, 55000.0), (4, &#39;Bob&#39;, &#39;Brown&#39;, &#39;bob.brown@uio.com&#39;, &#39;2020-01-20&#39;, 45000.0)]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Creamos a continuación una clase que nos va a servir para obtener una respuesta estructurada, es decir una respuesta con un formato que es el que nosotros queremos (<a class="reference internal" href="salidas_estructuradas.html#templates"><span class="std std-ref">ver este apartado</span></a>).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">SubmitFinalAnswer</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Submit the final answer to the user based on the query results.&quot;&quot;&quot;</span>
+    <span class="n">final_answer</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The final answer to the user&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>También hay que definir el <a class="reference internal" href="inicioAgentes.html#estado"><span class="std std-ref">estado del agente</span></a>. Lo hacemos a continuación</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypedDict</span><span class="p">,</span> <span class="n">Annotated</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnyMessage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.graph.message</span><span class="w"> </span><span class="kn">import</span> <span class="n">add_messages</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">State</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="n">messages</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">AnyMessage</span><span class="p">],</span> <span class="n">add_messages</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
 <p><a class="reference external" href="https://www.youtube.com/watch?v=gcRSQblTwPw&amp;amp;t=724s">https://www.youtube.com/watch?v=gcRSQblTwPw&amp;t=724s</a></p>
 <p><a class="github reference external" href="https://github.com/sunnysavita10/langgraph-end-to-end/blob/main/agent_based_rag/sql_agent_with_langgraph.ipynb">sunnysavita10/langgraph-end-to-end</a></p>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -321,12 +795,12 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="init_langGraph.html"
+       href="inicioAgentes.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title"><span class="section-number">9. </span>Introducción</p>
+        <p class="prev-next-title"><span class="section-number">10. </span>Los agentes en LangGraph</p>
       </div>
     </a>
     <a class="right-next"
@@ -334,7 +808,7 @@
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><span class="section-number">11. </span>Programación asíncrona con asyncio en Python: una guía práctica</p>
+        <p class="prev-next-title"><span class="section-number">12. </span>Programación asíncrona con asyncio en Python: una guía práctica</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -344,6 +818,26 @@
             </div>
             
             
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comprension-de-las-bases-de-datos">11.1. Comprensión de las bases de datos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#text2sql-traduciendo-el-lenguaje-a-consultas">11.2. text2SQL: Traduciendo el lenguaje a consultas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sqlite">11.3. sqlite</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#llm-con-groq">11.4. LLM con Groq</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>
