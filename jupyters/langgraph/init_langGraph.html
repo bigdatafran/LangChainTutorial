@@ -63,7 +63,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'jupyters/langgraph/init_langGraph';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="10. Los agentes en LangGraph" href="inicioAgentes.html" />
+    <link rel="next" title="10. Introducción" href="base_datos.html" />
     <link rel="prev" title="8. LangChain en producción: concurrencia y operaciones asíncronas" href="../langchain_async_concurrencia.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -173,15 +173,14 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">LangGraph.</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">9. Primer acercamiento a LangGraph</a></li>
-<li class="toctree-l1"><a class="reference internal" href="inicioAgentes.html">10. Construir agentes en LangGraph</a></li>
-<li class="toctree-l1"><a class="reference internal" href="base_datos.html">11. Base de datos con LangGraph</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">9. Construir agentes en LangGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="base_datos.html">10. Base de datos con LangGraph</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Apéndices.</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../asyncio.html">12. Asincronia con asyncio</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ollama.html">13. Ollama</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../sitiosweb.html">14. Sitios web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../asyncio.html">11. Asincronia con asyncio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ollama.html">12. Ollama</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sitiosweb.html">13. Sitios web</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Índice de términos</span></p>
 <ul class="nav bd-sidenav">
@@ -283,7 +282,15 @@
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-asincrona">9.1. Versión asíncrona</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#por-que-langgraph">9.1. ¿Por qué LangGraph?.</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grafos-en-langgraph">9.2. Grafos en LangGraph</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#workflow-agentico-con-langgraph">9.3. Workflow agéntico con LangGraph</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gestion-de-estados-en-langgraph">9.4. Gestión de estados en LangGraph</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#codigos-y-ejemplos">9.5. Códigos y ejemplos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#typeddict-vs-pydantic-cuando-elegir-que">9.6. TypedDict vs Pydantic (cuándo elegir qué)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-simple">9.7. Ejemplo simple</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-asincrona-del-ejemplo">9.8. Versión asíncrona del ejemplo</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ejercicio-estado-del-servicio-de-atencion-al-cliente">9.9. Ejercicio: Estado del servicio de atención al cliente</a></li>
 </ul>
             </nav>
         </div>
@@ -298,6 +305,83 @@
   <section class="tex2jax_ignore mathjax_ignore" id="introduccion">
 <h1><span class="section-number">9. </span>Introducción<a class="headerlink" href="#introduccion" title="Link to this heading">#</a></h1>
 <p>Las llamadas LLM simples están limitadas por el conocimiento con el que se entrenó el modelo. Para solucionar esto, los desarrolladores usan cadenas o sistemas de agentes para otorgar a los LLM mayor control sobre los flujos de trabajo de la aplicación.</p>
+<section id="por-que-langgraph">
+<h2><span class="section-number">9.1. </span>¿Por qué LangGraph?.<a class="headerlink" href="#por-que-langgraph" title="Link to this heading">#</a></h2>
+<p>Dar más control a un LLM reduce la confiabilidad , pero LangGraph ayuda a mantener la confiabilidad al tiempo que permite un comportamiento agente .</p>
+<p>• Más flexibilidad en el diseño de flujos de trabajo.</p>
+<p>• Visibilidad clara del flujo de control (sin indicaciones complejas ocultas).</p>
+<p>• Admite ciclos y persistencia , lo que lo hace adecuado para flujos de trabajo de IA iterativos</p>
+</section>
+<section id="grafos-en-langgraph">
+<h2><span class="section-number">9.2. </span>Grafos en LangGraph<a class="headerlink" href="#grafos-en-langgraph" title="Link to this heading">#</a></h2>
+<p>LangGraph estructura los flujos de trabajo como grafos  con nodos y bordes :</p>
+<p>• <strong>Nodos</strong> : funciones de Python que definen la lógica del agente .</p>
+<p>• <strong>Bordes</strong> : funciones de Python que deciden qué nodo se ejecuta a continuación en función del estado.</p>
+<p><img alt="" src="../../_images/langGrapg.png" /></p>
+</section>
+<section id="workflow-agentico-con-langgraph">
+<h2><span class="section-number">9.3. </span>Workflow agéntico con LangGraph<a class="headerlink" href="#workflow-agentico-con-langgraph" title="Link to this heading">#</a></h2>
+<p>Los flujos de trabajo agentísticos permiten a los LLM controlar el flujo de ejecución , adaptándose a la entrada, las condiciones y las herramientas del usuario . A diferencia de las cadenas fijas, los flujos de trabajo agentísticos toman decisiones en tiempo real , lo que mejora la flexibilidad y la automatización.</p>
+</section>
+<section id="gestion-de-estados-en-langgraph">
+<span id="estado"></span><h2><span class="section-number">9.4. </span>Gestión de estados en LangGraph<a class="headerlink" href="#gestion-de-estados-en-langgraph" title="Link to this heading">#</a></h2>
+<p id="index-0">LangGraph utiliza un estado estructurado para mantener la coherencia de los datos del agente a medida que avanzan en un flujo de trabajo. Para un agente de atención al cliente, este estado puede incluir el historial de conversaciones, las preferencias del usuario, las decisiones de enrutamiento (departamento) y las tareas pendientes. A medida que los nodos procesan la información, el estado se actualiza y se transmite, lo que permite un comportamiento del agente modular y fácil de mantener.</p>
+<p>Estos estados se consiguen mediante la creación de clases que heredan bien de <strong>TypeDict</strong>, de <strong>Pydantic</strong>, o de <strong>messagesState</strong>.</p>
+<p>Dos opciones de esquema definen este estado:</p>
+<p>• <strong>TypedDict</strong> para velocidad y simplicidad con tipos nativos de Python.</p>
+<p>• <strong>Pydantic</strong>  para validación en tiempo de ejecución y modelos más enriquecidos, útil cuando se requiere integridad estricta de los datos.</p>
+<p>Las actualizaciones de estado se controlan mediante reductores (reducers). De forma predeterminada, las actualizaciones sobrescriben los valores, pero los reductores permiten comportamientos personalizados, como la adición de listas. Cada campo del estado actúa como un canal independiente, de modo que los nodos pueden leer y escribir fragmentos específicos de forma independiente (p. ej., solo mensajes o solo departamento). LangGraph también admite patrones avanzados, como objetos de comando para actualizaciones complejas, bordes condicionales para el enrutamiento según el estado y persistencia/puntos de control para pausar, reanudar o depurar mediante viajes
+en el tiempo.</p>
+</section>
+<section id="codigos-y-ejemplos">
+<h2><span class="section-number">9.5. </span>Códigos y ejemplos<a class="headerlink" href="#codigos-y-ejemplos" title="Link to this heading">#</a></h2>
+<p>Ejemplo de TypedDict para el estado de un agente:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">AgentState</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">user_preferences</span><span class="p">:</span> <span class="nb">dict</span>
+    <span class="n">department</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">pending_tasks</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Ejemplo de reductor para agregar mensajes en lugar de sobrescribirlos:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Annotated</span><span class="p">,</span> <span class="n">TypedDict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">operator</span><span class="w"> </span><span class="kn">import</span> <span class="n">add</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">State</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="n">messages</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">add</span><span class="p">]</span> <span class="c1"># Añade nuevos mensaje</span>
+    <span class="n">department</span><span class="p">:</span> <span class="nb">str</span> <span class="c1"># sobre escribe por defecto</span>
+
+</pre></div>
+</div>
+<p><em>Notas</em>:</p>
+<p>• Sin un reductor, las actualizaciones sobrescriben el valor existente.</p>
+<p>• Con <code class="docutils literal notranslate"><span class="pre">Annotated</span></code> y <code class="docutils literal notranslate"><span class="pre">operator.add</span></code>, las actualizaciones de la lista se agregan a la lista existente.</p>
+</section>
+<section id="typeddict-vs-pydantic-cuando-elegir-que">
+<h2><span class="section-number">9.6. </span>TypedDict vs Pydantic (cuándo elegir qué)<a class="headerlink" href="#typeddict-vs-pydantic-cuando-elegir-que" title="Link to this heading">#</a></h2>
+<p>• <strong>TypedDict</strong></p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>– Ligero y nativo de Python
+
+– Alto rendimiento, sin validación en tiempo de ejecución
+
+– Acceso simple similar a un diccionario
+
+– Bueno para creación de prototipos y flujos sensibles al rendimiento
+</pre></div>
+</div>
+<p>• <strong>Pydantic</strong></p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>– Validación en tiempo de ejecución para la integridad de los datos
+
+– Admite estructuras y métodos complejos
+
+– Mejor para escenarios de producción que requieren una validación estricta
+
+– Rendimiento moderado debido a la sobrecarga de validación
+</pre></div>
+</div>
+</section>
+<section id="ejemplo-simple">
+<h2><span class="section-number">9.7. </span>Ejemplo simple<a class="headerlink" href="#ejemplo-simple" title="Link to this heading">#</a></h2>
+<p>Veamos en este ejemplo simple como podemos crear un flujo agéntico en langGraph</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
@@ -311,6 +395,7 @@
 </div>
 </div>
 </div>
+<p>Definimos lo que es el estado del agente y para ello heredemos de TypeDict y declaramos dos estados de la agente: <em>input</em> y <em>output</em>. Observar que en este ejemplo no utilizamos reductores</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">State</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
@@ -320,6 +405,7 @@
 </div>
 </div>
 </div>
+<p>A continuación definimos mediante simples funciones los nodos del agente</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">node_a</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">State</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">State</span><span class="p">:</span>
@@ -350,6 +436,7 @@
 </div>
 </div>
 </div>
+<p>Definidos los nodos, los unimos de la siguiente manera</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">workflow</span> <span class="o">=</span> <span class="n">StateGraph</span><span class="p">(</span><span class="n">state_schema</span><span class="o">=</span><span class="n">State</span><span class="p">)</span>
@@ -360,7 +447,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;langgraph.graph.state.StateGraph at 0x248c51b1190&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;langgraph.graph.state.StateGraph at 0x269a116c7d0&gt;
 </pre></div>
 </div>
 </div>
@@ -374,11 +461,12 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;langgraph.graph.state.StateGraph at 0x248c51b1190&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;langgraph.graph.state.StateGraph at 0x269a116c7d0&gt;
 </pre></div>
 </div>
 </div>
 </div>
+<p>Compilamos el grafo que antes hemos definido</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># compilamos el grafo</span>
@@ -387,6 +475,7 @@
 </div>
 </div>
 </div>
+<p>Y finalmente mostramos el grafo mediante una imagen</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Dibujamos el grafo</span>
@@ -399,9 +488,10 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../_images/3cbb687ec301362ccbc6aa5134b92ea20f63262cc36c5408a9f0ff403e7cd48f.png" src="../../_images/3cbb687ec301362ccbc6aa5134b92ea20f63262cc36c5408a9f0ff403e7cd48f.png" />
+<img alt="../../_images/6026a98742ae2192f68d70501bbb8a1cb88b92fcfbaf68731ecdd5bea85c7b6e.png" src="../../_images/6026a98742ae2192f68d70501bbb8a1cb88b92fcfbaf68731ecdd5bea85c7b6e.png" />
 </div>
 </div>
+<p>Ya estamos en condiciones de ejecutar ese grafo</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Finalmente ejecutamos</span>
@@ -416,22 +506,24 @@
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>NODE A:
 -&gt;input:1
--&gt;offset:5
--&gt;output:6
+-&gt;offset:2
+-&gt;output:3
 
 NODE B:
 -&gt;input:1
--&gt;offset:4
--&gt;output:5
+-&gt;offset:6
+-&gt;output:7
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;input&#39;: 1, &#39;output&#39;: 5}
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;input&#39;: 1, &#39;output&#39;: 7}
 </pre></div>
 </div>
 </div>
 </div>
-<section id="version-asincrona">
-<h2><span class="section-number">9.1. </span>Versión asíncrona<a class="headerlink" href="#version-asincrona" title="Link to this heading">#</a></h2>
+</section>
+<section id="version-asincrona-del-ejemplo">
+<h2><span class="section-number">9.8. </span>Versión asíncrona del ejemplo<a class="headerlink" href="#version-asincrona-del-ejemplo" title="Link to this heading">#</a></h2>
+<p>Mostramos a continuación cómo conseguimos la versión asíncrona del ejemplo anterior</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">node_a2</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">State</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">State</span><span class="p">:</span>
@@ -499,32 +591,22 @@ NODE B:
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">RuntimeError</span><span class="g g-Whitespace">                              </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">12</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">ejecutar</span><span class="p">())</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>NODE A:
+-&gt;input:1
+-&gt;offset:7
+-&gt;output:8
 
-<span class="nn">File ~\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\asyncio\runners.py:191,</span> in <span class="ni">run</span><span class="nt">(main, debug, loop_factory)</span>
-<span class="g g-Whitespace">    </span><span class="mi">161</span><span class="w"> </span><span class="sd">&quot;&quot;&quot;Execute the coroutine and return the result.</span>
-<span class="g g-Whitespace">    </span><span class="mi">162</span><span class="sd"> </span>
-<span class="g g-Whitespace">    </span><span class="mi">163</span><span class="sd"> This function runs the passed coroutine, taking care of</span>
-<span class="sd">   (...)    187     asyncio.run(main())</span>
-<span class="g g-Whitespace">    </span><span class="mi">188</span><span class="sd"> &quot;&quot;&quot;</span>
-<span class="g g-Whitespace">    </span><span class="mi">189</span> <span class="k">if</span> <span class="n">events</span><span class="o">.</span><span class="n">_get_running_loop</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">190</span>     <span class="c1"># fail fast with short traceback</span>
-<span class="ne">--&gt; </span><span class="mi">191</span>     <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">192</span>         <span class="s2">&quot;asyncio.run() cannot be called from a running event loop&quot;</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">194</span> <span class="k">with</span> <span class="n">Runner</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">,</span> <span class="n">loop_factory</span><span class="o">=</span><span class="n">loop_factory</span><span class="p">)</span> <span class="k">as</span> <span class="n">runner</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">195</span>     <span class="k">return</span> <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">)</span>
-
-<span class="ne">RuntimeError</span>: asyncio.run() cannot be called from a running event loop
+NODE B:
+-&gt;input:1
+-&gt;offset:2
+-&gt;output:3
 </pre></div>
 </div>
 </div>
 </div>
 <p>Este error es muy típico en Jupyter, y <strong>no es que hayas hecho algo “mal”</strong>, sino que el entorno ya tiene un event loop de asyncio corriendo. Lo que ocurre es que <code class="docutils literal notranslate"><span class="pre">asyncio.run()</span></code> intenta crear y ejecutar su propio loop, pero Jupyter (a través de IPython) ya tiene uno activo, así que choca.</p>
 <p>Para resolver est utilizamos la librería <code class="docutils literal notranslate"><span class="pre">nest_asyncio</span></code></p>
-<div class="cell docutils container">
+<div class="cell docutils container" id="index-1">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">nest_asyncio</span>
 <span class="n">nest_asyncio</span><span class="o">.</span><span class="n">apply</span><span class="p">()</span>
@@ -536,13 +618,204 @@ NODE B:
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>NODE A:
 -&gt;input:1
--&gt;offset:3
--&gt;output:4
+-&gt;offset:7
+-&gt;output:8
 
 NODE B:
 -&gt;input:1
--&gt;offset:6
--&gt;output:7
+-&gt;offset:5
+-&gt;output:6
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="ejercicio-estado-del-servicio-de-atencion-al-cliente">
+<h2><span class="section-number">9.9. </span>Ejercicio: Estado del servicio de atención al cliente<a class="headerlink" href="#ejercicio-estado-del-servicio-de-atencion-al-cliente" title="Link to this heading">#</a></h2>
+<p>Esta demostración aplica un flujo de trabajo con estado usando LangGraph para dirigir los mensajes de los clientes a facturación, técnicos o ventas, resolver el problema y registrar su seguimiento. El flujo utiliza un estado tipificado, reductores para la acumulación de mensajes e historial, un nodo enrutador, controladores de departamento y un puntero de control para mantener la continuidad entre turnos.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypedDict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Annotated</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">StateGraph</span><span class="p">,</span> <span class="n">START</span><span class="p">,</span> <span class="n">END</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.graph.message</span><span class="w"> </span><span class="kn">import</span> <span class="n">add_messages</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.checkpoint.memory</span><span class="w"> </span><span class="kn">import</span> <span class="n">InMemorySaver</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">operator</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>1.- Definir el estado y los reductores</p>
+<p>• Cree un TypedDict con campos para mensajes, departamento, user_id, issue_id, user_name,
+issue_history y resuelto.</p>
+<p>• Utilice <em>add_messages</em> para fusionar mensajes entre nodos.</p>
+<p>• Utilice el operador <em>.add</em> para agregar al issue_history en los pasos.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">CustomerServiceState</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="n">messages</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="n">add_messages</span><span class="p">]</span>
+    <span class="n">department</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;billing&quot;</span><span class="p">,</span> <span class="s2">&quot;technical&quot;</span><span class="p">,</span> <span class="s2">&quot;sales&quot;</span><span class="p">]]</span>
+    <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">issue_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">user_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">issue_history</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">operator</span><span class="o">.</span><span class="n">add</span><span class="p">]</span>
+    <span class="n">resolved</span><span class="p">:</span> <span class="nb">bool</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Implementar el nodo enrutador</p>
+<ul class="simple">
+<li><p>Lea el último mensaje del usuario.</p></li>
+<li><p>Hacer coincidir palabras clave con un departamento.</p></li>
+<li><p>Emite un AIMessage inicial y crea un UUID issue_id.</p></li>
+<li><p>Establezca solved=False para continuar el flujo.</p></li>
+</ul>
+<p>A continuación definimos las funciones que vana definir los nodos del grafo</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span><span class="p">,</span> <span class="n">AIMessage</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
+
+<span class="c1"># función de enrutamiento determine department based on keywords and adds␣inicitial task</span>
+<span class="c1"># Determinar el departamento en función de las palabras clave y añadir la tarea␣inicial.</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">route_customer</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">CustomerServiceState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CustomerServiceState</span><span class="p">:</span>
+    <span class="n">department</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">ai_message</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">]:</span>
+    <span class="c1"># si no hay mensage incial se devuelve el estado tal y como está</span>
+        <span class="k">return</span> <span class="n">state</span>
+    <span class="c1"># en caso contrario, se devuelve el último mensaje</span>
+    <span class="n">last_message</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="c1"># si el último mensaje contiene alguna de la palabras &quot;bill&quot;, &quot;payment&quot;,   &quot;charge&quot;</span>
+    <span class="c1"># se asigna el departamento de billing</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">word</span> <span class="ow">in</span> <span class="n">last_message</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;bill&quot;</span><span class="p">,</span> <span class="s2">&quot;payment&quot;</span><span class="p">,</span> <span class="s2">&quot;charge&quot;</span><span class="p">]):</span>
+        <span class="n">department</span> <span class="o">=</span> <span class="s2">&quot;billing&quot;</span>
+        <span class="c1"># Se añade un mensaje de tipo AImessage</span>
+        <span class="n">ai_message</span> <span class="o">=</span> <span class="n">AIMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;I&#39;ll help you with your billing issue.␣ Let me check your account.&quot;</span><span class="p">)</span>
+    <span class="c1"># si contiene alguna de las palabras &quot;broken&quot;, &quot;error&quot;, &quot;not working&quot;</span>
+    <span class="c1"># se asigna al departamento technical</span>
+    <span class="k">elif</span> <span class="nb">any</span><span class="p">(</span><span class="n">word</span> <span class="ow">in</span> <span class="n">last_message</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;broken&quot;</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="s2">&quot;not␣ working&quot;</span><span class="p">]):</span>
+        <span class="n">department</span> <span class="o">=</span> <span class="s2">&quot;technical&quot;</span>
+        <span class="c1"># Let&#39;s troubleshoot your technical issue. == Vamos a solucionar tu␣problema técnico.</span>
+        <span class="n">ai_message</span> <span class="o">=</span> <span class="n">AIMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;Let&#39;s troubleshoot your technical issue.&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">any</span><span class="p">(</span><span class="n">word</span> <span class="ow">in</span> <span class="n">last_message</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;buy&quot;</span><span class="p">,</span> <span class="s2">&quot;purchase&quot;</span><span class="p">,</span> <span class="s2">&quot;upgrade&quot;</span><span class="p">]):</span>
+        <span class="n">department</span> <span class="o">=</span> <span class="s2">&quot;sales&quot;</span>
+        <span class="n">ai_message</span> <span class="o">=</span> <span class="n">AIMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;I&#39;d be happy to help with your purchase.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">ai_message</span><span class="p">],</span> <span class="s2">&quot;department&quot;</span><span class="p">:</span> <span class="n">department</span><span class="p">,</span> <span class="s2">&quot;issue_id&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()),</span> <span class="s2">&quot;resolved&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+    <span class="c1"># str(uuid.uuid4()) == Genera un UUID (identificador único universal)␣aleatorio versión 4</span>
+    <span class="c1"># y conviértelo a una cadena de texto.</span>
+    <span class="c1"># uuid.uuid4() crea un UUID v4, que es un identificador aleatorio de 128␣bits</span>
+    <span class="c1"># (por ejemplo: e3c9b2a4-4f0b-4c8a-8cd2-2b7a3d1e9cbb).</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Los gestores del departamento procesan y resuelven los problemas.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">handle_billing</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">CustomerServiceState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CustomerServiceState</span><span class="p">:</span>
+    <span class="n">new_issues_id</span> <span class="o">=</span> <span class="s2">&quot;billing-&quot;</span> <span class="o">+</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;issue_id&quot;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">AIMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;Retrieved billing history: Last␣ payment $99&quot;</span><span class="p">)],</span>
+    <span class="s2">&quot;resolved&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;issue_history&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">new_issues_id</span><span class="p">]}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">handle_technical</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">CustomerServiceState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CustomerServiceState</span><span class="p">:</span>
+    <span class="n">new_issues_id</span> <span class="o">=</span> <span class="s2">&quot;technical-&quot;</span> <span class="o">+</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;issue_id&quot;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">AIMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;Diagnostics complete. No hardware␣issues detected.&quot;</span><span class="p">)],</span>
+    <span class="s2">&quot;resolved&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;issue_history&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">new_issues_id</span><span class="p">]}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">handle_sales</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">CustomerServiceState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CustomerServiceState</span><span class="p">:</span>
+    <span class="n">new_issues_id</span> <span class="o">=</span> <span class="s2">&quot;sales-&quot;</span> <span class="o">+</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;issue_id&quot;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">AIMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;Products available: Premium␣Upgrade, Family Plan.&quot;</span><span class="p">)],</span>
+        <span class="s2">&quot;resolved&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;issue_history&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">new_issues_id</span><span class="p">]}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>La función que se define posteriormente llamada <code class="docutils literal notranslate"><span class="pre">next_step</span></code> va a servir para dirigir el flujo del grafo hacia un nodo u otro</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">StateGraph</span><span class="p">,</span> <span class="n">START</span><span class="p">,</span> <span class="n">END</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.checkpoint.memory</span><span class="w"> </span><span class="kn">import</span> <span class="n">InMemorySaver</span>
+
+<span class="n">workflow</span> <span class="o">=</span> <span class="n">StateGraph</span><span class="p">(</span><span class="n">CustomerServiceState</span><span class="p">)</span>
+
+<span class="c1"># nodo del enrutador</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;router&quot;</span><span class="p">,</span> <span class="n">route_customer</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">next_step</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">CustomerServiceState</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;resolved&quot;</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="n">END</span>
+    <span class="k">return</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;department&quot;</span><span class="p">]</span> <span class="ow">or</span> <span class="s2">&quot;router&quot;</span>
+
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;billing&quot;</span><span class="p">,</span> <span class="n">handle_billing</span><span class="p">)</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;technical&quot;</span><span class="p">,</span> <span class="n">handle_technical</span><span class="p">)</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;sales&quot;</span><span class="p">,</span> <span class="n">handle_sales</span><span class="p">)</span>
+<span class="c1"># definimos la entrada al flujo de trabajo</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">set_entry_point</span><span class="p">(</span><span class="s2">&quot;router&quot;</span><span class="p">)</span>
+
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_conditional_edges</span><span class="p">(</span><span class="s2">&quot;router&quot;</span><span class="p">,</span> <span class="n">next_step</span><span class="p">)</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s2">&quot;billing&quot;</span><span class="p">,</span> <span class="n">END</span><span class="p">)</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s2">&quot;technical&quot;</span><span class="p">,</span> <span class="n">END</span><span class="p">)</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s2">&quot;sales&quot;</span><span class="p">,</span> <span class="n">END</span><span class="p">)</span>
+
+<span class="c1"># esto lo hacemos para mantener la memoria a corto plazo del agente</span>
+<span class="n">memory</span> <span class="o">=</span> <span class="n">InMemorySaver</span><span class="p">()</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">workflow</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">checkpointer</span><span class="o">=</span><span class="n">memory</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;configurable&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;thread_id&quot;</span><span class="p">:</span> <span class="s2">&quot;user123&quot;</span><span class="p">}}</span>
+
+<span class="n">state1</span> <span class="o">=</span> <span class="n">CustomerServiceState</span><span class="p">(</span>
+    <span class="n">messages</span><span class="o">=</span><span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;My bill seems too high this month&quot;</span><span class="p">)],</span>
+    <span class="n">department</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">user_id</span><span class="o">=</span><span class="s2">&quot;user123&quot;</span><span class="p">,</span>
+    <span class="n">user_name</span><span class="o">=</span><span class="s2">&quot;John Doe&quot;</span><span class="p">,</span>
+    <span class="n">issue_history</span><span class="o">=</span><span class="p">[],</span>
+    <span class="n">resolved</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+<span class="n">result1</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">state1</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Department:&quot;</span><span class="p">,</span> <span class="n">result1</span><span class="p">[</span><span class="s1">&#39;department&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Final response:&quot;</span><span class="p">,</span> <span class="n">result1</span><span class="p">[</span><span class="s1">&#39;messages&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Customer issue history:&quot;</span><span class="p">,</span> <span class="n">result1</span><span class="p">[</span><span class="s1">&#39;issue_history&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Department: billing
+Final response: Retrieved billing history: Last␣ payment $99
+Customer issue history: [&#39;billing-8a36d389-8d8f-4145-9e9e-07db6161128c&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;configurable&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;thread_id&quot;</span><span class="p">:</span> <span class="s2">&quot;user123&quot;</span><span class="p">}}</span>
+<span class="n">state1</span> <span class="o">=</span> <span class="n">CustomerServiceState</span><span class="p">(</span>
+<span class="n">messages</span><span class="o">=</span><span class="p">[</span><span class="n">HumanMessage</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;My bill seems too high this month&quot;</span><span class="p">)],</span>
+<span class="n">department</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="n">user_id</span><span class="o">=</span><span class="s2">&quot;user123&quot;</span><span class="p">,</span>
+<span class="n">user_name</span><span class="o">=</span><span class="s2">&quot;John Doe&quot;</span><span class="p">,</span>
+<span class="n">issue_history</span><span class="o">=</span><span class="p">[],</span>
+<span class="n">resolved</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+<span class="n">result1</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">state1</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Department:&quot;</span><span class="p">,</span> <span class="n">result1</span><span class="p">[</span><span class="s1">&#39;department&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Final response:&quot;</span><span class="p">,</span> <span class="n">result1</span><span class="p">[</span><span class="s1">&#39;messages&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Customer issue history:&quot;</span><span class="p">,</span> <span class="n">result1</span><span class="p">[</span><span class="s1">&#39;issue_history&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Department: billing
+Final response: Retrieved billing history: Last␣ payment $99
+Customer issue history: [&#39;billing-8a36d389-8d8f-4145-9e9e-07db6161128c&#39;, &#39;billing-3c358199-d402-408c-b6df-3266263463ca&#39;]
 </pre></div>
 </div>
 </div>
@@ -590,11 +863,11 @@ NODE B:
       </div>
     </a>
     <a class="right-next"
-       href="inicioAgentes.html"
+       href="base_datos.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><span class="section-number">10. </span>Los agentes en LangGraph</p>
+        <p class="prev-next-title"><span class="section-number">10. </span>Introducción</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -616,7 +889,15 @@ NODE B:
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-asincrona">9.1. Versión asíncrona</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#por-que-langgraph">9.1. ¿Por qué LangGraph?.</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grafos-en-langgraph">9.2. Grafos en LangGraph</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#workflow-agentico-con-langgraph">9.3. Workflow agéntico con LangGraph</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gestion-de-estados-en-langgraph">9.4. Gestión de estados en LangGraph</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#codigos-y-ejemplos">9.5. Códigos y ejemplos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#typeddict-vs-pydantic-cuando-elegir-que">9.6. TypedDict vs Pydantic (cuándo elegir qué)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-simple">9.7. Ejemplo simple</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-asincrona-del-ejemplo">9.8. Versión asíncrona del ejemplo</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ejercicio-estado-del-servicio-de-atencion-al-cliente">9.9. Ejercicio: Estado del servicio de atención al cliente</a></li>
 </ul>
   </nav></div>
 

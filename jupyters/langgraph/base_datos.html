@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>11. Introducción &#8212; LangChain &amp; LangGraph</title>
+    <title>10. Introducción &#8212; LangChain &amp; LangGraph</title>
   
   
   
@@ -63,8 +63,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'jupyters/langgraph/base_datos';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="12. Programación asíncrona con asyncio en Python: una guía práctica" href="../asyncio.html" />
-    <link rel="prev" title="10. Los agentes en LangGraph" href="inicioAgentes.html" />
+    <link rel="next" title="11. Programación asíncrona con asyncio en Python: una guía práctica" href="../asyncio.html" />
+    <link rel="prev" title="9. Introducción" href="init_langGraph.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -173,15 +173,14 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">LangGraph.</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="init_langGraph.html">9. Primer acercamiento a LangGraph</a></li>
-<li class="toctree-l1"><a class="reference internal" href="inicioAgentes.html">10. Construir agentes en LangGraph</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">11. Base de datos con LangGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="init_langGraph.html">9. Construir agentes en LangGraph</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">10. Base de datos con LangGraph</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Apéndices.</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../asyncio.html">12. Asincronia con asyncio</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ollama.html">13. Ollama</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../sitiosweb.html">14. Sitios web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../asyncio.html">11. Asincronia con asyncio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ollama.html">12. Ollama</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sitiosweb.html">13. Sitios web</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Índice de términos</span></p>
 <ul class="nav bd-sidenav">
@@ -283,13 +282,13 @@
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comprension-de-las-bases-de-datos">11.1. Comprensión de las bases de datos</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#text2sql-traduciendo-el-lenguaje-a-consultas">11.2. text2SQL: Traduciendo el lenguaje a consultas</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sqlite">11.3. sqlite</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#llm-con-groq">11.4. LLM con Groq</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#utilizacion-de-sqlalchemy">11.5. Utilización de SQLAlchemy</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creacion-de-herramientas-tools-para-base-de-datos">11.6. Creación de herramientas (Tools) para base de datos</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creacion-del-agente-para-consulta-db">11.7. Creación del agente para consulta DB</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comprension-de-las-bases-de-datos">10.1. Comprensión de las bases de datos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#text2sql-traduciendo-el-lenguaje-a-consultas">10.2. text2SQL: Traduciendo el lenguaje a consultas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sqlite">10.3. sqlite</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#llm-con-groq">10.4. LLM con Groq</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#utilizacion-de-sqlalchemy">10.5. Utilización de SQLAlchemy</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creacion-de-herramientas-tools-para-base-de-datos">10.6. Creación de herramientas (Tools) para base de datos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creacion-del-agente-para-consulta-db">10.7. Creación del agente para consulta DB</a></li>
 </ul>
             </nav>
         </div>
@@ -302,14 +301,14 @@
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="introduccion">
-<h1><span class="section-number">11. </span>Introducción<a class="headerlink" href="#introduccion" title="Link to this heading">#</a></h1>
+<h1><span class="section-number">10. </span>Introducción<a class="headerlink" href="#introduccion" title="Link to this heading">#</a></h1>
 <p id="index-0">En este apartado vamos a ver como iteractuamos con bases de datos ## Enseñar a los agentes a recuperar y actualizar datos estructurados.</p>
 <p>Los agentes obtienen un nivel de utilidad completamente nuevo al poder acceder y modificar datos privados y estructurados, como registros internos, sistemas de tickets o bases de datos de clientes.</p>
 <p>A diferencia de los datos web públicos o las API, este tipo de información reside dentro de una organización y suele almacenarse en formatos estructurados que requieren una interacción precisa.</p>
 <p>Si se le pregunta a un agente “¿Cuál es el estado del ticket n.° 9265?”, no puede buscarlo en la web, o al menos ahí será muy difícil encuentre la información solicitada. La respuesta probablemente se encuentre en una base de datos relacional o un CRM. De
 igual manera, si el agente completa una tarea, debería actualizar el sistema correspondiente; no solo confirmar el éxito en el chat, sino escribir una nueva entrada en la base de datos. Los agentes que interactúan con datos estructurados pueden realizar trabajo real, no solo generar texto.</p>
 <section id="comprension-de-las-bases-de-datos">
-<h2><span class="section-number">11.1. </span>Comprensión de las bases de datos<a class="headerlink" href="#comprension-de-las-bases-de-datos" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">10.1. </span>Comprensión de las bases de datos<a class="headerlink" href="#comprension-de-las-bases-de-datos" title="Link to this heading">#</a></h2>
 <p>Existen muchos tipos de bases de datos que según la estructura de esos datos, y a grandes rasgos se pueden casificar como:</p>
 <ul class="simple">
 <li><p><strong>Las bases de datos relacionales</strong> (por ejemplo, PostgreSQL, MySQL) almacenan datos en tablas con esquemas definidos, lo que resulta perfecto para interacciones de agentes que requieren consultas estructuradas.</p></li>
@@ -319,7 +318,7 @@ igual manera, si el agente completa una tarea, debería actualizar el sistema co
 <p>Pero en este apartado vamos a poner el enfoque en las bases de datos relacional, en las que se accede a la información mediante el lenguaje SQL</p>
 </section>
 <section id="text2sql-traduciendo-el-lenguaje-a-consultas">
-<h2><span class="section-number">11.2. </span>text2SQL: Traduciendo el lenguaje a consultas<a class="headerlink" href="#text2sql-traduciendo-el-lenguaje-a-consultas" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">10.2. </span>text2SQL: Traduciendo el lenguaje a consultas<a class="headerlink" href="#text2sql-traduciendo-el-lenguaje-a-consultas" title="Link to this heading">#</a></h2>
 <p id="index-1">Los agentes pueden traducir lenguaje natural a SQL, una práctica conocida como <code class="docutils literal notranslate"><span class="pre">text2SQL</span></code>. Por ejemplo:</p>
 <p><em>Entrada</em>: “¿Cuántos usuarios se registraron esta semana?”</p>
 <p>*<em>Producción</em>: SELECT COUNT(*) FROM users WHERE signup_date &gt;= ‘2025-07-01’</p>
@@ -341,7 +340,7 @@ igual manera, si el agente completa una tarea, debería actualizar el sistema co
 <p>Comenzamos este apartado viendo determinados aspectos de la base de datos sqlite para posteriormente ir avanzando en nivel de conocimientos hasta llegar a usar <code class="docutils literal notranslate"><span class="pre">sqlalchemy</span></code> que supone un nivel avanzado en el tratamiento de las bases de datos con python.</p>
 </section>
 <section id="sqlite">
-<h2><span class="section-number">11.3. </span>sqlite<a class="headerlink" href="#sqlite" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">10.3. </span>sqlite<a class="headerlink" href="#sqlite" title="Link to this heading">#</a></h2>
 <p id="index-2"><code class="docutils literal notranslate"><span class="pre">SQLite</span></code> es un sistema de gestión de bases de datos relacional muy ligero y ampliamente utilizado. A diferencia de otros sistemas como MySQL o PostgreSQL, SQLite no funciona como un servidor independiente, sino que está integrado directamente dentro de la aplicación que lo usa.</p>
 <p>Esto significa que no requiere instalación ni configuración compleja: toda la base de datos se guarda en un único archivo en el sistema, lo que lo hace ideal para aplicaciones móviles, programas de escritorio o proyectos pequeños.</p>
 <p>SQLite utiliza el lenguaje estándar SQL para realizar operaciones como crear tablas, insertar datos, consultarlos o modificarlos. A pesar de su simplicidad, es muy potente y cumple con gran parte del estándar SQL, incluyendo transacciones seguras.</p>
@@ -547,7 +546,7 @@ igual manera, si el agente completa una tarea, debería actualizar el sistema co
 </div>
 </section>
 <section id="llm-con-groq">
-<h2><span class="section-number">11.4. </span>LLM con Groq<a class="headerlink" href="#llm-con-groq" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">10.4. </span>LLM con Groq<a class="headerlink" href="#llm-con-groq" title="Link to this heading">#</a></h2>
 <p id="index-3">Hasta estos momentos, se ha utilizado una gestión de base de datos de modo tradicional. En lo que sigue, introducimos el modelo LLM con Groq, pues ademá de ser generoso con la parte gratuita, nos va a permitir desarrollar los conceptos fundamentales perseguidoes en este apartado.</p>
 <p>Comenzamos leyendo la api key que nos proporciona esta LLM (se puede obtener, previa identificación en <a class="reference external" href="https://console.groq.com/keys">https://console.groq.com/keys</a>)</p>
 <div class="cell docutils container">
@@ -759,7 +758,7 @@ emp_id	first_name	last_name	email	hire_date	salary
 </div>
 </div>
 </div>
-<p>También hay que definir el <a class="reference internal" href="inicioAgentes.html#estado"><span class="std std-ref">estado del agente</span></a> que lo que hace es mantener los mensajes que fluyen a lo largo de todo el trabajo del agente. Lo hacemos a continuación</p>
+<p>También hay que definir el <a class="reference internal" href="init_langGraph.html#estado"><span class="std std-ref">estado del agente</span></a> que lo que hace es mantener los mensajes que fluyen a lo largo de todo el trabajo del agente. Lo hacemos a continuación</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypedDict</span><span class="p">,</span> <span class="n">Annotated</span>
@@ -1155,7 +1154,7 @@ emp_id	first_name	last_name	email	hire_date	salary
 <p><a class="github reference external" href="https://github.com/sunnysavita10/langgraph-end-to-end/blob/main/agent_based_rag/sql_agent_with_langgraph.ipynb">sunnysavita10/langgraph-end-to-end</a></p>
 </section>
 <section id="utilizacion-de-sqlalchemy">
-<h2><span class="section-number">11.5. </span>Utilización de SQLAlchemy<a class="headerlink" href="#utilizacion-de-sqlalchemy" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">10.5. </span>Utilización de SQLAlchemy<a class="headerlink" href="#utilizacion-de-sqlalchemy" title="Link to this heading">#</a></h2>
 <p id="index-6">SQLAlchemy es una librería de Python que permite interactuar con bases de datos relacionales (como SQLite, PostgreSQL, MySQL o SQL Server) de forma segura y eficiente, tanto usando SQL “nativo” como a través de un ORM (Object‑Relational Mapper).</p>
 <p>Su idea central es que puedas trabajar con tablas y filas como clases y objetos de Python, en lugar de escribir solo cadenas de SQL, lo que hace el código más limpio, mantenible y portable entre motores de base de datos.</p>
 <p>Para el desarrollo de este apartado nos vamos a basar en una base de datos de tipo sqlite, y que el lector podrá encontrar y descargar en el siguiente enlace:</p>
@@ -1419,7 +1418,7 @@ emp_id	first_name	last_name	email	hire_date	salary
 </div>
 </section>
 <section id="creacion-de-herramientas-tools-para-base-de-datos">
-<h2><span class="section-number">11.6. </span>Creación de herramientas (Tools) para base de datos<a class="headerlink" href="#creacion-de-herramientas-tools-para-base-de-datos" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">10.6. </span>Creación de herramientas (Tools) para base de datos<a class="headerlink" href="#creacion-de-herramientas-tools-para-base-de-datos" title="Link to this heading">#</a></h2>
 <p>Una vez hecha la introducción anterior, en lo que sigue vamos a crear diferentes herramientas (tools) que posteriomente nos van a servir para crear agentes con LangGraph. Creemos a continuación la primera de etas herramientas</p>
 <p>Creamos primero un elemento del tipo RunnableConfig (<a class="reference internal" href="../runnables.html#runnable"><span class="std std-ref">Ver apartado Runnables</span></a>)</p>
 <div class="cell docutils container">
@@ -1614,7 +1613,7 @@ emp_id	first_name	last_name	email	hire_date	salary
 </div>
 </section>
 <section id="creacion-del-agente-para-consulta-db">
-<h2><span class="section-number">11.7. </span>Creación del agente para consulta DB<a class="headerlink" href="#creacion-del-agente-para-consulta-db" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">10.7. </span>Creación del agente para consulta DB<a class="headerlink" href="#creacion-del-agente-para-consulta-db" title="Link to this heading">#</a></h2>
 <p>Ahora que ya hemos creado la herramientas anteriores, las vamos a colocar en un fichero denominado sql_toolkit.py y las vamos a importar para trabajar con ellas. El código necesario se implementa a continuación.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1904,12 +1903,12 @@ The number of Dell XPS 15 sold is 0.
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="inicioAgentes.html"
+       href="init_langGraph.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title"><span class="section-number">10. </span>Los agentes en LangGraph</p>
+        <p class="prev-next-title"><span class="section-number">9. </span>Introducción</p>
       </div>
     </a>
     <a class="right-next"
@@ -1917,7 +1916,7 @@ The number of Dell XPS 15 sold is 0.
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><span class="section-number">12. </span>Programación asíncrona con asyncio en Python: una guía práctica</p>
+        <p class="prev-next-title"><span class="section-number">11. </span>Programación asíncrona con asyncio en Python: una guía práctica</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1939,13 +1938,13 @@ The number of Dell XPS 15 sold is 0.
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comprension-de-las-bases-de-datos">11.1. Comprensión de las bases de datos</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#text2sql-traduciendo-el-lenguaje-a-consultas">11.2. text2SQL: Traduciendo el lenguaje a consultas</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sqlite">11.3. sqlite</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#llm-con-groq">11.4. LLM con Groq</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#utilizacion-de-sqlalchemy">11.5. Utilización de SQLAlchemy</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creacion-de-herramientas-tools-para-base-de-datos">11.6. Creación de herramientas (Tools) para base de datos</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creacion-del-agente-para-consulta-db">11.7. Creación del agente para consulta DB</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comprension-de-las-bases-de-datos">10.1. Comprensión de las bases de datos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#text2sql-traduciendo-el-lenguaje-a-consultas">10.2. text2SQL: Traduciendo el lenguaje a consultas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sqlite">10.3. sqlite</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#llm-con-groq">10.4. LLM con Groq</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#utilizacion-de-sqlalchemy">10.5. Utilización de SQLAlchemy</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creacion-de-herramientas-tools-para-base-de-datos">10.6. Creación de herramientas (Tools) para base de datos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creacion-del-agente-para-consulta-db">10.7. Creación del agente para consulta DB</a></li>
 </ul>
   </nav></div>
 
