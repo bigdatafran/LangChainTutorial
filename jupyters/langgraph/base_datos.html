@@ -288,6 +288,8 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sqlite">11.3. sqlite</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#llm-con-groq">11.4. LLM con Groq</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#utilizacion-de-sqlalchemy">11.5. Utilización de SQLAlchemy</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creacion-de-herramientas-tools-para-base-de-datos">11.6. Creación de herramientas (Tools) para base de datos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creacion-del-agente-para-consulta-db">11.7. Creación del agente para consulta DB</a></li>
 </ul>
             </nav>
         </div>
@@ -1156,12 +1158,718 @@ emp_id	first_name	last_name	email	hire_date	salary
 <h2><span class="section-number">11.5. </span>Utilización de SQLAlchemy<a class="headerlink" href="#utilizacion-de-sqlalchemy" title="Link to this heading">#</a></h2>
 <p id="index-6">SQLAlchemy es una librería de Python que permite interactuar con bases de datos relacionales (como SQLite, PostgreSQL, MySQL o SQL Server) de forma segura y eficiente, tanto usando SQL “nativo” como a través de un ORM (Object‑Relational Mapper).</p>
 <p>Su idea central es que puedas trabajar con tablas y filas como clases y objetos de Python, en lugar de escribir solo cadenas de SQL, lo que hace el código más limpio, mantenible y portable entre motores de base de datos.</p>
+<p>Para el desarrollo de este apartado nos vamos a basar en una base de datos de tipo sqlite, y que el lector podrá encontrar y descargar en el siguiente enlace:</p>
+<p><a class="github reference external" href="https://github.com/bigdatafran/LangChainTutorial/blob/main/sales.db">bigdatafran/LangChainTutorial</a></p>
 <p>Para entender este apartado, no es necesario que el lector conozca al detalle el uso de esta librería, pero para quien esté interesado en su uso, puede consultar los siguientes enlaces:</p>
 <ul class="simple">
 <li><p><a href="https://www.sqlalchemy.org/" target="_blank">Sitio oficial de SQLAchemy</a></p></li>
 <li><p><a href="https://4geeks.com/es/lesson/todo-lo-necesario-para-empezar-usar-sqlalchemy" target="_blank">Todo lo que necesitas saber de SQLAlchemy</a></p></li>
 <li><p><a href="https://j2logo.com/python/sqlalchemy-tutorial-de-python-sqlalchemy-guia-de-inicio/"> SQLAlchemy. Tutorial de Python SQLAlchemy </a></p></li>
 </ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sqlalchemy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy.engine.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Engine</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">text</span><span class="p">,</span> <span class="n">create_engine</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.runnables.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunnableConfig</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Comenzamos cargando esa base de datos y mostrando sus características</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">db_engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;sqlite:///sales.db&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Veamos cuantas tablas tiene esa base de datos</span>
+<span class="n">inspector</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">inspect</span><span class="p">(</span><span class="n">db_engine</span><span class="p">)</span>
+<span class="n">inspector</span><span class="o">.</span><span class="n">get_table_names</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;sales&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Veamos las características de la tabla <code class="docutils literal notranslate"><span class="pre">sales</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">table_name</span> <span class="o">=</span> <span class="s2">&quot;sales&quot;</span>
+<span class="n">inspector</span><span class="o">.</span><span class="n">get_columns</span><span class="p">(</span><span class="n">table_name</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[{&#39;name&#39;: &#39;id&#39;,
+  &#39;type&#39;: INTEGER(),
+  &#39;nullable&#39;: False,
+  &#39;default&#39;: None,
+  &#39;primary_key&#39;: 1},
+ {&#39;name&#39;: &#39;transaction_date&#39;,
+  &#39;type&#39;: DATE(),
+  &#39;nullable&#39;: True,
+  &#39;default&#39;: None,
+  &#39;primary_key&#39;: 0},
+ {&#39;name&#39;: &#39;model&#39;,
+  &#39;type&#39;: TEXT(length=50),
+  &#39;nullable&#39;: True,
+  &#39;default&#39;: None,
+  &#39;primary_key&#39;: 0},
+ {&#39;name&#39;: &#39;price&#39;,
+  &#39;type&#39;: FLOAT(),
+  &#39;nullable&#39;: True,
+  &#39;default&#39;: None,
+  &#39;primary_key&#39;: 0},
+ {&#39;name&#39;: &#39;quatity&#39;,
+  &#39;type&#39;: INTEGER(),
+  &#39;nullable&#39;: True,
+  &#39;default&#39;: None,
+  &#39;primary_key&#39;: 0},
+ {&#39;name&#39;: &#39;customer_id&#39;,
+  &#39;type&#39;: INTEGER(),
+  &#39;nullable&#39;: True,
+  &#39;default&#39;: None,
+  &#39;primary_key&#39;: 0}]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">schema</span> <span class="o">=</span> <span class="n">inspector</span><span class="o">.</span><span class="n">get_columns</span><span class="p">(</span><span class="n">table_name</span><span class="p">)</span>
+<span class="c1"># creo a continuación una list comprhension</span>
+<span class="n">column_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">column</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">schema</span><span class="p">]</span>
+<span class="n">column_names</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;id&#39;, &#39;transaction_date&#39;, &#39;model&#39;, &#39;price&#39;, &#39;quatity&#39;, &#39;customer_id&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Hagamos a continuación alguna consulta a la base de datos</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># recordar que antes hemos puesto lo siguiente</span>
+<span class="c1"># table_name = &quot;sales&quot;</span>
+<span class="n">sql</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;SELECT * FROM </span><span class="si">{</span><span class="n">table_name</span><span class="si">}</span><span class="s2"> LIMIT 10&quot;</span>
+<span class="k">with</span> <span class="n">db_engine</span><span class="o">.</span><span class="n">begin</span><span class="p">()</span> <span class="k">as</span> <span class="n">connection</span><span class="p">:</span>
+    <span class="n">answer</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">text</span><span class="p">(</span><span class="n">sql</span><span class="p">))</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+
+<span class="n">answer</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[(1, &#39;2023-01-01&#39;, &#39;Wireless Mouse&#39;, 24.99, 2, 101),
+ (2, &#39;2023-01-02&#39;, &#39;Gaming Keyboard&#39;, 79.5, 1, 102),
+ (3, &#39;2023-01-03&#39;, &#39;USB-C Charger&#39;, 18.0, 3, 103),
+ (4, &#39;2023-01-04&#39;, &#39;Bluetooth Speaker&#39;, 45.0, 1, 104),
+ (5, &#39;2023-01-05&#39;, &#39;4K Monitor&#39;, 299.99, 1, 105),
+ (6, &#39;2023-01-06&#39;, &#39;Laptop Stand&#39;, 32.5, 2, 106),
+ (7, &#39;2023-01-07&#39;, &#39;Noise Cancelling Headphones&#39;, 129.9, 1, 107),
+ (8, &#39;2023-01-08&#39;, &#39;Portable SSD&#39;, 89.99, 1, 108),
+ (9, &#39;2023-01-09&#39;, &#39;Smartphone Case&#39;, 12.99, 4, 109),
+ (10, &#39;2023-01-10&#39;, &#39;Wireless Earbuds&#39;, 54.99, 1, 110)]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Si lo necesitamos lo podemos pasar a un dataframe  de Pandas de la siguiente manera</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#lo incorporamos a un dataframe</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">answer</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">column_names</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>transaction_date</th>
+      <th>model</th>
+      <th>price</th>
+      <th>quatity</th>
+      <th>customer_id</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>2023-01-01</td>
+      <td>Wireless Mouse</td>
+      <td>24.99</td>
+      <td>2</td>
+      <td>101</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>2023-01-02</td>
+      <td>Gaming Keyboard</td>
+      <td>79.50</td>
+      <td>1</td>
+      <td>102</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>2023-01-03</td>
+      <td>USB-C Charger</td>
+      <td>18.00</td>
+      <td>3</td>
+      <td>103</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>2023-01-04</td>
+      <td>Bluetooth Speaker</td>
+      <td>45.00</td>
+      <td>1</td>
+      <td>104</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>2023-01-05</td>
+      <td>4K Monitor</td>
+      <td>299.99</td>
+      <td>1</td>
+      <td>105</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>6</td>
+      <td>2023-01-06</td>
+      <td>Laptop Stand</td>
+      <td>32.50</td>
+      <td>2</td>
+      <td>106</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>7</td>
+      <td>2023-01-07</td>
+      <td>Noise Cancelling Headphones</td>
+      <td>129.90</td>
+      <td>1</td>
+      <td>107</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>8</td>
+      <td>2023-01-08</td>
+      <td>Portable SSD</td>
+      <td>89.99</td>
+      <td>1</td>
+      <td>108</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>9</td>
+      <td>2023-01-09</td>
+      <td>Smartphone Case</td>
+      <td>12.99</td>
+      <td>4</td>
+      <td>109</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>10</td>
+      <td>2023-01-10</td>
+      <td>Wireless Earbuds</td>
+      <td>54.99</td>
+      <td>1</td>
+      <td>110</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="creacion-de-herramientas-tools-para-base-de-datos">
+<h2><span class="section-number">11.6. </span>Creación de herramientas (Tools) para base de datos<a class="headerlink" href="#creacion-de-herramientas-tools-para-base-de-datos" title="Link to this heading">#</a></h2>
+<p>Una vez hecha la introducción anterior, en lo que sigue vamos a crear diferentes herramientas (tools) que posteriomente nos van a servir para crear agentes con LangGraph. Creemos a continuación la primera de etas herramientas</p>
+<p>Creamos primero un elemento del tipo RunnableConfig (<a class="reference internal" href="../runnables.html#runnable"><span class="std std-ref">Ver apartado Runnables</span></a>)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;configurable&#39;</span><span class="p">:{</span><span class="s1">&#39;db_engine&#39;</span><span class="p">:</span> <span class="n">db_engine</span><span class="p">}}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## herramienta listar tablas</span>
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">list_tables_tool</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">RunnableConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    List all tables in database</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">db_engine</span><span class="p">:</span><span class="n">Engine</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;configurable&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;db_engine&quot;</span><span class="p">)</span>
+    <span class="n">inspector</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">inspect</span><span class="p">(</span><span class="n">db_engine</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">inspector</span><span class="o">.</span><span class="n">get_table_names</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ejecutamos lo anterior</span>
+<span class="n">list_tables_tool</span><span class="o">.</span><span class="n">invoke</span><span class="p">({},</span><span class="n">config</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;sales&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## Herramienta obtener el esquema de la tabla</span>
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_table_schema_tool</span><span class="p">(</span><span class="n">table_name</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">RunnableConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get schema information about a table. Returns a list of dictionaries.</span>
+<span class="sd">    - name is the column name</span>
+<span class="sd">    - type is the column type</span>
+<span class="sd">    - nullable is whether the column is nullable or not</span>
+<span class="sd">    - default is the default value of the column</span>
+<span class="sd">    - primary_key is whether the column is a primary key or not</span>
+<span class="sd">    Args:</span>
+<span class="sd">    table_name (str): Table name</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">db_engine</span><span class="p">:</span><span class="n">Engine</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;configurable&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;db_engine&quot;</span><span class="p">)</span>
+    <span class="n">inspector</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">inspect</span><span class="p">(</span><span class="n">db_engine</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">inspector</span><span class="o">.</span><span class="n">get_columns</span><span class="p">(</span><span class="n">table_name</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">get_table_schema_tool</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s1">&#39;table_name&#39;</span><span class="p">:</span><span class="s1">&#39;sales&#39;</span><span class="p">},</span><span class="n">config</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[{&#39;name&#39;: &#39;id&#39;,
+  &#39;type&#39;: INTEGER(),
+  &#39;nullable&#39;: False,
+  &#39;default&#39;: None,
+  &#39;primary_key&#39;: 1},
+ {&#39;name&#39;: &#39;transaction_date&#39;,
+  &#39;type&#39;: DATE(),
+  &#39;nullable&#39;: True,
+  &#39;default&#39;: None,
+  &#39;primary_key&#39;: 0},
+ {&#39;name&#39;: &#39;model&#39;,
+  &#39;type&#39;: TEXT(length=50),
+  &#39;nullable&#39;: True,
+  &#39;default&#39;: None,
+  &#39;primary_key&#39;: 0},
+ {&#39;name&#39;: &#39;price&#39;,
+  &#39;type&#39;: FLOAT(),
+  &#39;nullable&#39;: True,
+  &#39;default&#39;: None,
+  &#39;primary_key&#39;: 0},
+ {&#39;name&#39;: &#39;quatity&#39;,
+  &#39;type&#39;: INTEGER(),
+  &#39;nullable&#39;: True,
+  &#39;default&#39;: None,
+  &#39;primary_key&#39;: 0},
+ {&#39;name&#39;: &#39;customer_id&#39;,
+  &#39;type&#39;: INTEGER(),
+  &#39;nullable&#39;: True,
+  &#39;default&#39;: None,
+  &#39;primary_key&#39;: 0}]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Herramienta para ejecutar</span>
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">execute_sql_tool</span><span class="p">(</span><span class="n">query</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">RunnableConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Execute SQL query and return result.</span>
+<span class="sd">    This will automatically connect to the database and execute the query.</span>
+<span class="sd">    However, if the query is not valid, an error will be raised</span>
+<span class="sd">    Args:</span>
+<span class="sd">    query (str): SQL query</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">db_engine</span><span class="p">:</span><span class="n">Engine</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;configurable&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;db_engine&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">db_engine</span><span class="o">.</span><span class="n">begin</span><span class="p">()</span> <span class="k">as</span> <span class="n">connection</span><span class="p">:</span>
+        <span class="n">answer</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">text</span><span class="p">(</span><span class="n">query</span><span class="p">))</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">answer</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>La estructura que sigue se basa en un dictionary comprehension, que para el lector que no conozca como se obtiene en python <a href="https://www.datacamp.com/tutorial/python-dictionary-comprehension" target="_blank"> puede consultar este enlace</a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tables</span> <span class="o">=</span> <span class="n">list_tables_tool</span><span class="o">.</span><span class="n">invoke</span><span class="p">({},</span> <span class="n">config</span><span class="p">)</span>
+<span class="n">schemas</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">table</span><span class="p">:</span> <span class="n">get_table_schema_tool</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span>
+        <span class="s1">&#39;table_name&#39;</span><span class="p">:</span> <span class="n">table</span>
+    <span class="p">},</span> <span class="n">config</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">table</span> <span class="ow">in</span> <span class="n">tables</span>
+<span class="p">}</span>
+<span class="n">schemas</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;sales&#39;: [{&#39;name&#39;: &#39;id&#39;,
+   &#39;type&#39;: INTEGER(),
+   &#39;nullable&#39;: False,
+   &#39;default&#39;: None,
+   &#39;primary_key&#39;: 1},
+  {&#39;name&#39;: &#39;transaction_date&#39;,
+   &#39;type&#39;: DATE(),
+   &#39;nullable&#39;: True,
+   &#39;default&#39;: None,
+   &#39;primary_key&#39;: 0},
+  {&#39;name&#39;: &#39;model&#39;,
+   &#39;type&#39;: TEXT(length=50),
+   &#39;nullable&#39;: True,
+   &#39;default&#39;: None,
+   &#39;primary_key&#39;: 0},
+  {&#39;name&#39;: &#39;price&#39;,
+   &#39;type&#39;: FLOAT(),
+   &#39;nullable&#39;: True,
+   &#39;default&#39;: None,
+   &#39;primary_key&#39;: 0},
+  {&#39;name&#39;: &#39;quatity&#39;,
+   &#39;type&#39;: INTEGER(),
+   &#39;nullable&#39;: True,
+   &#39;default&#39;: None,
+   &#39;primary_key&#39;: 0},
+  {&#39;name&#39;: &#39;customer_id&#39;,
+   &#39;type&#39;: INTEGER(),
+   &#39;nullable&#39;: True,
+   &#39;default&#39;: None,
+   &#39;primary_key&#39;: 0}]}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sql</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;SELECT * FROM </span><span class="si">{</span><span class="n">tables</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> LIMIT 10&quot;</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">execute_sql_tool</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s1">&#39;query&#39;</span><span class="p">:</span> <span class="n">sql</span><span class="p">},</span> <span class="n">config</span><span class="p">)</span>
+<span class="n">result</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[(1, &#39;2023-01-01&#39;, &#39;Wireless Mouse&#39;, 24.99, 2, 101),
+ (2, &#39;2023-01-02&#39;, &#39;Gaming Keyboard&#39;, 79.5, 1, 102),
+ (3, &#39;2023-01-03&#39;, &#39;USB-C Charger&#39;, 18.0, 3, 103),
+ (4, &#39;2023-01-04&#39;, &#39;Bluetooth Speaker&#39;, 45.0, 1, 104),
+ (5, &#39;2023-01-05&#39;, &#39;4K Monitor&#39;, 299.99, 1, 105),
+ (6, &#39;2023-01-06&#39;, &#39;Laptop Stand&#39;, 32.5, 2, 106),
+ (7, &#39;2023-01-07&#39;, &#39;Noise Cancelling Headphones&#39;, 129.9, 1, 107),
+ (8, &#39;2023-01-08&#39;, &#39;Portable SSD&#39;, 89.99, 1, 108),
+ (9, &#39;2023-01-09&#39;, &#39;Smartphone Case&#39;, 12.99, 4, 109),
+ (10, &#39;2023-01-10&#39;, &#39;Wireless Earbuds&#39;, 54.99, 1, 110)]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="creacion-del-agente-para-consulta-db">
+<h2><span class="section-number">11.7. </span>Creación del agente para consulta DB<a class="headerlink" href="#creacion-del-agente-para-consulta-db" title="Link to this heading">#</a></h2>
+<p>Ahora que ya hemos creado la herramientas anteriores, las vamos a colocar en un fichero denominado sql_toolkit.py y las vamos a importar para trabajar con ellas. El código necesario se implementa a continuación.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">SystemMessage</span><span class="p">,</span> <span class="n">HumanMessage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">START</span><span class="p">,</span> <span class="n">END</span><span class="p">,</span> <span class="n">StateGraph</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.graph.message</span><span class="w"> </span><span class="kn">import</span> <span class="n">MessagesState</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.prebuilt</span><span class="w"> </span><span class="kn">import</span> <span class="n">ToolNode</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">display</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_engine</span>
+<span class="c1"># sql_toolkit es un fichero .py que se ha  creado yo y está en la misma carpeta de trabajo que este.</span>
+<span class="c1"># Básicamente contiene las tres herramientas que se han creado en el apartado␣anterior</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">sql_toolkit</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">list_tables_tool</span><span class="p">,</span>
+    <span class="n">get_table_schema_tool</span><span class="p">,</span>
+    <span class="n">execute_sql_tool</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Cargamos el llm con el que vamos a trabajar</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+<span class="n">load_dotenv</span><span class="p">()</span>
+<span class="n">GROQ_API_KEY</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;GROQ_API_KEY&quot;</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;GROQ_API_KEY&quot;</span><span class="p">]</span><span class="o">=</span> <span class="n">GROQ_API_KEY</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_groq</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatGroq</span>
+<span class="n">llm</span><span class="o">=</span><span class="n">ChatGroq</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;meta-llama/llama-4-scout-17b-16e-instruct&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p id="index-7">En la siguiente celda se crea una clase que define el estado del agente, pero en este caso se hereda de la clase <code class="docutils literal notranslate"><span class="pre">MessagesState</span></code> que es una clase que ya tiene predefinido el campo denominado  <code class="docutils literal notranslate"><span class="pre">messages</span></code> y posteriormente se pueden definir otros estados, somo en el caso actual que se añade <code class="docutils literal notranslate"><span class="pre">user_query</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">MessagesState</span></code> (o <code class="docutils literal notranslate"><span class="pre">State</span></code> con campo <code class="docutils literal notranslate"><span class="pre">messages</span></code> en LangGraph) es simplemente <strong>el “recipiente” donde se guarda el historial de mensajes de la conversación</strong> en un agente o chatbot.</p>
+<p>En pocas líneas:</p>
+<ul class="simple">
+<li><p>Es una clase/tipo que define un diccionario con una clave <code class="docutils literal notranslate"><span class="pre">messages:</span> <span class="pre">Annotated[list,</span> <span class="pre">add_messages]</span></code>.</p></li>
+<li><p>Cada vez que un nodo del grafo devuelve nuevos mensajes, <code class="docutils literal notranslate"><span class="pre">add_messages</span></code> los añade a la lista existente, <strong>sin borrar el historial</strong>.</p></li>
+<li><p>Así el estado del grafo “recuerda” toda la conversación hasta ese momento, y el agente puede usarlo para razonar y responder de forma coherente.</p></li>
+</ul>
+<p>En resumen: <code class="docutils literal notranslate"><span class="pre">MessagesState</span></code> = estructura de estado pensada para mantener y acumular los mensajes del chat de forma ordenada y segura.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Inicializamos el estado del grafo</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">State</span><span class="p">(</span><span class="n">MessagesState</span><span class="p">):</span>
+    <span class="n">user_query</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="n">workflow</span> <span class="o">=</span> <span class="n">StateGraph</span><span class="p">(</span><span class="n">State</span><span class="p">)</span>
+
+<span class="c1"># Definimos la lista de tools</span>
+<span class="n">dba_tools</span> <span class="o">=</span> <span class="p">[</span><span class="n">list_tables_tool</span><span class="p">,</span> <span class="n">get_table_schema_tool</span><span class="p">,</span> <span class="n">execute_sql_tool</span><span class="p">]</span>
+
+<span class="c1"># Añadimos un nodo al workflow</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;dba_tools&quot;</span><span class="p">,</span> <span class="n">ToolNode</span><span class="p">(</span><span class="n">dba_tools</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;langgraph.graph.state.StateGraph at 0x23d2c719f10&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dba_llm</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">bind_tools</span><span class="p">(</span><span class="n">dba_tools</span><span class="p">,</span> <span class="n">tool_choice</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">messages_builder</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">State</span><span class="p">):</span>
+    <span class="n">dba_sys_msg</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;You are a Sr. SQL developer tasked with generating SQL queries.␣ Perform the following steps:</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;First, find out the appropriate table name based on all tables. &quot;</span>
+        <span class="s2">&quot;Then get the table&#39;s schema to understand the columns. &quot;</span>
+        <span class="s2">&quot;   With the table name and the schema, generate the ANSI SQL query you␣think is applicable to the user question. &quot;</span>
+        <span class="s2">&quot;Finally, use a tool to execute the above SQL query and output the␣result based on the user question.&quot;</span>
+    <span class="p">)</span>
+    <span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">SystemMessage</span><span class="p">(</span><span class="n">dba_sys_msg</span><span class="p">),</span>
+        <span class="n">HumanMessage</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;user_query&quot;</span><span class="p">])</span>
+    <span class="p">]</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="n">messages</span><span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">dba_agent</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">State</span><span class="p">):</span>
+    <span class="n">ai_message</span> <span class="o">=</span> <span class="n">dba_llm</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">])</span>
+    <span class="n">ai_message</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;dba_agent&quot;</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="n">ai_message</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">workflow</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;messages_builder&quot;</span><span class="p">,</span> <span class="n">messages_builder</span><span class="p">)</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;dba_agent&quot;</span><span class="p">,</span> <span class="n">dba_agent</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;langgraph.graph.state.StateGraph at 0x23d2c719f10&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># función de decisión</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">should_continue</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">State</span><span class="p">):</span>
+    <span class="n">messages</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">]</span>
+    <span class="n">last_message</span> <span class="o">=</span> <span class="n">messages</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">last_message</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;dba_tools&quot;</span>
+    <span class="k">return</span> <span class="n">END</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">workflow</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">START</span><span class="p">,</span> <span class="s2">&quot;messages_builder&quot;</span><span class="p">)</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s2">&quot;messages_builder&quot;</span><span class="p">,</span> <span class="s2">&quot;dba_agent&quot;</span><span class="p">)</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_conditional_edges</span><span class="p">(</span>
+    <span class="n">source</span><span class="o">=</span><span class="s2">&quot;dba_agent&quot;</span><span class="p">,</span>
+    <span class="n">path</span><span class="o">=</span><span class="n">should_continue</span><span class="p">,</span>
+    <span class="n">path_map</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;dba_tools&quot;</span><span class="p">,</span> <span class="n">END</span><span class="p">]</span>
+<span class="p">)</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s2">&quot;dba_tools&quot;</span><span class="p">,</span> <span class="s2">&quot;dba_agent&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;langgraph.graph.state.StateGraph at 0x23d2c719f10&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">react_graph</span> <span class="o">=</span> <span class="n">workflow</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display</span><span class="p">(</span>
+    <span class="n">Image</span><span class="p">(</span>
+    <span class="n">react_graph</span><span class="o">.</span><span class="n">get_graph</span><span class="p">()</span><span class="o">.</span><span class="n">draw_mermaid_png</span><span class="p">()</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/f9a0a7f46139578ccc464de5f2a6144b3293eba299d08aa0822b2c57856038ac.png" src="../../_images/f9a0a7f46139578ccc464de5f2a6144b3293eba299d08aa0822b2c57856038ac.png" />
+</div>
+</div>
+<p>Probemos a continuación la construcción que acabamos de crear</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">db_engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;sqlite:///sales.db&quot;</span><span class="p">)</span>
+<span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;configurable&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;db_engine&quot;</span><span class="p">:</span> <span class="n">db_engine</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">inputs</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;user_query&quot;</span><span class="p">:</span> <span class="s2">&quot;How many Dell XPS 15 were sold?&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">messages</span> <span class="o">=</span> <span class="n">react_graph</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
+    <span class="nb">input</span><span class="o">=</span><span class="n">inputs</span><span class="p">,</span>
+    <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">messages</span><span class="p">[</span><span class="s1">&#39;messages&#39;</span><span class="p">]:</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">pretty_print</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>================================<span class=" -Color -Color-Bold"> System Message </span>================================
+
+You are a Sr. SQL developer tasked with generating SQL queries.␣ Perform the following steps:
+First, find out the appropriate table name based on all tables. Then get the table&#39;s schema to understand the columns.    With the table name and the schema, generate the ANSI SQL query you␣think is applicable to the user question. Finally, use a tool to execute the above SQL query and output the␣result based on the user question.
+================================<span class=" -Color -Color-Bold"> Human Message </span>=================================
+
+How many Dell XPS 15 were sold?
+==================================<span class=" -Color -Color-Bold"> Ai Message </span>==================================
+Name: dba_agent
+
+First, I need to find out the table name. Then I will get schema of the table. Based on table name and schema, I will generate SQL query and execute it to get the result.
+Tool Calls:
+  list_tables_tool (5qdsfhq1a)
+ Call ID: 5qdsfhq1a
+  Args:
+=================================<span class=" -Color -Color-Bold"> Tool Message </span>=================================
+Name: list_tables_tool
+
+[&quot;sales&quot;]
+==================================<span class=" -Color -Color-Bold"> Ai Message </span>==================================
+Name: dba_agent
+Tool Calls:
+  get_table_schema_tool (jw6qs7c7p)
+ Call ID: jw6qs7c7p
+  Args:
+    table_name: sales
+=================================<span class=" -Color -Color-Bold"> Tool Message </span>=================================
+Name: get_table_schema_tool
+
+[{&#39;name&#39;: &#39;id&#39;, &#39;type&#39;: INTEGER(), &#39;nullable&#39;: False, &#39;default&#39;: None, &#39;primary_key&#39;: 1}, {&#39;name&#39;: &#39;transaction_date&#39;, &#39;type&#39;: DATE(), &#39;nullable&#39;: True, &#39;default&#39;: None, &#39;primary_key&#39;: 0}, {&#39;name&#39;: &#39;model&#39;, &#39;type&#39;: TEXT(length=50), &#39;nullable&#39;: True, &#39;default&#39;: None, &#39;primary_key&#39;: 0}, {&#39;name&#39;: &#39;price&#39;, &#39;type&#39;: FLOAT(), &#39;nullable&#39;: True, &#39;default&#39;: None, &#39;primary_key&#39;: 0}, {&#39;name&#39;: &#39;quatity&#39;, &#39;type&#39;: INTEGER(), &#39;nullable&#39;: True, &#39;default&#39;: None, &#39;primary_key&#39;: 0}, {&#39;name&#39;: &#39;customer_id&#39;, &#39;type&#39;: INTEGER(), &#39;nullable&#39;: True, &#39;default&#39;: None, &#39;primary_key&#39;: 0}]
+==================================<span class=" -Color -Color-Bold"> Ai Message </span>==================================
+Name: dba_agent
+Tool Calls:
+  execute_sql_tool (egz2z10px)
+ Call ID: egz2z10px
+  Args:
+    query: SELECT COUNT(*) FROM sales WHERE model = &#39;Dell XPS 15&#39;
+=================================<span class=" -Color -Color-Bold"> Tool Message </span>=================================
+Name: execute_sql_tool
+
+[(0,)]
+==================================<span class=" -Color -Color-Bold"> Ai Message </span>==================================
+Name: dba_agent
+
+The number of Dell XPS 15 sold is 0.
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 </section>
 
@@ -1236,6 +1944,8 @@ emp_id	first_name	last_name	email	hire_date	salary
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sqlite">11.3. sqlite</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#llm-con-groq">11.4. LLM con Groq</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#utilizacion-de-sqlalchemy">11.5. Utilización de SQLAlchemy</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creacion-de-herramientas-tools-para-base-de-datos">11.6. Creación de herramientas (Tools) para base de datos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creacion-del-agente-para-consulta-db">11.7. Creación del agente para consulta DB</a></li>
 </ul>
   </nav></div>
 
