@@ -173,8 +173,7 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">LangGraph.</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">9. Introducción</a></li>
-
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">9. Construir agentes en LangGraph</a></li>
 <li class="toctree-l1"><a class="reference internal" href="base_datos.html">10. Base de datos con LangGraph</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Apéndices.</span></p>
@@ -283,7 +282,6 @@
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">9. Introducción</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#por-que-langgraph">9.1. ¿Por qué LangGraph?.</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grafos-en-langgraph">9.2. Grafos en LangGraph</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#workflow-agentico-con-langgraph">9.3. Workflow agéntico con LangGraph</a></li>
@@ -292,14 +290,9 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#typeddict-vs-pydantic-cuando-elegir-que">9.6. TypedDict vs Pydantic (cuándo elegir qué)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-simple">9.7. Ejemplo simple</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-asincrona-del-ejemplo">9.8. Versión asíncrona del ejemplo</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-inicial">9.9. Ejemplo inicial</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-avanzado-estado-del-servicio-de-atencion-al-cliente">9.10. Ejemplo avanzado: Estado del servicio de atención al cliente</a></li>
 </ul>
-</li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-inicial">9. Ejemplo inicial</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-avanzado-estado-del-servicio-de-atencion-al-cliente">9.1. Ejemplo avanzado: Estado del servicio de atención al cliente</a></li>
-</ul>
-</li>
-</ul>
-
             </nav>
         </div>
     </div>
@@ -638,9 +631,8 @@ NODE B:
 </div>
 </div>
 </section>
-</section>
-<section class="tex2jax_ignore mathjax_ignore" id="ejemplo-inicial">
-<h1><span class="section-number">9. </span>Ejemplo inicial<a class="headerlink" href="#ejemplo-inicial" title="Link to this heading">#</a></h1>
+<section id="ejemplo-inicial">
+<h2><span class="section-number">9.9. </span>Ejemplo inicial<a class="headerlink" href="#ejemplo-inicial" title="Link to this heading">#</a></h2>
 <p>Mostramos a continuación un ejemplo inicial de creación de un flujo de trabajo agéntico, con tres nodos y un arco condicional, definida por una función que elige un número entero aleatorio entre 1,2 o 3. Y dependiendo del número elegido lo lleva al nodo 1, 2 ó 3. El flujo o esquema de trabajo es el siguiente:</p>
 <p><img alt="" src="../../_images/flujo1.jpg" /></p>
 <p>Importamos las librerías necesarias y definimos el estado del agente</p>
@@ -828,7 +820,7 @@ NODE B:
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../_images/b1b88260307dfa3a63db22bd587aaba5838402d268d7f5950479a83e110f9480.png" src="../../_images/b1b88260307dfa3a63db22bd587aaba5838402d268d7f5950479a83e110f9480.png" />
+<img alt="../../_images/ae6052ae27450196733f4ed8f7516d882dcc0d5ef29ddb8cbd53e319fd35b87f.png" src="../../_images/ae6052ae27450196733f4ed8f7516d882dcc0d5ef29ddb8cbd53e319fd35b87f.png" />
 </div>
 </div>
 <p>Ejecutamos el flujo agéntico obtenido</p>
@@ -860,106 +852,22 @@ NODE B:
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=============================================
   EJECUTANDO EL FLUJO AGÉNTICO
 =============================================
-▶ [nodo_init] Inicializando el flujo...
-🟣 [nodo_1] Ejecutando nodo 1...
-🎲 [router_condicional] Número aleatorio elegido: 1
-🟣 [nodo_1] Ejecutando nodo 1...
-🎲 [router_condicional] Número aleatorio elegido: 1
+▶  [nodo_init] Inicializando el flujo...
+🟣 [nodo_1] Ejecutando nodo 1 (visita inicial)...
+🎲 [router_condicional] Número aleatorio elegido: 2
+🟡 [nodo_2] Router eligió 2 → ejecutando nodo_2...
 🏁 [nodo_final] Flujo completado.
-   Ruta seguida : Flujo iniciado. → nodo_1
-   Rama elegida : 0
-</pre></div>
-</div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">InvalidUpdateError</span><span class="g g-Whitespace">                        </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span> <span class="n">line</span> <span class="mi">16</span>
-<span class="g g-Whitespace">     </span><span class="mi">12</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  EJECUTANDO EL FLUJO AGÉNTICO&quot;</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">13</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">45</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">14</span> 
-<span class="g g-Whitespace">     </span><span class="mi">15</span> <span class="c1"># invoke() lanza el grafo y espera hasta que llega a END</span>
-<span class="ne">---&gt; </span><span class="mi">16</span> <span class="n">resultado</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">estado_inicial</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">17</span> 
-<span class="g g-Whitespace">     </span><span class="mi">18</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">45</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">19</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ESTADO FINAL:&quot;</span><span class="p">,</span> <span class="n">resultado</span><span class="p">)</span>
-
-<span class="nn">File d:\MisTrabajos\IA_generativa\Langchain\libro\.venv\Lib\site-packages\langgraph\pregel\main.py:3365,</span> in <span class="ni">Pregel.invoke</span><span class="nt">(self, input, config, context, stream_mode, print_mode, output_keys, interrupt_before, interrupt_after, durability, version, **kwargs)</span>
-<span class="g g-Whitespace">   </span><span class="mi">3362</span>             <span class="n">chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">3363</span> <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">3364</span>     <span class="c1"># v1: collect interrupts from updates stream</span>
-<span class="ne">-&gt; </span><span class="mi">3365</span>     <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="p">(</span>
-<span class="g g-Whitespace">   </span><span class="mi">3366</span>         <span class="nb">input</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">3367</span>         <span class="n">config</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">3368</span>         <span class="n">context</span><span class="o">=</span><span class="n">context</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">3369</span>         <span class="n">stream_mode</span><span class="o">=</span><span class="p">(</span>
-<span class="g g-Whitespace">   </span><span class="mi">3370</span>             <span class="p">[</span><span class="s2">&quot;updates&quot;</span><span class="p">,</span> <span class="s2">&quot;values&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">stream_mode</span> <span class="o">==</span> <span class="s2">&quot;values&quot;</span> <span class="k">else</span> <span class="n">stream_mode</span>
-<span class="g g-Whitespace">   </span><span class="mi">3371</span>         <span class="p">),</span>
-<span class="g g-Whitespace">   </span><span class="mi">3372</span>         <span class="n">print_mode</span><span class="o">=</span><span class="n">print_mode</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">3373</span>         <span class="n">output_keys</span><span class="o">=</span><span class="n">output_keys</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">3374</span>         <span class="n">interrupt_before</span><span class="o">=</span><span class="n">interrupt_before</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">3375</span>         <span class="n">interrupt_after</span><span class="o">=</span><span class="n">interrupt_after</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">3376</span>         <span class="n">durability</span><span class="o">=</span><span class="n">durability</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">3377</span>         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">3378</span>     <span class="p">):</span>
-<span class="g g-Whitespace">   </span><span class="mi">3379</span>         <span class="k">if</span> <span class="n">stream_mode</span> <span class="o">==</span> <span class="s2">&quot;values&quot;</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">3380</span>             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-
-<span class="nn">File d:\MisTrabajos\IA_generativa\Langchain\libro\.venv\Lib\site-packages\langgraph\pregel\main.py:2776,</span> in <span class="ni">Pregel.stream</span><span class="nt">(self, input, config, context, stream_mode, print_mode, output_keys, interrupt_before, interrupt_after, durability, subgraphs, debug, version, **kwargs)</span>
-<span class="g g-Whitespace">   </span><span class="mi">2759</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">runner</span><span class="o">.</span><span class="n">tick</span><span class="p">(</span>
-<span class="g g-Whitespace">   </span><span class="mi">2760</span>     <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">loop</span><span class="o">.</span><span class="n">tasks</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">t</span><span class="o">.</span><span class="n">writes</span><span class="p">],</span>
-<span class="g g-Whitespace">   </span><span class="mi">2761</span>     <span class="n">timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">step_timeout</span><span class="p">,</span>
-   <span class="p">(</span><span class="o">...</span><span class="p">)</span>   <span class="mi">2764</span> <span class="p">):</span>
-<span class="g g-Whitespace">   </span><span class="mi">2765</span>     <span class="c1"># emit output</span>
-<span class="g g-Whitespace">   </span><span class="mi">2766</span>     <span class="k">yield from</span> <span class="n">_output</span><span class="p">(</span>
-<span class="g g-Whitespace">   </span><span class="mi">2767</span>         <span class="n">stream_mode</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">2768</span>         <span class="n">print_mode</span><span class="p">,</span>
-   <span class="p">(</span><span class="o">...</span><span class="p">)</span>   <span class="mi">2774</span>         <span class="n">_state_mapper</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">2775</span>     <span class="p">)</span>
-<span class="ne">-&gt; </span><span class="mi">2776</span> <span class="n">loop</span><span class="o">.</span><span class="n">after_tick</span><span class="p">()</span>
-<span class="g g-Whitespace">   </span><span class="mi">2777</span> <span class="n">emit_graph_lifecycle_events</span><span class="p">(</span><span class="n">loop</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">2778</span> <span class="c1"># wait for checkpoint</span>
-
-<span class="nn">File d:\MisTrabajos\IA_generativa\Langchain\libro\.venv\Lib\site-packages\langgraph\pregel\_loop.py:589,</span> in <span class="ni">PregelLoop.after_tick</span><span class="nt">(self)</span>
-<span class="g g-Whitespace">    </span><span class="mi">587</span> <span class="n">writes</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tasks</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">t</span><span class="o">.</span><span class="n">writes</span><span class="p">]</span>
-<span class="g g-Whitespace">    </span><span class="mi">588</span> <span class="c1"># all tasks have finished</span>
-<span class="ne">--&gt; </span><span class="mi">589</span> <span class="bp">self</span><span class="o">.</span><span class="n">updated_channels</span> <span class="o">=</span> <span class="n">apply_writes</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">590</span>     <span class="bp">self</span><span class="o">.</span><span class="n">checkpoint</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">591</span>     <span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">592</span>     <span class="bp">self</span><span class="o">.</span><span class="n">tasks</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span>
-<span class="g g-Whitespace">    </span><span class="mi">593</span>     <span class="bp">self</span><span class="o">.</span><span class="n">checkpointer_get_next_version</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">594</span>     <span class="bp">self</span><span class="o">.</span><span class="n">trigger_to_nodes</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">595</span> <span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">596</span> <span class="c1"># produce values output</span>
-<span class="g g-Whitespace">    </span><span class="mi">597</span> <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">updated_channels</span><span class="o">.</span><span class="n">isdisjoint</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">598</span>     <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_keys</span><span class="p">,)</span>
-<span class="g g-Whitespace">    </span><span class="mi">599</span>     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_keys</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">600</span>     <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_keys</span>
-<span class="g g-Whitespace">    </span><span class="mi">601</span> <span class="p">):</span>
-
-<span class="nn">File d:\MisTrabajos\IA_generativa\Langchain\libro\.venv\Lib\site-packages\langgraph\pregel\_algo.py:297,</span> in <span class="ni">apply_writes</span><span class="nt">(checkpoint, channels, tasks, get_next_version, trigger_to_nodes)</span>
-<span class="g g-Whitespace">    </span><span class="mi">295</span> <span class="k">for</span> <span class="n">chan</span><span class="p">,</span> <span class="n">vals</span> <span class="ow">in</span> <span class="n">pending_writes_by_channel</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-<span class="g g-Whitespace">    </span><span class="mi">296</span>     <span class="k">if</span> <span class="n">chan</span> <span class="ow">in</span> <span class="n">channels</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">297</span>         <span class="k">if</span> <span class="n">channels</span><span class="p">[</span><span class="n">chan</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">vals</span><span class="p">)</span> <span class="ow">and</span> <span class="n">next_version</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">298</span>             <span class="n">checkpoint</span><span class="p">[</span><span class="s2">&quot;channel_versions&quot;</span><span class="p">][</span><span class="n">chan</span><span class="p">]</span> <span class="o">=</span> <span class="n">next_version</span>
-<span class="g g-Whitespace">    </span><span class="mi">299</span>             <span class="c1"># unavailable channels can&#39;t trigger tasks, so don&#39;t add them</span>
-
-<span class="nn">File d:\MisTrabajos\IA_generativa\Langchain\libro\.venv\Lib\site-packages\langgraph\channels\last_value.py:64,</span> in <span class="ni">LastValue.update</span><span class="nt">(self, values)</span>
-<span class="g g-Whitespace">     </span><span class="mi">59</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
-<span class="g g-Whitespace">     </span><span class="mi">60</span>     <span class="n">msg</span> <span class="o">=</span> <span class="n">create_error_message</span><span class="p">(</span>
-<span class="g g-Whitespace">     </span><span class="mi">61</span>         <span class="n">message</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;At key &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39;: Can receive only one value per step. Use an Annotated key to handle multiple values.&quot;</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">62</span>         <span class="n">error_code</span><span class="o">=</span><span class="n">ErrorCode</span><span class="o">.</span><span class="n">INVALID_CONCURRENT_GRAPH_UPDATE</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">63</span>     <span class="p">)</span>
-<span class="ne">---&gt; </span><span class="mi">64</span>     <span class="k">raise</span> <span class="n">InvalidUpdateError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">66</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-<span class="g g-Whitespace">     </span><span class="mi">67</span> <span class="k">return</span> <span class="kc">True</span>
-
-<span class="ne">InvalidUpdateError</span>: At key &#39;mensaje&#39;: Can receive only one value per step. Use an Annotated key to handle multiple values.
-<span class="n">For</span> <span class="n">troubleshooting</span><span class="p">,</span> <span class="n">visit</span><span class="p">:</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">docs</span><span class="o">.</span><span class="n">langchain</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">oss</span><span class="o">/</span><span class="n">python</span><span class="o">/</span><span class="n">langgraph</span><span class="o">/</span><span class="n">errors</span><span class="o">/</span><span class="n">INVALID_CONCURRENT_GRAPH_UPDATE</span>
+   Ruta seguida  : Flujo iniciado → nodo_1 → nodo_2(rama 2)
+   Rama elegida  : 0
+=============================================
+ESTADO FINAL: {&#39;mensaje&#39;: &#39;Flujo iniciado → nodo_1 → nodo_2(rama 2)&#39;, &#39;rama_elegida&#39;: 0}
 </pre></div>
 </div>
 </div>
 </div>
+</section>
 <section id="ejemplo-avanzado-estado-del-servicio-de-atencion-al-cliente">
-<h2><span class="section-number">9.1. </span>Ejemplo avanzado: Estado del servicio de atención al cliente<a class="headerlink" href="#ejemplo-avanzado-estado-del-servicio-de-atencion-al-cliente" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">9.10. </span>Ejemplo avanzado: Estado del servicio de atención al cliente<a class="headerlink" href="#ejemplo-avanzado-estado-del-servicio-de-atencion-al-cliente" title="Link to this heading">#</a></h2>
 <p>Esta demostración aplica un flujo de trabajo con estado usando LangGraph para dirigir los mensajes de los clientes a facturación, técnicos o ventas, resolver el problema y registrar su seguimiento. El flujo utiliza un estado tipificado, reductores para la acumulación de mensajes e historial, un nodo enrutador, controladores de departamento y un puntero de control para mantener la continuidad entre turnos.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1217,7 +1125,6 @@ Customer issue history: [&#39;billing-8a36d389-8d8f-4145-9e9e-07db6161128c&#39;,
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">9. Introducción</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#por-que-langgraph">9.1. ¿Por qué LangGraph?.</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grafos-en-langgraph">9.2. Grafos en LangGraph</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#workflow-agentico-con-langgraph">9.3. Workflow agéntico con LangGraph</a></li>
@@ -1226,14 +1133,9 @@ Customer issue history: [&#39;billing-8a36d389-8d8f-4145-9e9e-07db6161128c&#39;,
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#typeddict-vs-pydantic-cuando-elegir-que">9.6. TypedDict vs Pydantic (cuándo elegir qué)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-simple">9.7. Ejemplo simple</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-asincrona-del-ejemplo">9.8. Versión asíncrona del ejemplo</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-inicial">9.9. Ejemplo inicial</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-avanzado-estado-del-servicio-de-atencion-al-cliente">9.10. Ejemplo avanzado: Estado del servicio de atención al cliente</a></li>
 </ul>
-</li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-inicial">9. Ejemplo inicial</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-avanzado-estado-del-servicio-de-atencion-al-cliente">9.1. Ejemplo avanzado: Estado del servicio de atención al cliente</a></li>
-</ul>
-</li>
-</ul>
-
   </nav></div>
 
 </div></div>
