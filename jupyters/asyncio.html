@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>11. Programación asíncrona con asyncio en Python: una guía práctica &#8212; LangChain &amp; LangGraph</title>
+    <title>12. Programación asíncrona con asyncio en Python: una guía práctica &#8212; LangChain &amp; LangGraph</title>
   
   
   
@@ -63,8 +63,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'jupyters/asyncio';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="12. Introducción a Ollama" href="ollama.html" />
-    <link rel="prev" title="10. Introducción" href="langgraph/base_datos.html" />
+    <link rel="next" title="13. Introducción a Ollama" href="ollama.html" />
+    <link rel="prev" title="11. Introducción" href="langgraph/base_datos.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -169,18 +169,19 @@
 <li class="toctree-l1"><a class="reference internal" href="messages.html">5. Messages en LangChain</a></li>
 <li class="toctree-l1"><a class="reference internal" href="agentes.html">6. Agentes en LangChain</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tools.html">7. Tools (herramientas) en LangChain</a></li>
-<li class="toctree-l1"><a class="reference internal" href="langchain_async_concurrencia.html">8. Ejecución asíncrona en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wikipedia.html">8. Uso de la Tool wikipedia en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="langchain_async_concurrencia.html">9. Ejecución asíncrona en LangChain</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">LangGraph.</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="langgraph/init_langGraph.html">9. Construir agentes en LangGraph</a></li>
-<li class="toctree-l1"><a class="reference internal" href="langgraph/base_datos.html">10. Base de datos con LangGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="langgraph/init_langGraph.html">10. Construir agentes en LangGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="langgraph/base_datos.html">11. Base de datos con LangGraph</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Apéndices.</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">11. Asincronia con asyncio</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ollama.html">12. Ollama</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sitiosweb.html">13. Sitios web</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">12. Asincronia con asyncio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ollama.html">13. Ollama</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sitiosweb.html">14. Sitios web</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Índice de términos</span></p>
 <ul class="nav bd-sidenav">
@@ -282,15 +283,15 @@
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#por-que-importa-la-asincronia">11.1. ¿Por qué importa la asincronía?</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#corrutinas-la-base-de-todo">11.2. Corrutinas: la base de todo</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gestores-de-contexto-e-iteradores-asincronos">11.3. Gestores de contexto e iteradores asíncronos</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tareas-y-ejecucion-concurrente">11.4. Tareas y ejecución concurrente.</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#medir-el-tiempo-de-ejecucion-con-decoradores">11.5. Medir el tiempo de ejecución con decoradores</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#manejo-de-errores-en-corrutinas-concurrentes">11.6. Manejo de errores en corrutinas concurrentes</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#el-bucle-de-eventos">11.7. El bucle de eventos</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modo-debug-detecta-problemas-antes-de-que-lleguen-a-produccion">11.8. Modo debug: detecta problemas antes de que lleguen a producción</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">11.9. Conclusión</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#por-que-importa-la-asincronia">12.1. ¿Por qué importa la asincronía?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#corrutinas-la-base-de-todo">12.2. Corrutinas: la base de todo</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gestores-de-contexto-e-iteradores-asincronos">12.3. Gestores de contexto e iteradores asíncronos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tareas-y-ejecucion-concurrente">12.4. Tareas y ejecución concurrente.</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#medir-el-tiempo-de-ejecucion-con-decoradores">12.5. Medir el tiempo de ejecución con decoradores</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#manejo-de-errores-en-corrutinas-concurrentes">12.6. Manejo de errores en corrutinas concurrentes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#el-bucle-de-eventos">12.7. El bucle de eventos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modo-debug-detecta-problemas-antes-de-que-lleguen-a-produccion">12.8. Modo debug: detecta problemas antes de que lleguen a producción</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">12.9. Conclusión</a></li>
 </ul>
             </nav>
         </div>
@@ -303,15 +304,15 @@
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="programacion-asincrona-con-asyncio-en-python-una-guia-practica">
-<span id="referencia1"></span><h1><span class="section-number">11. </span>Programación asíncrona con asyncio en Python: una guía práctica<a class="headerlink" href="#programacion-asincrona-con-asyncio-en-python-una-guia-practica" title="Link to this heading">#</a></h1>
+<span id="referencia1"></span><h1><span class="section-number">12. </span>Programación asíncrona con asyncio en Python: una guía práctica<a class="headerlink" href="#programacion-asincrona-con-asyncio-en-python-una-guia-practica" title="Link to this heading">#</a></h1>
 <section id="por-que-importa-la-asincronia">
-<h2><span class="section-number">11.1. </span>¿Por qué importa la asincronía?<a class="headerlink" href="#por-que-importa-la-asincronia" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">12.1. </span>¿Por qué importa la asincronía?<a class="headerlink" href="#por-que-importa-la-asincronia" title="Link to this heading">#</a></h2>
 <p>Python ha madurado enormemente en los últimos años, y una de las áreas donde más ha crecido es la programación asíncrona. La biblioteca asyncio hace posible ejecutar múltiples tareas de forma concurrente dentro de un programa que, en esencia, corre en un solo hilo.</p>
 <p>Cuando construyes aplicaciones que dependen de operaciones lentas —consultar una API externa, leer de una base de datos, procesar archivos grandes— el tiempo de espera se convierte en tu enemigo. asyncio te permite aprovechar ese tiempo de espera para seguir haciendo trabajo útil en lugar de quedarte bloqueado.</p>
 <p>Este artículo te llevará por los pilares fundamentales de asyncio: corrutinas, gestores de contexto asíncronos, tareas concurrentes, medición de rendimiento, manejo de errores y el bucle de eventos. Cada sección incluye ejemplos listos para ejecutar.</p>
 </section>
 <section id="corrutinas-la-base-de-todo">
-<h2><span class="section-number">11.2. </span>Corrutinas: la base de todo<a class="headerlink" href="#corrutinas-la-base-de-todo" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">12.2. </span>Corrutinas: la base de todo<a class="headerlink" href="#corrutinas-la-base-de-todo" title="Link to this heading">#</a></h2>
 <p>Una corrutina es una función especial que puede suspender su ejecución en un punto determinado y ceder el control a otra tarea, para luego retomar desde donde se quedó. Esto es exactamente lo que necesitas cuando tienes operaciones que implican esperas.</p>
 <p>En Python, una corrutina se declara con <code class="docutils literal notranslate"><span class="pre">async</span> <span class="pre">def</span></code>:</p>
 <div class="cell docutils container">
@@ -395,7 +396,7 @@
 </div>
 </section>
 <section id="gestores-de-contexto-e-iteradores-asincronos">
-<h2><span class="section-number">11.3. </span>Gestores de contexto e iteradores asíncronos<a class="headerlink" href="#gestores-de-contexto-e-iteradores-asincronos" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">12.3. </span>Gestores de contexto e iteradores asíncronos<a class="headerlink" href="#gestores-de-contexto-e-iteradores-asincronos" title="Link to this heading">#</a></h2>
 <p>En aplicaciones reales, necesitas abrir conexiones, leer archivos o interactuar con servicios externos. asyncio ofrece soporte nativo para hacer todo esto de forma no bloqueante.</p>
 <p><code class="docutils literal notranslate"><span class="pre">async</span> <span class="pre">with</span></code></p>
 <p>El bloque async with gestiona recursos asíncronos de forma segura, garantizando que se abran y cierren correctamente aunque ocurra un error:</p>
@@ -487,7 +488,7 @@ Procesando → Sección generada: conclusiones
 <p>La diferencia entre for y async for es clara: el primero recorre iterables síncronos (listas, tuplas, generadores normales), mientras que el segundo está diseñado para iterables asíncronos. Intentar mezclarlos incorrectamente provoca un TypeError en tiempo de ejecución.</p>
 </section>
 <section id="tareas-y-ejecucion-concurrente">
-<h2><span class="section-number">11.4. </span>Tareas y ejecución concurrente.<a class="headerlink" href="#tareas-y-ejecucion-concurrente" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">12.4. </span>Tareas y ejecución concurrente.<a class="headerlink" href="#tareas-y-ejecucion-concurrente" title="Link to this heading">#</a></h2>
 <p>Cuando envuelves una corrutina en una <code class="docutils literal notranslate"><span class="pre">Task</span></code> usando <code class="docutils literal notranslate"><span class="pre">asyncio.create_task()</span></code>, la estás registrando para que el bucle de eventos la ejecute tan pronto como pueda, sin esperar a que la corrutina anterior termine:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -549,7 +550,7 @@ Descarga completada: foto_perfil.jpg
 </div>
 </section>
 <section id="medir-el-tiempo-de-ejecucion-con-decoradores">
-<h2><span class="section-number">11.5. </span>Medir el tiempo de ejecución con decoradores<a class="headerlink" href="#medir-el-tiempo-de-ejecucion-con-decoradores" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">12.5. </span>Medir el tiempo de ejecución con decoradores<a class="headerlink" href="#medir-el-tiempo-de-ejecucion-con-decoradores" title="Link to this heading">#</a></h2>
 <p>Un decorador asíncrono te permite instrumentar tus corrutinas sin modificar su lógica interna. Es útil para detectar cuellos de botella:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -594,7 +595,7 @@ Descarga completada: foto_perfil.jpg
 <p>Validar la escalabilidad: antes de aumentar la carga de tu sistema, necesitas saber cómo se comportan tus corrutinas con los datos actuales.</p>
 </section>
 <section id="manejo-de-errores-en-corrutinas-concurrentes">
-<h2><span class="section-number">11.6. </span>Manejo de errores en corrutinas concurrentes<a class="headerlink" href="#manejo-de-errores-en-corrutinas-concurrentes" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">12.6. </span>Manejo de errores en corrutinas concurrentes<a class="headerlink" href="#manejo-de-errores-en-corrutinas-concurrentes" title="Link to this heading">#</a></h2>
 <p>Las corrutinas son “perezosas”: no ejecutan su cuerpo hasta que alguien las espera con await. Esto significa que los errores también se posponen, lo que puede dificultar el diagnóstico si no estás preparado.</p>
 <p>Cuando ejecutas múltiples corrutinas en paralelo, <code class="docutils literal notranslate"><span class="pre">asyncio.gather</span></code> con <code class="docutils literal notranslate"><span class="pre">return_exceptions=True</span></code> te permite recoger todos los errores sin que uno solo interrumpa el resto:</p>
 <div class="cell docutils container">
@@ -644,7 +645,7 @@ Error capturado: &#39;Par de divisas no válido: ZZZ/XXX&#39;
 </div>
 </section>
 <section id="el-bucle-de-eventos">
-<h2><span class="section-number">11.7. </span>El bucle de eventos<a class="headerlink" href="#el-bucle-de-eventos" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">12.7. </span>El bucle de eventos<a class="headerlink" href="#el-bucle-de-eventos" title="Link to this heading">#</a></h2>
 <p>El bucle de eventos es el motor que orquesta la ejecución de todas las corrutinas. Normalmente no necesitas interactuar con él directamente —asyncio.run() lo gestiona— pero en algunos casos avanzados puedes controlarlo manualmente:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -728,7 +729,7 @@ Pedido #3: listo
 <p>Recuerda: asyncio está pensado para tareas limitadas por entrada/salida (I/O-bound). Si tus operaciones consumen CPU intensivamente (cálculos matemáticos, procesamiento de imágenes), el paralelismo real requiere <code class="docutils literal notranslate"><span class="pre">multiprocessing</span></code>, no corrutinas.</p>
 </section>
 <section id="modo-debug-detecta-problemas-antes-de-que-lleguen-a-produccion">
-<h2><span class="section-number">11.8. </span>Modo debug: detecta problemas antes de que lleguen a producción<a class="headerlink" href="#modo-debug-detecta-problemas-antes-de-que-lleguen-a-produccion" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">12.8. </span>Modo debug: detecta problemas antes de que lleguen a producción<a class="headerlink" href="#modo-debug-detecta-problemas-antes-de-que-lleguen-a-produccion" title="Link to this heading">#</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">asyncio</span></code> incluye un modo de depuración que emite advertencias cuando detecta patrones problemáticos, como llamadas bloqueantes dentro del bucle de eventos:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -856,7 +857,7 @@ Notificación enviada a usuario 202
 <p>En este ejemplo, <code class="docutils literal notranslate"><span class="pre">time.sleep(3)</span></code> dentro de <code class="docutils literal notranslate"><span class="pre">exportar_csv</span></code> bloquea el bucle de eventos durante 3 segundos, impidiendo que las otras tareas avancen. El modo debug detecta esta situación y la reporta con un mensaje de advertencia. En producción, la solución es reemplazar <code class="docutils literal notranslate"><span class="pre">time.sleep</span></code> por <code class="docutils literal notranslate"><span class="pre">await</span> <span class="pre">asyncio.sleep</span></code> o, si la operación es realmente síncrona, ejecutarla en un executor separado.</p>
 </section>
 <section id="conclusion">
-<h2><span class="section-number">11.9. </span>Conclusión<a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">12.9. </span>Conclusión<a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h2>
 <p>Con este material se tiene una base sólida para trabajar con <code class="docutils literal notranslate"><span class="pre">asyncio</span></code>: sabes cómo definir y ejecutar corrutinas, cómo gestionar recursos de forma asíncrona con <code class="docutils literal notranslate"><span class="pre">async</span> <span class="pre">with</span></code> y <code class="docutils literal notranslate"><span class="pre">async</span> <span class="pre">for</span></code>, cómo crear tareas concurrentes, medir su rendimiento y capturar errores de forma robusta.</p>
 <p>El verdadero potencial de <code class="docutils literal notranslate"><span class="pre">asyncio</span></code> aparece cuando las aplicaciones crecen y necesitas coordinar docenas o cientos de tareas simultáneas: semáforos para limitar concurrencia, colas para comunicación entre tareas, o transportes y protocolos para comunicación de red de bajo nivel.</p>
 </section>
@@ -898,7 +899,7 @@ Notificación enviada a usuario 202
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title"><span class="section-number">10. </span>Introducción</p>
+        <p class="prev-next-title"><span class="section-number">11. </span>Introducción</p>
       </div>
     </a>
     <a class="right-next"
@@ -906,7 +907,7 @@ Notificación enviada a usuario 202
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><span class="section-number">12. </span>Introducción a Ollama</p>
+        <p class="prev-next-title"><span class="section-number">13. </span>Introducción a Ollama</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -928,15 +929,15 @@ Notificación enviada a usuario 202
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#por-que-importa-la-asincronia">11.1. ¿Por qué importa la asincronía?</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#corrutinas-la-base-de-todo">11.2. Corrutinas: la base de todo</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gestores-de-contexto-e-iteradores-asincronos">11.3. Gestores de contexto e iteradores asíncronos</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tareas-y-ejecucion-concurrente">11.4. Tareas y ejecución concurrente.</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#medir-el-tiempo-de-ejecucion-con-decoradores">11.5. Medir el tiempo de ejecución con decoradores</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#manejo-de-errores-en-corrutinas-concurrentes">11.6. Manejo de errores en corrutinas concurrentes</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#el-bucle-de-eventos">11.7. El bucle de eventos</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modo-debug-detecta-problemas-antes-de-que-lleguen-a-produccion">11.8. Modo debug: detecta problemas antes de que lleguen a producción</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">11.9. Conclusión</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#por-que-importa-la-asincronia">12.1. ¿Por qué importa la asincronía?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#corrutinas-la-base-de-todo">12.2. Corrutinas: la base de todo</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gestores-de-contexto-e-iteradores-asincronos">12.3. Gestores de contexto e iteradores asíncronos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tareas-y-ejecucion-concurrente">12.4. Tareas y ejecución concurrente.</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#medir-el-tiempo-de-ejecucion-con-decoradores">12.5. Medir el tiempo de ejecución con decoradores</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#manejo-de-errores-en-corrutinas-concurrentes">12.6. Manejo de errores en corrutinas concurrentes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#el-bucle-de-eventos">12.7. El bucle de eventos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modo-debug-detecta-problemas-antes-de-que-lleguen-a-produccion">12.8. Modo debug: detecta problemas antes de que lleguen a producción</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">12.9. Conclusión</a></li>
 </ul>
   </nav></div>
 

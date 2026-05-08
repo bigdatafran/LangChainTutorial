@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>12. Introducción a Ollama &#8212; LangChain &amp; LangGraph</title>
+    <title>13. Introducción a Ollama &#8212; LangChain &amp; LangGraph</title>
   
   
   
@@ -63,8 +63,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'jupyters/ollama';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="13. Sitios web" href="sitiosweb.html" />
-    <link rel="prev" title="11. Programación asíncrona con asyncio en Python: una guía práctica" href="asyncio.html" />
+    <link rel="next" title="14. Sitios web" href="sitiosweb.html" />
+    <link rel="prev" title="12. Programación asíncrona con asyncio en Python: una guía práctica" href="asyncio.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -169,18 +169,19 @@
 <li class="toctree-l1"><a class="reference internal" href="messages.html">5. Messages en LangChain</a></li>
 <li class="toctree-l1"><a class="reference internal" href="agentes.html">6. Agentes en LangChain</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tools.html">7. Tools (herramientas) en LangChain</a></li>
-<li class="toctree-l1"><a class="reference internal" href="langchain_async_concurrencia.html">8. Ejecución asíncrona en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wikipedia.html">8. Uso de la Tool wikipedia en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="langchain_async_concurrencia.html">9. Ejecución asíncrona en LangChain</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">LangGraph.</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="langgraph/init_langGraph.html">9. Construir agentes en LangGraph</a></li>
-<li class="toctree-l1"><a class="reference internal" href="langgraph/base_datos.html">10. Base de datos con LangGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="langgraph/init_langGraph.html">10. Construir agentes en LangGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="langgraph/base_datos.html">11. Base de datos con LangGraph</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Apéndices.</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="asyncio.html">11. Asincronia con asyncio</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">12. Ollama</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sitiosweb.html">13. Sitios web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="asyncio.html">12. Asincronia con asyncio</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">13. Ollama</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sitiosweb.html">14. Sitios web</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Índice de términos</span></p>
 <ul class="nav bd-sidenav">
@@ -282,31 +283,31 @@
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#por-que-ejecutar-llms-locales-en-windows">12.1. ¿Por qué ejecutar LLMs locales en Windows?</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requisitos-del-sistema-e-instalacion-en-windows">12.2. Requisitos del Sistema e Instalación en Windows</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#requisitos-minimos-y-recomendados">12.2.1. Requisitos mínimos y recomendados</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proceso-de-instalacion">12.2.2. Proceso de Instalación</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#por-que-ejecutar-llms-locales-en-windows">13.1. ¿Por qué ejecutar LLMs locales en Windows?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requisitos-del-sistema-e-instalacion-en-windows">13.2. Requisitos del Sistema e Instalación en Windows</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#requisitos-minimos-y-recomendados">13.2.1. Requisitos mínimos y recomendados</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proceso-de-instalacion">13.2.2. Proceso de Instalación</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gestion-y-operacion-de-modelos-con-ollama">12.3. Gestión y Operación de Modelos con Ollama</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comandos-esenciales">12.3.1. Comandos Esenciales</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#el-archivo-de-configuracion-modelfile">12.3.2. El Archivo de Configuración (Modelfile)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gestion-y-operacion-de-modelos-con-ollama">13.3. Gestión y Operación de Modelos con Ollama</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comandos-esenciales">13.3.1. Comandos Esenciales</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#el-archivo-de-configuracion-modelfile">13.3.2. El Archivo de Configuración (Modelfile)</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#integracion-de-ollama-con-langchain">12.4. Integración de Ollama con LangChain</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#configuracion-del-entorno-de-python">12.4.1. Configuración del Entorno de Python</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-1-inferencia-basica-con-chatollama">12.4.2. Ejemplo 1: Inferencia Básica con <code class="docutils literal notranslate"><span class="pre">ChatOllama</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-2-creacion-de-cadenas-chains-con-prompts-estructurados">12.4.3. Ejemplo 2: Creación de Cadenas (Chains) con Prompts Estructurados</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-3-respuestas-en-streaming">12.4.4. Ejemplo 3: Respuestas en Streaming</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#integracion-de-ollama-con-langchain">13.4. Integración de Ollama con LangChain</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#configuracion-del-entorno-de-python">13.4.1. Configuración del Entorno de Python</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-1-inferencia-basica-con-chatollama">13.4.2. Ejemplo 1: Inferencia Básica con <code class="docutils literal notranslate"><span class="pre">ChatOllama</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-2-creacion-de-cadenas-chains-con-prompts-estructurados">13.4.3. Ejemplo 2: Creación de Cadenas (Chains) con Prompts Estructurados</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-3-respuestas-en-streaming">13.4.4. Ejemplo 3: Respuestas en Streaming</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#arquitectura-avanzada-implementacion-de-rag-local-con-ollama-y-langchain">12.5. Arquitectura Avanzada: Implementación de RAG local con Ollama y LangChain</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-completo-de-rag-local">12.5.1. Ejemplo completo de RAG Local</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#arquitectura-avanzada-implementacion-de-rag-local-con-ollama-y-langchain">13.5. Arquitectura Avanzada: Implementación de RAG local con Ollama y LangChain</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-completo-de-rag-local">13.5.1. Ejemplo completo de RAG Local</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#solucion-de-problemas-y-buenas-practicas-en-windows">12.6. Solución de Problemas y Buenas Prácticas en Windows</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problemas-comunes-y-soluciones">12.6.1. Problemas comunes y soluciones</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#buenas-practicas">12.6.2. Buenas Prácticas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#solucion-de-problemas-y-buenas-practicas-en-windows">13.6. Solución de Problemas y Buenas Prácticas en Windows</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problemas-comunes-y-soluciones">13.6.1. Problemas comunes y soluciones</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#buenas-practicas">13.6.2. Buenas Prácticas</a></li>
 </ul>
 </li>
 </ul>
@@ -321,10 +322,10 @@
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="introduccion-a-ollama">
-<span id="ollama2"></span><h1><span class="section-number">12. </span>Introducción a Ollama<a class="headerlink" href="#introduccion-a-ollama" title="Link to this heading">#</a></h1>
+<span id="ollama2"></span><h1><span class="section-number">13. </span>Introducción a Ollama<a class="headerlink" href="#introduccion-a-ollama" title="Link to this heading">#</a></h1>
 <p id="index-0">Ollama es una herramienta revolucionaria diseñada para simplificar la descarga, instalación y ejecución de grandes modelos de lenguaje (LLMs) de forma local. Tradicionalmente, trabajar con modelos como Llama 3, Mistral o Gemma requería configurar entornos complejos de Python, manejar dependencias de GPU (como CUDA) y descargar manualmente gigabytes de pesos de modelos. Ollama abstrae toda esta complejidad y la empaqueta en una solución ligera y eficiente.</p>
 <section id="por-que-ejecutar-llms-locales-en-windows">
-<h2><span class="section-number">12.1. </span>¿Por qué ejecutar LLMs locales en Windows?<a class="headerlink" href="#por-que-ejecutar-llms-locales-en-windows" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">13.1. </span>¿Por qué ejecutar LLMs locales en Windows?<a class="headerlink" href="#por-que-ejecutar-llms-locales-en-windows" title="Link to this heading">#</a></h2>
 <p>El uso de LLMs de forma local en entornos Windows ofrece ventajas estratégicas cruciales:</p>
 <ul class="simple">
 <li><p><strong>Privacidad y Seguridad de Datos</strong>: La información procesada nunca sale de tu máquina local. Esto es vital para entornos corporativos o proyectos con datos confidenciales.</p></li>
@@ -335,10 +336,10 @@
 </section>
 <hr class="docutils" />
 <section id="requisitos-del-sistema-e-instalacion-en-windows">
-<h2><span class="section-number">12.2. </span>Requisitos del Sistema e Instalación en Windows<a class="headerlink" href="#requisitos-del-sistema-e-instalacion-en-windows" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">13.2. </span>Requisitos del Sistema e Instalación en Windows<a class="headerlink" href="#requisitos-del-sistema-e-instalacion-en-windows" title="Link to this heading">#</a></h2>
 <p>Ollama cuenta con soporte nativo para Windows, lo que significa que no necesitas configurar el Subsistema de Windows para Linux (WSL2) de manera obligatoria, aunque sigue siendo compatible.</p>
 <section id="requisitos-minimos-y-recomendados">
-<h3><span class="section-number">12.2.1. </span>Requisitos mínimos y recomendados<a class="headerlink" href="#requisitos-minimos-y-recomendados" title="Link to this heading">#</a></h3>
+<h3><span class="section-number">13.2.1. </span>Requisitos mínimos y recomendados<a class="headerlink" href="#requisitos-minimos-y-recomendados" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Sistema Operativo</strong>: Windows 10 (versión 19041 o superior) o Windows 11.</p></li>
 <li><p><strong>Memoria RAM</strong>:</p>
@@ -351,7 +352,7 @@
 </ul>
 </section>
 <section id="proceso-de-instalacion">
-<h3><span class="section-number">12.2.2. </span>Proceso de Instalación<a class="headerlink" href="#proceso-de-instalacion" title="Link to this heading">#</a></h3>
+<h3><span class="section-number">13.2.2. </span>Proceso de Instalación<a class="headerlink" href="#proceso-de-instalacion" title="Link to this heading">#</a></h3>
 <ol class="arabic">
 <li><p><strong>Descargar el Instalador</strong>: Dirígete al sitio web oficial de Ollama y descarga el ejecutable para Windows (<code class="docutils literal notranslate"><span class="pre">OllamaSetup.exe</span></code>).</p></li>
 <li><p><strong>Ejecutar el Instalador</strong>: Abre el archivo descargado y sigue los pasos del asistente. El proceso instalará Ollama en tu sistema y lo configurará como un servicio en segundo plano.</p></li>
@@ -365,10 +366,10 @@
 </section>
 <hr class="docutils" />
 <section id="gestion-y-operacion-de-modelos-con-ollama">
-<h2><span class="section-number">12.3. </span>Gestión y Operación de Modelos con Ollama<a class="headerlink" href="#gestion-y-operacion-de-modelos-con-ollama" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">13.3. </span>Gestión y Operación de Modelos con Ollama<a class="headerlink" href="#gestion-y-operacion-de-modelos-con-ollama" title="Link to this heading">#</a></h2>
 <p>Ollama funciona mediante una interfaz de línea de comandos (CLI) intuitiva. El servicio por defecto escucha en <code class="docutils literal notranslate"><span class="pre">http://localhost:11434</span></code>.</p>
 <section id="comandos-esenciales">
-<h3><span class="section-number">12.3.1. </span>Comandos Esenciales<a class="headerlink" href="#comandos-esenciales" title="Link to this heading">#</a></h3>
+<h3><span class="section-number">13.3.1. </span>Comandos Esenciales<a class="headerlink" href="#comandos-esenciales" title="Link to this heading">#</a></h3>
 <ul>
 <li><p><strong>Descargar y ejecutar un modelo</strong>: El comando <code class="docutils literal notranslate"><span class="pre">run</span></code> descarga el modelo (si no está ya en el sistema) y arranca una sesión de chat interactiva.</p>
 <div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">ollama</span> <span class="n">run</span> <span class="n">llama3</span>
@@ -393,7 +394,7 @@
 </ul>
 </section>
 <section id="el-archivo-de-configuracion-modelfile">
-<h3><span class="section-number">12.3.2. </span>El Archivo de Configuración (Modelfile)<a class="headerlink" href="#el-archivo-de-configuracion-modelfile" title="Link to this heading">#</a></h3>
+<h3><span class="section-number">13.3.2. </span>El Archivo de Configuración (Modelfile)<a class="headerlink" href="#el-archivo-de-configuracion-modelfile" title="Link to this heading">#</a></h3>
 <p>Ollama permite personalizar el comportamiento de los modelos mediante un archivo llamado <code class="docutils literal notranslate"><span class="pre">Modelfile</span></code>. Puedes definir el sistema de prompts (instrucciones base), la temperatura y otros hiperparámetros.</p>
 <p>Ejemplo de un archivo <code class="docutils literal notranslate"><span class="pre">Modelfile</span></code> para crear un asistente experto en Python:</p>
 <div class="highlight-dockerfile notranslate"><div class="highlight"><pre><span></span><span class="k">FROM</span><span class="w"> </span><span class="s">llama3</span>
@@ -420,10 +421,10 @@ utilizando<span class="w"> </span>siempre<span class="w"> </span>tipado<span cla
 </section>
 <hr class="docutils" />
 <section id="integracion-de-ollama-con-langchain">
-<h2><span class="section-number">12.4. </span>Integración de Ollama con LangChain<a class="headerlink" href="#integracion-de-ollama-con-langchain" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">13.4. </span>Integración de Ollama con LangChain<a class="headerlink" href="#integracion-de-ollama-con-langchain" title="Link to this heading">#</a></h2>
 <p>LangChain es el framework líder para el desarrollo de aplicaciones basadas en Modelos de Lenguaje. Permite encadenar llamadas a LLMs, gestionar la memoria, conectar datos externos (RAG) y construir agentes complejos.</p>
 <section id="configuracion-del-entorno-de-python">
-<h3><span class="section-number">12.4.1. </span>Configuración del Entorno de Python<a class="headerlink" href="#configuracion-del-entorno-de-python" title="Link to this heading">#</a></h3>
+<h3><span class="section-number">13.4.1. </span>Configuración del Entorno de Python<a class="headerlink" href="#configuracion-del-entorno-de-python" title="Link to this heading">#</a></h3>
 <p>Para conectar Ollama con LangChain en Windows, primero necesitas crear un entorno virtual de Python e instalar las librerías necesarias. Abre PowerShell y ejecuta:</p>
 <div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="c"># Crear y activar un entorno virtual</span>
 <span class="n">python</span> <span class="n">-m</span> <span class="n">venv</span> <span class="p">.</span><span class="n">venv</span>
@@ -435,7 +436,7 @@ utilizando<span class="w"> </span>siempre<span class="w"> </span>tipado<span cla
 </div>
 </section>
 <section id="ejemplo-1-inferencia-basica-con-chatollama">
-<h3><span class="section-number">12.4.2. </span>Ejemplo 1: Inferencia Básica con <code class="docutils literal notranslate"><span class="pre">ChatOllama</span></code><a class="headerlink" href="#ejemplo-1-inferencia-basica-con-chatollama" title="Link to this heading">#</a></h3>
+<h3><span class="section-number">13.4.2. </span>Ejemplo 1: Inferencia Básica con <code class="docutils literal notranslate"><span class="pre">ChatOllama</span></code><a class="headerlink" href="#ejemplo-1-inferencia-basica-con-chatollama" title="Link to this heading">#</a></h3>
 <p>En LangChain, la clase <code class="docutils literal notranslate"><span class="pre">ChatOllama</span></code> se utiliza para interactuar con modelos de chat locales servidos por Ollama.</p>
 <p>Crea un archivo llamado <code class="docutils literal notranslate"><span class="pre">basico.py</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_community.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOllama</span>
@@ -461,7 +462,7 @@ utilizando<span class="w"> </span>siempre<span class="w"> </span>tipado<span cla
 </div>
 </section>
 <section id="ejemplo-2-creacion-de-cadenas-chains-con-prompts-estructurados">
-<h3><span class="section-number">12.4.3. </span>Ejemplo 2: Creación de Cadenas (Chains) con Prompts Estructurados<a class="headerlink" href="#ejemplo-2-creacion-de-cadenas-chains-con-prompts-estructurados" title="Link to this heading">#</a></h3>
+<h3><span class="section-number">13.4.3. </span>Ejemplo 2: Creación de Cadenas (Chains) con Prompts Estructurados<a class="headerlink" href="#ejemplo-2-creacion-de-cadenas-chains-con-prompts-estructurados" title="Link to this heading">#</a></h3>
 <p>La verdadera potencia de LangChain surge al estructurar los prompts y procesar las respuestas mediante el Lenguaje de Expresión de LangChain (LCEL).</p>
 <p>Crea un archivo llamado <code class="docutils literal notranslate"><span class="pre">cadena_traduccion.py</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
@@ -496,7 +497,7 @@ utilizando<span class="w"> </span>siempre<span class="w"> </span>tipado<span cla
 </div>
 </section>
 <section id="ejemplo-3-respuestas-en-streaming">
-<h3><span class="section-number">12.4.4. </span>Ejemplo 3: Respuestas en Streaming<a class="headerlink" href="#ejemplo-3-respuestas-en-streaming" title="Link to this heading">#</a></h3>
+<h3><span class="section-number">13.4.4. </span>Ejemplo 3: Respuestas en Streaming<a class="headerlink" href="#ejemplo-3-respuestas-en-streaming" title="Link to this heading">#</a></h3>
 <p>Para mejorar la experiencia de usuario, puedes configurar LangChain para que imprima la respuesta del modelo en tiempo real a medida que se genera.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_community.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOllama</span>
 
@@ -514,14 +515,14 @@ utilizando<span class="w"> </span>siempre<span class="w"> </span>tipado<span cla
 </section>
 <hr class="docutils" />
 <section id="arquitectura-avanzada-implementacion-de-rag-local-con-ollama-y-langchain">
-<h2><span class="section-number">12.5. </span>Arquitectura Avanzada: Implementación de RAG local con Ollama y LangChain<a class="headerlink" href="#arquitectura-avanzada-implementacion-de-rag-local-con-ollama-y-langchain" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">13.5. </span>Arquitectura Avanzada: Implementación de RAG local con Ollama y LangChain<a class="headerlink" href="#arquitectura-avanzada-implementacion-de-rag-local-con-ollama-y-langchain" title="Link to this heading">#</a></h2>
 <p>El patrón <strong>RAG (Generación Aumentada por Recuperación)</strong> permite al modelo local responder preguntas basándose en documentos privados (PDFs, TXT, bases de datos) que no estaban en su entrenamiento original.</p>
 <p>Para implementar un RAG completamente local en Windows necesitas instalar paquetes adicionales para procesar texto y crear una base de datos vectorial local (ChromaDB):</p>
 <div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">chromadb</span> <span class="n">langchain-text-splitters</span>
 </pre></div>
 </div>
 <section id="ejemplo-completo-de-rag-local">
-<h3><span class="section-number">12.5.1. </span>Ejemplo completo de RAG Local<a class="headerlink" href="#ejemplo-completo-de-rag-local" title="Link to this heading">#</a></h3>
+<h3><span class="section-number">13.5.1. </span>Ejemplo completo de RAG Local<a class="headerlink" href="#ejemplo-completo-de-rag-local" title="Link to this heading">#</a></h3>
 <p>A continuación se muestra un script que simula la ingesta de documentos, su almacenamiento en una base de datos vectorial en memoria y la posterior consulta utilizando Ollama para generar la respuesta final.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_community.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOllama</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_community.embeddings</span><span class="w"> </span><span class="kn">import</span> <span class="n">OllamaEmbeddings</span>
@@ -583,9 +584,9 @@ utilizando<span class="w"> </span>siempre<span class="w"> </span>tipado<span cla
 </section>
 <hr class="docutils" />
 <section id="solucion-de-problemas-y-buenas-practicas-en-windows">
-<h2><span class="section-number">12.6. </span>Solución de Problemas y Buenas Prácticas en Windows<a class="headerlink" href="#solucion-de-problemas-y-buenas-practicas-en-windows" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">13.6. </span>Solución de Problemas y Buenas Prácticas en Windows<a class="headerlink" href="#solucion-de-problemas-y-buenas-practicas-en-windows" title="Link to this heading">#</a></h2>
 <section id="problemas-comunes-y-soluciones">
-<h3><span class="section-number">12.6.1. </span>Problemas comunes y soluciones<a class="headerlink" href="#problemas-comunes-y-soluciones" title="Link to this heading">#</a></h3>
+<h3><span class="section-number">13.6.1. </span>Problemas comunes y soluciones<a class="headerlink" href="#problemas-comunes-y-soluciones" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Ollama no detecta la GPU NVIDIA</strong>:
 Asegúrate de tener instalados los drivers de NVIDIA más recientes. Puedes comprobar si Windows reconoce correctamente tu tarjeta gráfica ejecutando <code class="docutils literal notranslate"><span class="pre">nvidia-smi</span></code> en la terminal. Si ves información sobre tu GPU y la versión de CUDA instalada, Ollama debería reconocerla automáticamente al iniciarse.</p></li>
@@ -600,7 +601,7 @@ Este error ocurre si el servicio de Ollama no se está ejecutando en segundo pla
 </ul>
 </section>
 <section id="buenas-practicas">
-<h3><span class="section-number">12.6.2. </span>Buenas Prácticas<a class="headerlink" href="#buenas-practicas" title="Link to this heading">#</a></h3>
+<h3><span class="section-number">13.6.2. </span>Buenas Prácticas<a class="headerlink" href="#buenas-practicas" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Fijar variables de entorno</strong>: Puedes configurar variables de entorno en Windows para modificar el comportamiento de Ollama. Por ejemplo, <code class="docutils literal notranslate"><span class="pre">OLLAMA_NUM_PARALLEL=4</span></code> permite atender múltiples peticiones en paralelo.</p></li>
 <li><p><strong>Limpieza de caché</strong>: De vez en cuando, revisa el espacio que ocupan los modelos. En Windows, por defecto, los modelos se guardan en <code class="docutils literal notranslate"><span class="pre">C:\Users\&lt;TuUsuario&gt;\.ollama\models</span></code>. Si cambias de disco y quieres ahorrar espacio en el disco del sistema (<code class="docutils literal notranslate"><span class="pre">C:</span></code>), puedes establecer la variable de entorno de sistema <code class="docutils literal notranslate"><span class="pre">OLLAMA_MODELS</span></code> apuntando a otra unidad de almacenamiento.</p></li>
@@ -648,7 +649,7 @@ Este error ocurre si el servicio de Ollama no se está ejecutando en segundo pla
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title"><span class="section-number">11. </span>Programación asíncrona con asyncio en Python: una guía práctica</p>
+        <p class="prev-next-title"><span class="section-number">12. </span>Programación asíncrona con asyncio en Python: una guía práctica</p>
       </div>
     </a>
     <a class="right-next"
@@ -656,7 +657,7 @@ Este error ocurre si el servicio de Ollama no se está ejecutando en segundo pla
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><span class="section-number">13. </span>Sitios web</p>
+        <p class="prev-next-title"><span class="section-number">14. </span>Sitios web</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -678,31 +679,31 @@ Este error ocurre si el servicio de Ollama no se está ejecutando en segundo pla
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#por-que-ejecutar-llms-locales-en-windows">12.1. ¿Por qué ejecutar LLMs locales en Windows?</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requisitos-del-sistema-e-instalacion-en-windows">12.2. Requisitos del Sistema e Instalación en Windows</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#requisitos-minimos-y-recomendados">12.2.1. Requisitos mínimos y recomendados</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proceso-de-instalacion">12.2.2. Proceso de Instalación</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#por-que-ejecutar-llms-locales-en-windows">13.1. ¿Por qué ejecutar LLMs locales en Windows?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requisitos-del-sistema-e-instalacion-en-windows">13.2. Requisitos del Sistema e Instalación en Windows</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#requisitos-minimos-y-recomendados">13.2.1. Requisitos mínimos y recomendados</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proceso-de-instalacion">13.2.2. Proceso de Instalación</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gestion-y-operacion-de-modelos-con-ollama">12.3. Gestión y Operación de Modelos con Ollama</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comandos-esenciales">12.3.1. Comandos Esenciales</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#el-archivo-de-configuracion-modelfile">12.3.2. El Archivo de Configuración (Modelfile)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gestion-y-operacion-de-modelos-con-ollama">13.3. Gestión y Operación de Modelos con Ollama</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comandos-esenciales">13.3.1. Comandos Esenciales</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#el-archivo-de-configuracion-modelfile">13.3.2. El Archivo de Configuración (Modelfile)</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#integracion-de-ollama-con-langchain">12.4. Integración de Ollama con LangChain</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#configuracion-del-entorno-de-python">12.4.1. Configuración del Entorno de Python</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-1-inferencia-basica-con-chatollama">12.4.2. Ejemplo 1: Inferencia Básica con <code class="docutils literal notranslate"><span class="pre">ChatOllama</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-2-creacion-de-cadenas-chains-con-prompts-estructurados">12.4.3. Ejemplo 2: Creación de Cadenas (Chains) con Prompts Estructurados</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-3-respuestas-en-streaming">12.4.4. Ejemplo 3: Respuestas en Streaming</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#integracion-de-ollama-con-langchain">13.4. Integración de Ollama con LangChain</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#configuracion-del-entorno-de-python">13.4.1. Configuración del Entorno de Python</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-1-inferencia-basica-con-chatollama">13.4.2. Ejemplo 1: Inferencia Básica con <code class="docutils literal notranslate"><span class="pre">ChatOllama</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-2-creacion-de-cadenas-chains-con-prompts-estructurados">13.4.3. Ejemplo 2: Creación de Cadenas (Chains) con Prompts Estructurados</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-3-respuestas-en-streaming">13.4.4. Ejemplo 3: Respuestas en Streaming</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#arquitectura-avanzada-implementacion-de-rag-local-con-ollama-y-langchain">12.5. Arquitectura Avanzada: Implementación de RAG local con Ollama y LangChain</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-completo-de-rag-local">12.5.1. Ejemplo completo de RAG Local</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#arquitectura-avanzada-implementacion-de-rag-local-con-ollama-y-langchain">13.5. Arquitectura Avanzada: Implementación de RAG local con Ollama y LangChain</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-completo-de-rag-local">13.5.1. Ejemplo completo de RAG Local</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#solucion-de-problemas-y-buenas-practicas-en-windows">12.6. Solución de Problemas y Buenas Prácticas en Windows</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problemas-comunes-y-soluciones">12.6.1. Problemas comunes y soluciones</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#buenas-practicas">12.6.2. Buenas Prácticas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#solucion-de-problemas-y-buenas-practicas-en-windows">13.6. Solución de Problemas y Buenas Prácticas en Windows</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problemas-comunes-y-soluciones">13.6.1. Problemas comunes y soluciones</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#buenas-practicas">13.6.2. Buenas Prácticas</a></li>
 </ul>
 </li>
 </ul>

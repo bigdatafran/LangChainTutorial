@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>8. LangChain en producción: concurrencia y operaciones asíncronas &#8212; LangChain &amp; LangGraph</title>
+    <title>9. LangChain en producción: concurrencia y operaciones asíncronas &#8212; LangChain &amp; LangGraph</title>
   
   
   
@@ -63,8 +63,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'jupyters/langchain_async_concurrencia';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="9. Introducción" href="langgraph/init_langGraph.html" />
-    <link rel="prev" title="7. Introducción a las Tools." href="tools.html" />
+    <link rel="next" title="10. Introducción" href="langgraph/init_langGraph.html" />
+    <link rel="prev" title="8. Uso de la wikipedia con LangChain" href="wikipedia.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -169,18 +169,19 @@
 <li class="toctree-l1"><a class="reference internal" href="messages.html">5. Messages en LangChain</a></li>
 <li class="toctree-l1"><a class="reference internal" href="agentes.html">6. Agentes en LangChain</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tools.html">7. Tools (herramientas) en LangChain</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">8. Ejecución asíncrona en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wikipedia.html">8. Uso de la Tool wikipedia en LangChain</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">9. Ejecución asíncrona en LangChain</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">LangGraph.</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="langgraph/init_langGraph.html">9. Construir agentes en LangGraph</a></li>
-<li class="toctree-l1"><a class="reference internal" href="langgraph/base_datos.html">10. Base de datos con LangGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="langgraph/init_langGraph.html">10. Construir agentes en LangGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="langgraph/base_datos.html">11. Base de datos con LangGraph</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Apéndices.</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="asyncio.html">11. Asincronia con asyncio</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ollama.html">12. Ollama</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sitiosweb.html">13. Sitios web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="asyncio.html">12. Asincronia con asyncio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ollama.html">13. Ollama</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sitiosweb.html">14. Sitios web</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Índice de términos</span></p>
 <ul class="nav bd-sidenav">
@@ -282,19 +283,19 @@
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#soporte-asincrono-nativo-en-langchain">8.1. 1. Soporte asíncrono nativo en LangChain</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conceptos-esenciales-de-asyncio">8.2. 2. Conceptos esenciales de <code class="docutils literal notranslate"><span class="pre">asyncio</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#de-sincrono-a-asincrono-usando-ainvoke">8.3. 3. De síncrono a asíncrono: usando <code class="docutils literal notranslate"><span class="pre">ainvoke</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ejecucion-concurrente-con-asyncio-gather">8.4. 4. Ejecución concurrente con <code class="docutils literal notranslate"><span class="pre">asyncio.gather</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streaming-asincrono-con-astream">8.5. 5. Streaming asíncrono con <code class="docutils literal notranslate"><span class="pre">astream</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#procesamiento-por-lotes-con-abatch">8.6. 6. Procesamiento por lotes con <code class="docutils literal notranslate"><span class="pre">abatch</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#consideraciones-para-produccion">8.7. 7. Consideraciones para producción</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manejo-de-errores-en-asyncio-gather">8.7.1. 7.1 Manejo de errores en <code class="docutils literal notranslate"><span class="pre">asyncio.gather</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#limitar-la-concurrencia-con-asyncio-semaphore">8.7.2. 7.2 Limitar la concurrencia con <code class="docutils literal notranslate"><span class="pre">asyncio.Semaphore</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integrar-codigo-sincrono-bloqueante-con-run-in-executor">8.7.3. 7.3 Integrar código síncrono bloqueante con <code class="docutils literal notranslate"><span class="pre">run_in_executor</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#soporte-asincrono-nativo-en-langchain">9.1. 1. Soporte asíncrono nativo en LangChain</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conceptos-esenciales-de-asyncio">9.2. 2. Conceptos esenciales de <code class="docutils literal notranslate"><span class="pre">asyncio</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#de-sincrono-a-asincrono-usando-ainvoke">9.3. 3. De síncrono a asíncrono: usando <code class="docutils literal notranslate"><span class="pre">ainvoke</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ejecucion-concurrente-con-asyncio-gather">9.4. 4. Ejecución concurrente con <code class="docutils literal notranslate"><span class="pre">asyncio.gather</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streaming-asincrono-con-astream">9.5. 5. Streaming asíncrono con <code class="docutils literal notranslate"><span class="pre">astream</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#procesamiento-por-lotes-con-abatch">9.6. 6. Procesamiento por lotes con <code class="docutils literal notranslate"><span class="pre">abatch</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#consideraciones-para-produccion">9.7. 7. Consideraciones para producción</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manejo-de-errores-en-asyncio-gather">9.7.1. 7.1 Manejo de errores en <code class="docutils literal notranslate"><span class="pre">asyncio.gather</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#limitar-la-concurrencia-con-asyncio-semaphore">9.7.2. 7.2 Limitar la concurrencia con <code class="docutils literal notranslate"><span class="pre">asyncio.Semaphore</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integrar-codigo-sincrono-bloqueante-con-run-in-executor">9.7.3. 7.3 Integrar código síncrono bloqueante con <code class="docutils literal notranslate"><span class="pre">run_in_executor</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resumen">8.8. Resumen</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resumen">9.8. Resumen</a></li>
 </ul>
             </nav>
         </div>
@@ -307,12 +308,12 @@
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="langchain-en-produccion-concurrencia-y-operaciones-asincronas">
-<h1><span class="section-number">8. </span>LangChain en producción: concurrencia y operaciones asíncronas<a class="headerlink" href="#langchain-en-produccion-concurrencia-y-operaciones-asincronas" title="Link to this heading">#</a></h1>
+<h1><span class="section-number">9. </span>LangChain en producción: concurrencia y operaciones asíncronas<a class="headerlink" href="#langchain-en-produccion-concurrencia-y-operaciones-asincronas" title="Link to this heading">#</a></h1>
 <p><strong>NOTA</strong>: Se recomienda al lector leer la sección del anexo titulado <a class="reference internal" href="asyncio.html#referencia1"><span class="std std-ref">Programación asíncrona con asyncio en Python: una guía práctica</span></a>.</p>
 <p>Cuando una aplicación LangChain crece en complejidad y empieza a manejar múltiples peticiones simultáneas, la ejecución secuencial (síncrona) se convierte rápidamente en el cuello de botella. Llamadas a modelos de lenguaje a través de la red, consultas a bases de datos vectoriales o integraciones con APIs externas son operaciones donde el programa pasa la mayor parte del tiempo <strong>esperando</strong>, no computando.</p>
 <p>La programación asíncrona con <code class="docutils literal notranslate"><span class="pre">asyncio</span></code> permite que, durante esas esperas, el hilo siga atendiendo otras tareas. El resultado es una mejora sustancial en el rendimiento y la capacidad de respuesta de la aplicación.</p>
 <section id="soporte-asincrono-nativo-en-langchain">
-<h2><span class="section-number">8.1. </span>1. Soporte asíncrono nativo en LangChain<a class="headerlink" href="#soporte-asincrono-nativo-en-langchain" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">9.1. </span>1. Soporte asíncrono nativo en LangChain<a class="headerlink" href="#soporte-asincrono-nativo-en-langchain" title="Link to this heading">#</a></h2>
 <p id="index-0">LangChain está diseñado desde el principio para trabajar en entornos asíncronos. Casi todos sus componentes que implican I/O ofrecen una versión asíncrona siguiendo una convención sencilla:</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -339,7 +340,7 @@
 <p>Para usar estos métodos solo necesitas escribir tu código con las palabras clave <code class="docutils literal notranslate"><span class="pre">async</span></code> y <code class="docutils literal notranslate"><span class="pre">await</span></code> de Python.</p>
 </section>
 <section id="conceptos-esenciales-de-asyncio">
-<h2><span class="section-number">8.2. </span>2. Conceptos esenciales de <code class="docutils literal notranslate"><span class="pre">asyncio</span></code><a class="headerlink" href="#conceptos-esenciales-de-asyncio" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">9.2. </span>2. Conceptos esenciales de <code class="docutils literal notranslate"><span class="pre">asyncio</span></code><a class="headerlink" href="#conceptos-esenciales-de-asyncio" title="Link to this heading">#</a></h2>
 <p>Antes de ver ejemplos con LangChain, conviene tener claros cinco conceptos:</p>
 <ol class="arabic simple">
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">async</span> <span class="pre">def</span></code></strong> — declara una función como corrutina. Las corrutinas pueden pausarse y reanudarse.</p></li>
@@ -350,7 +351,7 @@
 </ol>
 </section>
 <section id="de-sincrono-a-asincrono-usando-ainvoke">
-<h2><span class="section-number">8.3. </span>3. De síncrono a asíncrono: usando <code class="docutils literal notranslate"><span class="pre">ainvoke</span></code><a class="headerlink" href="#de-sincrono-a-asincrono-usando-ainvoke" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">9.3. </span>3. De síncrono a asíncrono: usando <code class="docutils literal notranslate"><span class="pre">ainvoke</span></code><a class="headerlink" href="#de-sincrono-a-asincrono-usando-ainvoke" title="Link to this heading">#</a></h2>
 <p>Veamos cómo transformar una cadena síncrona básica en su versión asíncrona. La definición de la cadena con LCEL (<code class="docutils literal notranslate"><span class="pre">prompt</span> <span class="pre">|</span> <span class="pre">model</span> <span class="pre">|</span> <span class="pre">parser</span></code>) no cambia; solo cambia la forma de invocarla.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -416,7 +417,7 @@ Resultado: La entropía mide el grado de desorden de un sistema termodinámico.
 </div></blockquote>
 </section>
 <section id="ejecucion-concurrente-con-asyncio-gather">
-<h2><span class="section-number">8.4. </span>4. Ejecución concurrente con <code class="docutils literal notranslate"><span class="pre">asyncio.gather</span></code><a class="headerlink" href="#ejecucion-concurrente-con-asyncio-gather" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">9.4. </span>4. Ejecución concurrente con <code class="docutils literal notranslate"><span class="pre">asyncio.gather</span></code><a class="headerlink" href="#ejecucion-concurrente-con-asyncio-gather" title="Link to this heading">#</a></h2>
 <p>El verdadero poder de la asincronía aparece cuando necesitas lanzar varias operaciones al mismo tiempo: consultar el LLM con distintos prompts, recuperar documentos de fuentes diferentes o validar múltiples entradas en paralelo.</p>
 <p><code class="docutils literal notranslate"><span class="pre">asyncio.gather</span></code> es la herramienta para esto. Recibe varias corrutinas y las ejecuta de forma concurrente, devolviendo los resultados en el mismo orden en que se pasaron.</p>
 <div class="cell docutils container">
@@ -473,7 +474,7 @@ Tiempo total: 1.51s  (secuencial hubiera tardado ~4.5s)
 <p>Con ejecución secuencial, tres llamadas de 1,5 s cada una sumarían <strong>4,5 s</strong>. Con <code class="docutils literal notranslate"><span class="pre">asyncio.gather</span></code>, al superponerse las esperas de red, el tiempo total se acerca a <strong>1,5 s</strong> (la duración de la operación más larga), más un pequeño overhead.</p>
 </section>
 <section id="streaming-asincrono-con-astream">
-<h2><span class="section-number">8.5. </span>5. Streaming asíncrono con <code class="docutils literal notranslate"><span class="pre">astream</span></code><a class="headerlink" href="#streaming-asincrono-con-astream" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">9.5. </span>5. Streaming asíncrono con <code class="docutils literal notranslate"><span class="pre">astream</span></code><a class="headerlink" href="#streaming-asincrono-con-astream" title="Link to this heading">#</a></h2>
 <p>Los modelos de lenguaje generan texto token a token. Con <code class="docutils literal notranslate"><span class="pre">astream()</span></code> puedes procesar cada fragmento conforme llega, sin esperar a que la respuesta esté completa. Esto mejora enormemente la experiencia en aplicaciones conversacionales: el usuario empieza a leer la respuesta casi de inmediato.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -512,7 +513,7 @@ El concepto de &#39;atención multi-cabeza&#39; es fundamental en el campo de la
 </div>
 </section>
 <section id="procesamiento-por-lotes-con-abatch">
-<h2><span class="section-number">8.6. </span>6. Procesamiento por lotes con <code class="docutils literal notranslate"><span class="pre">abatch</span></code><a class="headerlink" href="#procesamiento-por-lotes-con-abatch" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">9.6. </span>6. Procesamiento por lotes con <code class="docutils literal notranslate"><span class="pre">abatch</span></code><a class="headerlink" href="#procesamiento-por-lotes-con-abatch" title="Link to this heading">#</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">abatch()</span></code> es la versión asíncrona de <code class="docutils literal notranslate"><span class="pre">batch()</span></code>. Acepta múltiples entradas y las envía al componente subyacente de forma concurrente. Si el proveedor (modelo, API de embeddings, etc.) soporta peticiones en bloque reales, <code class="docutils literal notranslate"><span class="pre">abatch</span></code> puede ser más eficiente que varios <code class="docutils literal notranslate"><span class="pre">ainvoke</span></code> en paralelo porque reduce el número de llamadas a la red.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -567,9 +568,9 @@ Tiempo total: 1.21s
 </div></blockquote>
 </section>
 <section id="consideraciones-para-produccion">
-<h2><span class="section-number">8.7. </span>7. Consideraciones para producción<a class="headerlink" href="#consideraciones-para-produccion" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">9.7. </span>7. Consideraciones para producción<a class="headerlink" href="#consideraciones-para-produccion" title="Link to this heading">#</a></h2>
 <section id="manejo-de-errores-en-asyncio-gather">
-<h3><span class="section-number">8.7.1. </span>7.1 Manejo de errores en <code class="docutils literal notranslate"><span class="pre">asyncio.gather</span></code><a class="headerlink" href="#manejo-de-errores-en-asyncio-gather" title="Link to this heading">#</a></h3>
+<h3><span class="section-number">9.7.1. </span>7.1 Manejo de errores en <code class="docutils literal notranslate"><span class="pre">asyncio.gather</span></code><a class="headerlink" href="#manejo-de-errores-en-asyncio-gather" title="Link to this heading">#</a></h3>
 <p>Por defecto, si una corrutina lanza una excepción dentro de <code class="docutils literal notranslate"><span class="pre">gather</span></code>, esta se propaga de inmediato y puede cancelar las demás. Usa <code class="docutils literal notranslate"><span class="pre">return_exceptions=True</span></code> para capturar los errores como valores y seguir procesando el resto.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -610,7 +611,7 @@ Tiempo total: 1.21s
 </div>
 </section>
 <section id="limitar-la-concurrencia-con-asyncio-semaphore">
-<h3><span class="section-number">8.7.2. </span>7.2 Limitar la concurrencia con <code class="docutils literal notranslate"><span class="pre">asyncio.Semaphore</span></code><a class="headerlink" href="#limitar-la-concurrencia-con-asyncio-semaphore" title="Link to this heading">#</a></h3>
+<h3><span class="section-number">9.7.2. </span>7.2 Limitar la concurrencia con <code class="docutils literal notranslate"><span class="pre">asyncio.Semaphore</span></code><a class="headerlink" href="#limitar-la-concurrencia-con-asyncio-semaphore" title="Link to this heading">#</a></h3>
 <p>Lanzar demasiadas corrutinas a la vez puede saturar la API del LLM o agotar los recursos locales. Un <code class="docutils literal notranslate"><span class="pre">Semaphore</span></code> actúa como válvula: limita cuántas corrutinas pueden ejecutarse simultáneamente.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -666,7 +667,7 @@ Respuestas obtenidas:
 </div>
 </section>
 <section id="integrar-codigo-sincrono-bloqueante-con-run-in-executor">
-<h3><span class="section-number">8.7.3. </span>7.3 Integrar código síncrono bloqueante con <code class="docutils literal notranslate"><span class="pre">run_in_executor</span></code><a class="headerlink" href="#integrar-codigo-sincrono-bloqueante-con-run-in-executor" title="Link to this heading">#</a></h3>
+<h3><span class="section-number">9.7.3. </span>7.3 Integrar código síncrono bloqueante con <code class="docutils literal notranslate"><span class="pre">run_in_executor</span></code><a class="headerlink" href="#integrar-codigo-sincrono-bloqueante-con-run-in-executor" title="Link to this heading">#</a></h3>
 <p>A veces necesitas llamar a una librería que solo tiene API síncrona (por ejemplo, lectura de archivos pesados, operaciones con bases de datos sin driver async, etc.). Para no bloquear el bucle de eventos, usa <code class="docutils literal notranslate"><span class="pre">loop.run_in_executor()</span></code>, que ejecuta la función en un hilo separado.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -704,7 +705,7 @@ Datos cargados desde &#39;base_de_datos_legacy&#39;
 </section>
 <hr class="docutils" />
 <section id="resumen">
-<h2><span class="section-number">8.8. </span>Resumen<a class="headerlink" href="#resumen" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">9.8. </span>Resumen<a class="headerlink" href="#resumen" title="Link to this heading">#</a></h2>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Patrón</p></th>
@@ -768,12 +769,12 @@ Datos cargados desde &#39;base_de_datos_legacy&#39;
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="tools.html"
+       href="wikipedia.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title"><span class="section-number">7. </span>Introducción a las Tools.</p>
+        <p class="prev-next-title"><span class="section-number">8. </span>Uso de la wikipedia con LangChain</p>
       </div>
     </a>
     <a class="right-next"
@@ -781,7 +782,7 @@ Datos cargados desde &#39;base_de_datos_legacy&#39;
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><span class="section-number">9. </span>Introducción</p>
+        <p class="prev-next-title"><span class="section-number">10. </span>Introducción</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -803,19 +804,19 @@ Datos cargados desde &#39;base_de_datos_legacy&#39;
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#soporte-asincrono-nativo-en-langchain">8.1. 1. Soporte asíncrono nativo en LangChain</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conceptos-esenciales-de-asyncio">8.2. 2. Conceptos esenciales de <code class="docutils literal notranslate"><span class="pre">asyncio</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#de-sincrono-a-asincrono-usando-ainvoke">8.3. 3. De síncrono a asíncrono: usando <code class="docutils literal notranslate"><span class="pre">ainvoke</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ejecucion-concurrente-con-asyncio-gather">8.4. 4. Ejecución concurrente con <code class="docutils literal notranslate"><span class="pre">asyncio.gather</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streaming-asincrono-con-astream">8.5. 5. Streaming asíncrono con <code class="docutils literal notranslate"><span class="pre">astream</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#procesamiento-por-lotes-con-abatch">8.6. 6. Procesamiento por lotes con <code class="docutils literal notranslate"><span class="pre">abatch</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#consideraciones-para-produccion">8.7. 7. Consideraciones para producción</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manejo-de-errores-en-asyncio-gather">8.7.1. 7.1 Manejo de errores en <code class="docutils literal notranslate"><span class="pre">asyncio.gather</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#limitar-la-concurrencia-con-asyncio-semaphore">8.7.2. 7.2 Limitar la concurrencia con <code class="docutils literal notranslate"><span class="pre">asyncio.Semaphore</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integrar-codigo-sincrono-bloqueante-con-run-in-executor">8.7.3. 7.3 Integrar código síncrono bloqueante con <code class="docutils literal notranslate"><span class="pre">run_in_executor</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#soporte-asincrono-nativo-en-langchain">9.1. 1. Soporte asíncrono nativo en LangChain</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conceptos-esenciales-de-asyncio">9.2. 2. Conceptos esenciales de <code class="docutils literal notranslate"><span class="pre">asyncio</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#de-sincrono-a-asincrono-usando-ainvoke">9.3. 3. De síncrono a asíncrono: usando <code class="docutils literal notranslate"><span class="pre">ainvoke</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ejecucion-concurrente-con-asyncio-gather">9.4. 4. Ejecución concurrente con <code class="docutils literal notranslate"><span class="pre">asyncio.gather</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streaming-asincrono-con-astream">9.5. 5. Streaming asíncrono con <code class="docutils literal notranslate"><span class="pre">astream</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#procesamiento-por-lotes-con-abatch">9.6. 6. Procesamiento por lotes con <code class="docutils literal notranslate"><span class="pre">abatch</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#consideraciones-para-produccion">9.7. 7. Consideraciones para producción</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manejo-de-errores-en-asyncio-gather">9.7.1. 7.1 Manejo de errores en <code class="docutils literal notranslate"><span class="pre">asyncio.gather</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#limitar-la-concurrencia-con-asyncio-semaphore">9.7.2. 7.2 Limitar la concurrencia con <code class="docutils literal notranslate"><span class="pre">asyncio.Semaphore</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integrar-codigo-sincrono-bloqueante-con-run-in-executor">9.7.3. 7.3 Integrar código síncrono bloqueante con <code class="docutils literal notranslate"><span class="pre">run_in_executor</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resumen">8.8. Resumen</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resumen">9.8. Resumen</a></li>
 </ul>
   </nav></div>
 

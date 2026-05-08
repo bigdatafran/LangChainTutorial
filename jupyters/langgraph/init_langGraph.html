@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>9. Introducción &#8212; LangChain &amp; LangGraph</title>
+    <title>10. Introducción &#8212; LangChain &amp; LangGraph</title>
   
   
   
@@ -63,8 +63,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'jupyters/langgraph/init_langGraph';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="10. Introducción" href="base_datos.html" />
-    <link rel="prev" title="8. LangChain en producción: concurrencia y operaciones asíncronas" href="../langchain_async_concurrencia.html" />
+    <link rel="next" title="11. Introducción" href="base_datos.html" />
+    <link rel="prev" title="9. LangChain en producción: concurrencia y operaciones asíncronas" href="../langchain_async_concurrencia.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -169,18 +169,19 @@
 <li class="toctree-l1"><a class="reference internal" href="../messages.html">5. Messages en LangChain</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../agentes.html">6. Agentes en LangChain</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tools.html">7. Tools (herramientas) en LangChain</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../langchain_async_concurrencia.html">8. Ejecución asíncrona en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../wikipedia.html">8. Uso de la Tool wikipedia en LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../langchain_async_concurrencia.html">9. Ejecución asíncrona en LangChain</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">LangGraph.</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">9. Construir agentes en LangGraph</a></li>
-<li class="toctree-l1"><a class="reference internal" href="base_datos.html">10. Base de datos con LangGraph</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">10. Construir agentes en LangGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="base_datos.html">11. Base de datos con LangGraph</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Apéndices.</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../asyncio.html">11. Asincronia con asyncio</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ollama.html">12. Ollama</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../sitiosweb.html">13. Sitios web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../asyncio.html">12. Asincronia con asyncio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ollama.html">13. Ollama</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sitiosweb.html">14. Sitios web</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Índice de términos</span></p>
 <ul class="nav bd-sidenav">
@@ -282,16 +283,16 @@
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#por-que-langgraph">9.1. ¿Por qué LangGraph?.</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grafos-en-langgraph">9.2. Grafos en LangGraph</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#workflow-agentico-con-langgraph">9.3. Workflow agéntico con LangGraph</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gestion-de-estados-en-langgraph">9.4. Gestión de estados en LangGraph</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#codigos-y-ejemplos">9.5. Códigos y ejemplos</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#typeddict-vs-pydantic-cuando-elegir-que">9.6. TypedDict vs Pydantic (cuándo elegir qué)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-simple">9.7. Ejemplo simple</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-asincrona-del-ejemplo">9.8. Versión asíncrona del ejemplo</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-inicial">9.9. Ejemplo inicial</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-avanzado-estado-del-servicio-de-atencion-al-cliente">9.10. Ejemplo avanzado: Estado del servicio de atención al cliente</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#por-que-langgraph">10.1. ¿Por qué LangGraph?.</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grafos-en-langgraph">10.2. Grafos en LangGraph</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#workflow-agentico-con-langgraph">10.3. Workflow agéntico con LangGraph</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gestion-de-estados-en-langgraph">10.4. Gestión de estados en LangGraph</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#codigos-y-ejemplos">10.5. Códigos y ejemplos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#typeddict-vs-pydantic-cuando-elegir-que">10.6. TypedDict vs Pydantic (cuándo elegir qué)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-simple">10.7. Ejemplo simple</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-asincrona-del-ejemplo">10.8. Versión asíncrona del ejemplo</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-inicial">10.9. Ejemplo inicial</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-avanzado-estado-del-servicio-de-atencion-al-cliente">10.10. Ejemplo avanzado: Estado del servicio de atención al cliente</a></li>
 </ul>
             </nav>
         </div>
@@ -304,28 +305,28 @@
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="introduccion">
-<h1><span class="section-number">9. </span>Introducción<a class="headerlink" href="#introduccion" title="Link to this heading">#</a></h1>
+<h1><span class="section-number">10. </span>Introducción<a class="headerlink" href="#introduccion" title="Link to this heading">#</a></h1>
 <p>Las llamadas LLM simples están limitadas por el conocimiento con el que se entrenó el modelo. Para solucionar esto, los desarrolladores usan cadenas o sistemas de agentes para otorgar a los LLM mayor control sobre los flujos de trabajo de la aplicación.</p>
 <section id="por-que-langgraph">
-<h2><span class="section-number">9.1. </span>¿Por qué LangGraph?.<a class="headerlink" href="#por-que-langgraph" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">10.1. </span>¿Por qué LangGraph?.<a class="headerlink" href="#por-que-langgraph" title="Link to this heading">#</a></h2>
 <p>Dar más control a un LLM reduce la confiabilidad , pero LangGraph ayuda a mantener la confiabilidad al tiempo que permite un comportamiento agente .</p>
 <p>• Más flexibilidad en el diseño de flujos de trabajo.</p>
 <p>• Visibilidad clara del flujo de control (sin indicaciones complejas ocultas).</p>
 <p>• Admite ciclos y persistencia , lo que lo hace adecuado para flujos de trabajo de IA iterativos</p>
 </section>
 <section id="grafos-en-langgraph">
-<h2><span class="section-number">9.2. </span>Grafos en LangGraph<a class="headerlink" href="#grafos-en-langgraph" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">10.2. </span>Grafos en LangGraph<a class="headerlink" href="#grafos-en-langgraph" title="Link to this heading">#</a></h2>
 <p>LangGraph estructura los flujos de trabajo como grafos  con nodos y bordes :</p>
 <p>• <strong>Nodos</strong> : funciones de Python que definen la lógica del agente .</p>
 <p>• <strong>Bordes</strong> : funciones de Python que deciden qué nodo se ejecuta a continuación en función del estado.</p>
 <p><img alt="" src="../../_images/langGrapg.png" /></p>
 </section>
 <section id="workflow-agentico-con-langgraph">
-<h2><span class="section-number">9.3. </span>Workflow agéntico con LangGraph<a class="headerlink" href="#workflow-agentico-con-langgraph" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">10.3. </span>Workflow agéntico con LangGraph<a class="headerlink" href="#workflow-agentico-con-langgraph" title="Link to this heading">#</a></h2>
 <p>Los flujos de trabajo agentísticos permiten a los LLM controlar el flujo de ejecución , adaptándose a la entrada, las condiciones y las herramientas del usuario . A diferencia de las cadenas fijas, los flujos de trabajo agentísticos toman decisiones en tiempo real , lo que mejora la flexibilidad y la automatización.</p>
 </section>
 <section id="gestion-de-estados-en-langgraph">
-<span id="estado"></span><h2><span class="section-number">9.4. </span>Gestión de estados en LangGraph<a class="headerlink" href="#gestion-de-estados-en-langgraph" title="Link to this heading">#</a></h2>
+<span id="estado"></span><h2><span class="section-number">10.4. </span>Gestión de estados en LangGraph<a class="headerlink" href="#gestion-de-estados-en-langgraph" title="Link to this heading">#</a></h2>
 <p id="index-0">LangGraph utiliza un estado estructurado para mantener la coherencia de los datos del agente a medida que avanzan en un flujo de trabajo. Para un agente de atención al cliente, este estado puede incluir el historial de conversaciones, las preferencias del usuario, las decisiones de enrutamiento (departamento) y las tareas pendientes. A medida que los nodos procesan la información, el estado se actualiza y se transmite, lo que permite un comportamiento del agente modular y fácil de mantener.</p>
 <p>Estos estados se consiguen mediante la creación de clases que heredan bien de <strong>TypeDict</strong>, de <strong>Pydantic</strong>, o de <strong>messagesState</strong>.</p>
 <p>Dos opciones de esquema definen este estado:</p>
@@ -335,7 +336,7 @@
 en el tiempo.</p>
 </section>
 <section id="codigos-y-ejemplos">
-<h2><span class="section-number">9.5. </span>Códigos y ejemplos<a class="headerlink" href="#codigos-y-ejemplos" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">10.5. </span>Códigos y ejemplos<a class="headerlink" href="#codigos-y-ejemplos" title="Link to this heading">#</a></h2>
 <p>Ejemplo de TypedDict para el estado de un agente:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">AgentState</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
     <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
@@ -358,7 +359,7 @@ en el tiempo.</p>
 <p>• Con <code class="docutils literal notranslate"><span class="pre">Annotated</span></code> y <code class="docutils literal notranslate"><span class="pre">operator.add</span></code>, las actualizaciones de la lista se agregan a la lista existente.</p>
 </section>
 <section id="typeddict-vs-pydantic-cuando-elegir-que">
-<h2><span class="section-number">9.6. </span>TypedDict vs Pydantic (cuándo elegir qué)<a class="headerlink" href="#typeddict-vs-pydantic-cuando-elegir-que" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">10.6. </span>TypedDict vs Pydantic (cuándo elegir qué)<a class="headerlink" href="#typeddict-vs-pydantic-cuando-elegir-que" title="Link to this heading">#</a></h2>
 <p>• <strong>TypedDict</strong></p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>– Ligero y nativo de Python
 
@@ -381,7 +382,7 @@ en el tiempo.</p>
 </div>
 </section>
 <section id="ejemplo-simple">
-<h2><span class="section-number">9.7. </span>Ejemplo simple<a class="headerlink" href="#ejemplo-simple" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">10.7. </span>Ejemplo simple<a class="headerlink" href="#ejemplo-simple" title="Link to this heading">#</a></h2>
 <p>Veamos en este ejemplo simple como podemos crear un flujo agéntico en langGraph</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -523,7 +524,7 @@ NODE B:
 </div>
 </section>
 <section id="version-asincrona-del-ejemplo">
-<h2><span class="section-number">9.8. </span>Versión asíncrona del ejemplo<a class="headerlink" href="#version-asincrona-del-ejemplo" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">10.8. </span>Versión asíncrona del ejemplo<a class="headerlink" href="#version-asincrona-del-ejemplo" title="Link to this heading">#</a></h2>
 <p>Mostramos a continuación cómo conseguimos la versión asíncrona del ejemplo anterior</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -632,7 +633,7 @@ NODE B:
 </div>
 </section>
 <section id="ejemplo-inicial">
-<h2><span class="section-number">9.9. </span>Ejemplo inicial<a class="headerlink" href="#ejemplo-inicial" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">10.9. </span>Ejemplo inicial<a class="headerlink" href="#ejemplo-inicial" title="Link to this heading">#</a></h2>
 <p>Mostramos a continuación un ejemplo inicial de creación de un flujo de trabajo agéntico, con tres nodos y un arco condicional, definida por una función que elige un número entero aleatorio entre 1,2 o 3. Y dependiendo del número elegido lo lleva al nodo 1, 2 ó 3. El flujo o esquema de trabajo es el siguiente:</p>
 <p><img alt="" src="../../_images/flujo1.jpg" /></p>
 <p>Importamos las librerías necesarias y definimos el estado del agente</p>
@@ -867,7 +868,7 @@ ESTADO FINAL: {&#39;mensaje&#39;: &#39;Flujo iniciado → nodo_1 → nodo_2(rama
 </div>
 </section>
 <section id="ejemplo-avanzado-estado-del-servicio-de-atencion-al-cliente">
-<h2><span class="section-number">9.10. </span>Ejemplo avanzado: Estado del servicio de atención al cliente<a class="headerlink" href="#ejemplo-avanzado-estado-del-servicio-de-atencion-al-cliente" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">10.10. </span>Ejemplo avanzado: Estado del servicio de atención al cliente<a class="headerlink" href="#ejemplo-avanzado-estado-del-servicio-de-atencion-al-cliente" title="Link to this heading">#</a></h2>
 <p>Esta demostración aplica un flujo de trabajo con estado usando LangGraph para dirigir los mensajes de los clientes a facturación, técnicos o ventas, resolver el problema y registrar su seguimiento. El flujo utiliza un estado tipificado, reductores para la acumulación de mensajes e historial, un nodo enrutador, controladores de departamento y un puntero de control para mantener la continuidad entre turnos.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1095,7 +1096,7 @@ Customer issue history: [&#39;billing-8a36d389-8d8f-4145-9e9e-07db6161128c&#39;,
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title"><span class="section-number">8. </span>LangChain en producción: concurrencia y operaciones asíncronas</p>
+        <p class="prev-next-title"><span class="section-number">9. </span>LangChain en producción: concurrencia y operaciones asíncronas</p>
       </div>
     </a>
     <a class="right-next"
@@ -1103,7 +1104,7 @@ Customer issue history: [&#39;billing-8a36d389-8d8f-4145-9e9e-07db6161128c&#39;,
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><span class="section-number">10. </span>Introducción</p>
+        <p class="prev-next-title"><span class="section-number">11. </span>Introducción</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1125,16 +1126,16 @@ Customer issue history: [&#39;billing-8a36d389-8d8f-4145-9e9e-07db6161128c&#39;,
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#por-que-langgraph">9.1. ¿Por qué LangGraph?.</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grafos-en-langgraph">9.2. Grafos en LangGraph</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#workflow-agentico-con-langgraph">9.3. Workflow agéntico con LangGraph</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gestion-de-estados-en-langgraph">9.4. Gestión de estados en LangGraph</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#codigos-y-ejemplos">9.5. Códigos y ejemplos</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#typeddict-vs-pydantic-cuando-elegir-que">9.6. TypedDict vs Pydantic (cuándo elegir qué)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-simple">9.7. Ejemplo simple</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-asincrona-del-ejemplo">9.8. Versión asíncrona del ejemplo</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-inicial">9.9. Ejemplo inicial</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-avanzado-estado-del-servicio-de-atencion-al-cliente">9.10. Ejemplo avanzado: Estado del servicio de atención al cliente</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#por-que-langgraph">10.1. ¿Por qué LangGraph?.</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grafos-en-langgraph">10.2. Grafos en LangGraph</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#workflow-agentico-con-langgraph">10.3. Workflow agéntico con LangGraph</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gestion-de-estados-en-langgraph">10.4. Gestión de estados en LangGraph</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#codigos-y-ejemplos">10.5. Códigos y ejemplos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#typeddict-vs-pydantic-cuando-elegir-que">10.6. TypedDict vs Pydantic (cuándo elegir qué)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-simple">10.7. Ejemplo simple</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-asincrona-del-ejemplo">10.8. Versión asíncrona del ejemplo</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-inicial">10.9. Ejemplo inicial</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-avanzado-estado-del-servicio-de-atencion-al-cliente">10.10. Ejemplo avanzado: Estado del servicio de atención al cliente</a></li>
 </ul>
   </nav></div>
 
